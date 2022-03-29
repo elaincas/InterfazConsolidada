@@ -1,0 +1,244 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div
+            class="card-header card-header-icon"
+            data-background-color="blue"
+          >
+            <em class="material-icons">view_list</em>
+          </div>
+
+          <dx-load-panel
+            #loadPanel
+            [shadingColor]="'rgba(255, 0, 0, 0.2)'"
+            [position]="{ of: '#contentTabs' }"
+            [(visible)]="cargandoVisible"
+            [showIndicator]="true"
+            [showPane]="true"
+            [shading]="true"
+            [closeOnOutsideClick]="false"
+            [message]="mensajeLoader"
+          >
+          </dx-load-panel>
+
+          <div class="card-content" id="tabCon">
+            <h4 class="card-title">Listado de Stickers</h4>
+            <div class="form-group">
+              <button
+                type="button"
+                class="btn btn-Azulsiman btn-round btn-fab btn-fab-mini"
+                (click)="configurarNuevoSticker()"
+              >
+                <em class="material-icons">add</em>
+                <div class="ripple-container"></div>
+              </button>
+            </div>
+            <dx-data-grid
+              [showBorders]="true"
+              [rowAlternationEnabled]="true"
+              [dataSource]="data"
+              [columnAutoWidth]="true"
+              [columnHidingEnabled]="false"
+              [allowColumnResizing]="false"
+              [wordWrapEnabled]="true"
+            >
+              <dxo-load-panel
+                [enabled]="true"
+                text="Cargando Información"
+              ></dxo-load-panel>
+
+              <dxo-paging [pageSize]="10"> </dxo-paging>
+              <dxo-pager
+                [showPageSizeSelector]="true"
+                [allowedPageSizes]="[10, 25, 50, 100]"
+                [showInfo]="true"
+              ></dxo-pager>
+
+              <dxo-filter-row [visible]="true"> </dxo-filter-row>
+
+              <dxo-header-filter [visible]="true"></dxo-header-filter>
+              <dxo-search-panel
+                [visible]="true"
+                [width]="240"
+                placeholder="Buscar..."
+              ></dxo-search-panel>
+
+              <dxi-column
+                caption="Id"
+                [allowEditing]="false"
+                dataField="id"
+                [width]="60"
+              >
+              </dxi-column>
+              <dxi-column
+                caption="Descripción"
+                [allowEditing]="false"
+                dataField="descripcion"
+                [width]="350"
+              >
+              </dxi-column>
+              <dxi-column
+                caption="Producto Id"
+                [allowEditing]="false"
+                dataField="productoId"
+                [width]="100"
+              >
+              </dxi-column>
+              <dxi-column
+                caption="Producto"
+                [allowEditing]="false"
+                dataField="descripcionProducto"
+                [width]="250"
+              >
+              </dxi-column>
+              <dxi-column
+                caption="Monto del Sticker"
+                [allowEditing]="false"
+                dataField="montoSticker"
+                [width]="100"
+              >
+              </dxi-column>
+              <dxi-column
+                caption="Monto Requisito de Entrega"
+                [allowEditing]="false"
+                dataField="montoRequisitoEntrega"
+                [width]="100"
+              >
+              </dxi-column>
+              <dxi-column
+                caption="Tipo de Canje"
+                [allowEditing]="false"
+                dataField="descripcionCanjeTipo"
+                [width]="100"
+              >
+              </dxi-column>
+              <dxi-column
+                caption="Fecha Inicio"
+                [allowEditing]="false"
+                dataField="fechaInicio"
+                [width]="0"
+                dataType="date"
+                displayFormat="dd/MM/yyyy"
+              >
+              </dxi-column>
+              <dxi-column
+                caption="Fecha Fin"
+                [allowEditing]="false"
+                dataField="fechaFin"
+                [width]="90"
+                dataType="date"
+                displayFormat="dd/MM/yyyy"
+              >
+              </dxi-column>
+              <dxi-column
+                caption="¿Aplica para todas las sucursales?"
+                [allowEditing]="false"
+                dataField="aplicaParaTodasLasSucursales"
+                [width]="130"
+              >
+              </dxi-column>
+              <dxi-column
+                caption="¿Es digital?"
+                [allowEditing]="false"
+                dataField="esDigital"
+                [width]="120"
+              >
+              </dxi-column>
+              <dxi-column
+                caption="Sticker Tipo"
+                [allowEditing]="false"
+                dataField="stickerTipoDescripcion"
+                [width]="120"
+              >
+              </dxi-column>
+              <dxi-column
+                caption="Usuario Agrega"
+                [allowEditing]="false"
+                type="adaptative"
+                dataField="usuarioAgregaId"
+                [width]="150"
+              >
+              </dxi-column>
+              <dxi-column
+                caption="Fecha Agrega"
+                dataField="fechaAgrega"
+                dataType="date"
+                type="adaptative"
+                format="dd/MM/yyyy"
+                [allowEditing]="false"
+                [width]="150"
+              >
+              </dxi-column>
+              <dxi-column
+                caption="Usuario Modifica"
+                dataField="usuarioModificaId"
+                type="adaptative"
+                [allowEditing]="false"
+                [width]="150"
+              >
+              </dxi-column>
+              <dxi-column
+                caption="Fecha Modifica"
+                dataField="fechaModifica"
+                type="adaptative"
+                [allowEditing]="false"
+                dataType="date"
+                format="dd/MM/yyyy"
+                [width]="150"
+              >
+              </dxi-column>
+              <dxi-column
+                caption="Activo"
+                type="adaptative"
+                dataField="activo"
+                [width]="100"
+              >
+              </dxi-column>
+              <dxi-column
+                caption="Acciones"
+                cellTemplate="accionTemplate"
+                [width]="100"
+              >
+              </dxi-column>
+
+              <div *dxTemplate="let accion of 'accionTemplate'">
+                <button
+                  rel="tooltip"
+                  title="Desactivar"
+                  *ngIf="accion.data.activo"
+                  type="button"
+                  (click)="inactivar(accion.data.id)"
+                  class="btn btn-grid btn-success"
+                >
+                  <em class="material-icons">arrow_downward</em>
+                </button>
+                <button
+                  rel="tooltip"
+                  title="Activar"
+                  *ngIf="!accion.data.activo"
+                  (click)="activar(accion.data.id)"
+                  type="button"
+                  class="btn btn-grid btn-danger"
+                >
+                  <em class="material-icons">arrow_upward</em>
+                </button>
+                <button
+                  rel="tooltip"
+                  title="Editar"
+                  type="button"
+                  (click)="obtenerValoresParaActualizar(accion.data)"
+                  class="btn btn-grid btn-Azulsiman"
+                >
+                  <em class="material-icons">mode_edit</em>
+                </button>
+              </div>
+            </dx-data-grid>
+          </div>
+          <div class="card-footer"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

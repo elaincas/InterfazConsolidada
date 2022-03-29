@@ -1,0 +1,783 @@
+<!-- <app-main-loader></app-main-loader> -->
+<div class="main-content">
+  <dx-popup
+    [width]="300"
+    [height]="330"
+    [showTitle]="true"
+    title="Seleccionar fecha"
+    [dragEnabled]="false"
+    [closeOnOutsideClick]="true"
+    [(visible)]="datePopupVisible"
+  >
+    <div *dxTemplate="let data of 'content'">
+      <div class="row">
+        <div class="form-group">
+          <span class="labelsFormularios">Posponer pedido hasta:</span>
+          <dx-date-box
+            [displayFormat]="'dd/MM/yyyy'"
+            [(ngModel)]="fechaPosponerPedido"
+            [min]="fechaMinima"
+            [value]="fechaPosponerPedido"
+            type="date"
+          >
+          </dx-date-box>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group">
+          <span class="labelsFormularios">Observación:</span>
+          <dx-text-area
+            [maxLength]="1000"
+            [(value)]="observaciones"
+            [readOnly]="false"
+          >
+          </dx-text-area>
+        </div>
+      </div>
+
+      <div class="row">
+        <button
+          class="btn btn-block btn-Azulsiman"
+          type="submit"
+          (click)="GuardarPosponerPedidos()"
+        >
+          Aceptar
+        </button>
+      </div>
+    </div>
+  </dx-popup>
+  <!--Popup para cambiar el tipo de pago-->
+  <dx-popup
+    [width]="300"
+    [height]="230"
+    [showTitle]="true"
+    title="Seleccionar tipo de pago"
+    [dragEnabled]="false"
+    [closeOnOutsideClick]="true"
+    [(visible)]="tipoPagoPopupVisible"
+  >
+    <div *dxTemplate="let data of 'content'">
+      <div class="row">
+        <div class="form-group">
+          <span class="labelsFormularios">Tipo de pago:</span>
+          <dx-select-box
+            [dataSource]="pagoTipoOptions"
+            displayExpr="pago"
+            valueExpr="id"
+            [(value)]="cambiarTipoPagoReorder.NuevoPagoTipo"
+          ></dx-select-box>
+        </div>
+      </div>
+
+      <div class="row">
+        <button
+          class="btn btn-block btn-Azulsiman"
+          (click)="GuardarCambioTipoDePagoPedido()"
+          type="submit"
+        >
+          Aceptar
+        </button>
+      </div>
+    </div>
+  </dx-popup>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="card">
+          <div
+            class="card-header card-header-icon"
+            data-background-color="green"
+          >
+            <i class="material-icons">motorcycle</i>
+          </div>
+          <div class="card-content">
+            <h4 class="card-title">Pedidos 'Suscríbete y Gana'</h4>
+          </div>
+          <div class="card-content">
+            <div class="row">
+              <div class="col-xs-12">
+                <dx-form
+                  id="form"
+                  [(formData)]="formReportePedidos"
+                  [colCount]="3"
+                  labelLocation="top"
+                >
+                  <dxi-item
+                    [label]="{ text: 'Fecha que debe realizarse pedido' }"
+                    dataField="fechaPedido"
+                    editorType="dxDateBox"
+                    [editorOptions]="{
+                      displayFormat: 'dd/MM/yyyy',
+                      value: now,
+                      width: '100%',
+                      showClearButton: true
+                    }"
+                  >
+                  </dxi-item>
+                  <dxi-item
+                    dataField="usuarioId"
+                    [label]="{ text: 'Cliente' }"
+                    editorType="dxSelectBox"
+                    [editorOptions]="{
+                      dataSource: usuariosDataSource,
+                      valueExpr: 'usuarioId',
+                      displayExpr: 'nombre',
+                      searchEnabled: 'true',
+                      searchExpr: 'nombre',
+                      searchTimeout: 500,
+                      minSearchLength: 4
+                    }"
+                  >
+                  </dxi-item>
+                  <dxi-item
+                    [label]="{ text: 'Estado' }"
+                    dataField="pedidoReorderEstado"
+                    editorType="dxSelectBox"
+                    [editorOptions]="{
+                      dataSource: pedidoReorderEstadoOptions,
+                      valueExpr: 'id',
+                      displayExpr: 'nombre'
+                    }"
+                  >
+                  </dxi-item>
+                  <dxi-item
+                    [label]="{ text: 'Empresa' }"
+                    dataField="empresaId"
+                    editorType="dxSelectBox"
+                    [editorOptions]="{
+                      dataSource: listadoEmpresas,
+                      valueExpr: 'id',
+                      displayExpr: 'descripcion'
+                    }"
+                  >
+                  </dxi-item>
+                </dx-form>
+              </div>
+              <div class="col-xs-12 col-sm-3 col-md-4 col-lg-3">
+                <button
+                  class="btn btn-block btn-success"
+                  type="submit"
+                  (click)="CargarPedidos()"
+                >
+                  Cargar pedidos
+                </button>
+              </div>
+              <div class="col-xs-12">
+                <br />
+                <h3>Lista de pedidos</h3>
+              </div>
+
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <dx-radio-group
+                        #radioGroup
+                        [items]="filtros"
+                        [value]="filtros[0]"
+                        layout="horizontal"
+                        (onValueChanged)="onValueChangedRadioGroup($event)"
+                      >
+                      </dx-radio-group>
+
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <button
+                      class="btn btn-block btn-success"
+                      type="submit"
+                      (click)="ExportarPedidos()"
+                    > Exportar </button>
+                  </div>
+                  <div class="col-md-3">
+                    <button
+                      class="btn btn-block btn-info"
+                      type="submit"
+                      (click)="PosponerClientes()"
+                    > Posponer Todos <i class="material-icons">forward_30</i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-12">
+                <dx-data-grid
+                  #dataGridPedidos
+                  [showBorders]="true"
+                  [masterDetail]="{
+                    enabled: true,
+                    template: 'clienteTemplate'
+                  }"
+                  [rowAlternationEnabled]="true"
+                  [dataSource]="pedidosFecha"
+                  (onRowPrepared)="onRowPrepared($event)"
+                >
+                  <dxo-filter-row [visible]="true"></dxo-filter-row>
+                  <!-- <dxi-column caption="#" dataField="paginaId" [width]="100"></dxi-column> -->
+                  <dxi-column
+                    caption="ID"
+                    dataField="identificador"
+                    [width]="50"
+                  >
+                  </dxi-column>
+                  <dxi-column
+                    caption="Identidad"
+                    dataField="clienteIdentificacion"
+                    [width]="150"
+                  ></dxi-column>
+                  <dxi-column
+                    caption="Cliente"
+                    cellTemplate="nombreClienteTemplate"
+                  ></dxi-column>
+                  <dxi-column
+                    caption="Teléfono"
+                    dataField="clienteTelefono"
+                    [width]="150"
+                  ></dxi-column>
+                  <dxi-column
+                    caption="Llamada"
+                    alignment="center"
+                    cellTemplate="llamadaTemplate"
+                    [width]="90"
+                  ></dxi-column>
+                  <div *dxTemplate="let d of 'nombreClienteTemplate'">
+                    <div>
+                      <span *ngIf="d.data.llamadaContestada" class="badge badge-pill badge-llamada-contestada">Llamada contestada</span>
+                      <span *ngIf="d.data.llamadaPerdida" class="badge badge-pill badge-llamada-perdida">Llamada perdida</span>
+                    </div>
+                    <span>{{d.data.clienteNombre}}</span>
+                  </div>
+                  <div *dxTemplate="let cliente of 'llamadaTemplate'">
+                    <button
+                      rel="tooltip"
+                      title="Llamada contestada"
+                      type="button"
+                      (click)="cambiarEstadoLlamada(true, cliente.data)"
+                      class="btn btn-grid btn-success"
+                    >
+                      <i class="material-icons">phone_forwarded</i>
+                    </button>
+                    <button
+                      rel="tooltip"
+                      title="LlamadaPerdida"
+                      type="button"
+                      (click)="cambiarEstadoLlamada(false, cliente.data)"
+                      class="btn btn-grid btn-danger"
+                    >
+                      <i class="material-icons">phone_missed</i>
+                    </button>
+                  </div>
+                  <dxi-column
+                    caption="Total"
+                    dataField="total"
+                    format="###,##0.00"
+                    [width]="150"
+                  ></dxi-column>
+
+                  <div *dxTemplate="let cliente of 'clienteTemplate'">
+                    <dx-data-grid
+                      [showBorders]="true"
+                      [rowAlternationEnabled]="true"
+                      [masterDetail]="{
+                        enabled: true,
+                        template: 'productosLugarPedidoTemplate'
+                      }"
+                      [dataSource]="cliente.data.pedidos"
+                    >
+                      <dxi-column
+                        caption="Tipo"
+                        dataField="lugarEntregaTipo"
+                        [width]="100"
+                      >
+                      </dxi-column>
+                      <dxi-column
+                        caption="Descripción"
+                        cellTemplate="lugarEntregaDescripcionTemplate"
+                        minWidth="300"
+                      >
+                      </dxi-column>
+                      <dxi-column
+                        caption="Tipo de pago"
+                        [width]="120"
+                        alignment="center"
+                        cellTemplate="tipoDePagoCellTemplate"
+                      >
+                      </dxi-column>
+                      <dxi-column
+                        caption="Productos"
+                        dataField="totalProductos"
+                        [width]="80"
+                        dataType="string"
+                        cssClass="text-align"
+                      ></dxi-column>
+                      <dxi-column
+                        caption="Acciones"
+                        alignment="center"
+                        cellTemplate="accionTemplate"
+                        [width]="160"
+                      >
+                      </dxi-column>
+                      <dxi-column
+                        caption="Cancelar"
+                        alignment="center"
+                        cellTemplate="accionTemplateCancel"
+                        [width]="70"
+                      >
+                      </dxi-column>
+                      <div *dxTemplate="let d of 'lugarEntregaDescripcionTemplate'">
+                        <div>
+                          <span *ngIf="d.data.algunosProductosTienenDocumentos" class="badge badge-pill badge-tiene-receta" (click)="mensajeDescripcionEtiqueta('hay-algun-documento')">Hay receta</span>
+                          <span *ngIf="d.data.todosProductosAceptaTerminos" class="badge badge-pill badge-acepto-terminos" (click)="mensajeDescripcionEtiqueta('acepto-terminos')">Aceptó términos</span>
+                          <span *ngIf="!d.data.todosProductosAceptaTerminos" class="badge badge-pill badge-no-acepto-terminos" (click)="mensajeDescripcionEtiqueta('no-acepto-terminos-parcial')">No aceptó algunos términos</span>
+                        </div>
+                        <span>{{d.data.lugarEntregaDescripcion}}</span>
+                      </div>
+                      <div
+                        *dxTemplate="
+                          let lugarPedidoAccionTemplate of 'tipoDePagoCellTemplate'
+                        "
+                      >
+                        <ng-container
+                          *ngFor="
+                            let tipoDePago of ObtenerTipoDePagoDeLosProductos(
+                              lugarPedidoAccionTemplate.data.productos
+                            )
+                          "
+                        >
+                          <span>{{ tipoDePago }}</span>
+                        </ng-container>
+                      </div>
+                      <div
+                        *dxTemplate="
+                          let lugarPedidoAccionTemplate of 'accionTemplate'
+                        "
+                      >
+                        <div *ngIf="cliente.data.hayPedidosSinRealizar">
+                          <button
+                            rel="tooltip"
+                            title="Realizar pedido"
+                            type="button"
+                            (click)="
+                              RegistrarPedido(
+                                cliente.data.id,
+                                lugarPedidoAccionTemplate.data.productos
+                              )
+                            "
+                            class="btn btn-grid btn-success"
+                          >
+                            <i class="material-icons">done</i>
+                          </button>
+                          <button
+                            rel="tooltip"
+                            title="Cambiar tipo de pago"
+                            type="button"
+                            (click)="
+                              MostrarPopupCambiarTipoDePago(
+                                lugarPedidoAccionTemplate.data.productos
+                              )
+                            "
+                            class="btn btn-grid btn-secondary"
+                          >
+                            <i class="material-icons">payments</i>
+                          </button>
+                          <button
+                            rel="tooltip"
+                            title="Agregar producto al pedido"
+                            type="button"
+                            (click)="
+                              MostrarPopupAgregarProductoAlPedido(
+                                cliente.data.id,
+                                lugarPedidoAccionTemplate.data
+                              )
+                            "
+                            class="btn btn-grid btn-primary"
+                          >
+                            <i class="material-icons">add</i>
+                          </button>
+                          <button
+                            rel="tooltip"
+                            title="Posponer todos"
+                            type="button"
+                            (click)="
+                              PosponerPedidoTodos(
+                                cliente.data.id,
+                                lugarPedidoAccionTemplate.data.productos
+                              )
+                            "
+                            class="btn btn-grid btn-info"
+                          >
+                            <i class="material-icons">forward_30</i>
+                          </button>
+                        </div>
+                      </div>
+
+                      <div
+                        *dxTemplate="
+                          let lugarPedidoAccionTemplate of 'accionTemplateCancel'
+                        "
+                      >
+                        <div *ngIf="cliente.data.hayPedidosSinRealizar">
+                          <button
+                            rel="tooltip"
+                            title="Cancelar todos"
+                            type="button"
+                            (click)="
+                              CancelarPedidoTodos(
+                                cliente.data.id,
+                                lugarPedidoAccionTemplate.data.productos
+                              )
+                            "
+                            class="btn btn-grid btn-danger"
+                          >
+                            <i class="material-icons">close</i>
+                          </button>
+                        </div>
+                      </div>
+                      <div
+                        *dxTemplate="
+                          let productosLugarPedido of 'productosLugarPedidoTemplate'
+                        "
+                      >
+                        <div *ngIf="cliente.data.hayPedidosSinRealizar">
+                          <button
+                            rel="tooltip"
+                            title="Cambiar dirección pedido"
+                            type="button"
+                            (click)="
+                              ElegirDireccionPedido(
+                                cliente.data.id,
+                                productosLugarPedido.data.productos
+                              )
+                            "
+                            class="btn btn-grid btn-caution"
+                          >
+                            <i class="material-icons">edit_location</i> Elegir
+                            dirección entrega
+                          </button>
+                          <button
+                            rel="tooltip"
+                            title="Cambiar sucursal pedido"
+                            type="button"
+                            (click)="
+                              ElegirSucursalPedido(
+                                cliente.data.id,
+                                productosLugarPedido.data.productos
+                              )
+                            "
+                            class="btn btn-grid btn-caution"
+                          >
+                            <i class="material-icons">edit_location</i> Elegir
+                            sucursal entrega
+                          </button>
+                          <button
+                            rel="tooltip"
+                            title="Consultar el Inventario"
+                            type="button"
+                            (click)="
+                              MostrarInventarioEnPopup(
+                                productosLugarPedido.data
+                              )
+                            "
+                            class="btn btn-grid btn-caution"
+                          >
+                            <i class="material-icons">assignment</i> Consultar
+                            Inventario
+                          </button>
+                          <br />
+                          <br />
+                        </div>
+
+                        <dx-data-grid
+                          [showBorders]="true"
+                          [rowAlternationEnabled]="true"
+                          [dataSource]="productosLugarPedido.data.productos"
+                        >
+                          <dxi-column
+                            caption="Código"
+                            dataField="productoId"
+                            [width]="90"
+                          >
+                          </dxi-column>
+                          <dxi-column
+                            caption="Producto"
+                            cellTemplate="descripcionProductoTemplate"
+                            minWidth="300"
+                          >
+                          </dxi-column>
+                          <dxi-column
+                            caption="Cantidad"
+                            dataField="cantidad"
+                            [width]="70"
+                            alignment="center"
+                          ></dxi-column>
+                          <dxi-column
+                            caption="Precio"
+                            dataField="precio"
+                            [width]="100"
+                            cellTemplate="precioCell"
+                            format="###,###,##0.00"
+                          >
+                          </dxi-column>
+                          <div *dxTemplate="let precioData of 'precioCell'">
+                            {{ "L. " + precioData.value }}
+                          </div>
+                          <dxi-column
+                            *ngIf="!formReportePedidos.fechaPedido"
+                            caption="A Realizar"
+                            dataField="fechaDebeRealizarsePedido"
+                            [width]="100"
+                            dataType="date"
+                            format="dd/MM/yyyy"
+                          ></dxi-column>
+                          <dxi-column
+                            caption="Empresa"
+                            dataField="empresaDescripcion"
+                            [width]="100"
+                            dataType="string"
+                          ></dxi-column>
+                          <dxi-column
+                          caption="Estado"
+                          dataField="estadoPedidoString"
+                          [width]="150"
+                          >
+                        </dxi-column>
+                          <dxi-column
+                            caption="Acciones"
+                            cellTemplate="accionTemplate"
+                            [width]="130"
+                            alignment="center"
+                          >
+                          </dxi-column>
+                          <dxi-column
+                            caption="Cancelar"
+                            cellTemplate="accionTemplateCancel"
+                            [width]="70"
+                            alignment="center"
+                          >
+                          </dxi-column>
+                          <div *dxTemplate="let d of 'descripcionProductoTemplate'">
+                            <div>
+                              <span *ngIf="d.data.tieneDocumentos" class="badge badge-pill badge-tiene-receta" (click)="mensajeDescripcionEtiqueta('hay-documento-producto')">Tiene receta</span>
+                              <span *ngIf="d.data.aceptoTerminos" class="badge badge-pill badge-acepto-terminos" (click)="mensajeDescripcionEtiqueta('acepto-terminos')">Aceptó términos</span>
+                              <span *ngIf="!d.data.aceptoTerminos" class="badge badge-pill badge-no-acepto-terminos" (click)="mensajeDescripcionEtiqueta('no-acepto-terminos')">No aceptó términos</span>
+                            </div>
+                            <span>{{d.data.prod_Desc}}</span>
+                          </div>
+                          <div
+                            *dxTemplate="let producto of 'accionTemplateCancel'"
+                          >
+                            <div *ngIf="!producto.data.pedidoRealizado">
+                              <button
+                                rel="tooltip"
+                                title="Dejar de pedir"
+                                type="button"
+                                (click)="
+                                  CancelarPedido(cliente.data.id, producto.data)
+                                "
+                                class="btn btn-grid btn-danger"
+                              >
+                                <i class="material-icons">close</i>
+                              </button>
+                            </div>
+                          </div>
+
+                          <div *dxTemplate="let producto of 'accionTemplate'">
+                            <ng-container *ngIf="producto.data.pedidoRealizado"
+                              >Pedido
+                              <span class="badge progress-bar-info">{{
+                                producto.data.pedidoId
+                              }}</span></ng-container
+                            >
+                            <div *ngIf="!producto.data.pedidoRealizado">
+                              <button
+                                rel="tooltip"
+                                title="Posponer"
+                                type="button"
+                                (click)="
+                                  PosponerPedido(cliente.data.id, producto.data)
+                                "
+                                class="btn btn-grid btn-info"
+                              >
+                                <i class="material-icons">forward_30</i>
+                              </button>
+                              <button
+                                rel="tooltip"
+                                title="Ver detalles"
+                                type="button"
+                                (click)="
+                                  MostrarPopupDetallePedido(producto.data)
+                                "
+                                class="btn btn-grid btn-primary"
+                              >
+                                <i class="material-icons">visibility</i>
+                              </button>
+                              <button
+                                *ngIf="producto.data.tieneDocumentos"
+                                rel="tooltip"
+                                title="Ver documentos"
+                                type="button"
+                                (click)="
+                                VerDocumentos(producto.data.documentos)
+                                "
+                                class="btn btn-grid btn-secondary"
+                              >
+                                <i class="material-icons">medication</i>
+                              </button>
+                            </div>
+                          </div>
+                        </dx-data-grid>
+                      </div>
+                    </dx-data-grid>
+                  </div>
+                </dx-data-grid>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<dx-popup
+  class="popup"
+  id="popup"
+  height="40%"
+  width="45%"
+  [showTitle]="true"
+  ng-controller="Ctrl"
+  title="Cambiar lugar de entrega"
+  [dragEnabled]="false"
+  [closeOnOutsideClick]="true"
+  [(visible)]="_mostrarPopup"
+  [showCloseButton]="true"
+  [resizeEnabled]="true"
+>
+  <div *dxTemplate="let data of 'content'">
+    <div class="row" *ngIf="elegirSucursal">
+      <div class="col-xs-12">
+        <label class="btn-block">
+          Elija una sucursal
+          <dx-lookup
+            [(ngModel)]="pedidoSucursalConfiguracion.sucursalId"
+            [dataSource]="sucursales"
+            closeOnOutsideClick="true"
+            showPopupTitle="false"
+            displayExpr="nombrePublico"
+            valueExpr="codigo"
+          >
+          </dx-lookup>
+        </label>
+      </div>
+    </div>
+    <div class="row" *ngIf="elegirDireccionUsuario">
+      <div class="col-xs-12">
+        <label class="btn-block">
+          Elija una dirección
+          <dx-lookup
+            [(ngModel)]="pedidoDomicilioConfiguracion.direccionId"
+            [dataSource]="direccionesUsuario"
+            closeOnOutsideClick="true"
+            showPopupTitle="false"
+            displayExpr="descripcion"
+            valueExpr="direccion_ID"
+          >
+          </dx-lookup>
+        </label>
+      </div>
+    </div>
+    <div class="row" style="float: right">
+      <br />
+      <div class="col-xs-12">
+        <dx-button
+          icon="fa fa-times-circle"
+          type="danger"
+          text="Cerrar"
+          (onClick)="CerrarPopup()"
+        >
+        </dx-button>
+        <dx-button
+          icon="fa fa-plus-circle"
+          type="success"
+          text="Guardar"
+          (onClick)="ActualizarLugarPedido()"
+        >
+        </dx-button>
+      </div>
+    </div>
+  </div>
+</dx-popup>
+<dx-popup
+  [maxWidth]="550"
+  [minWidth]="370"
+  [height]="250"
+  [showTitle]="true"
+  [title]="'Sucursal: ' + tituloPopupInventario"
+  [dragEnabled]="false"
+  [closeOnOutsideClick]="true"
+  [(visible)]="verInventario"
+>
+  <div *dxTemplate="let data of 'content'">
+    <dx-scroll-view width="100%" height="100%">
+      <div class="list-container">
+        <dx-list [items]="productosPedidoInventario" height="100%">
+          <div *dxTemplate="let item of 'item'">
+            <div class="producto">
+              <div>{{ item.productoId }}</div>
+              <div>{{ item.descripcion }}</div>
+              <div class="inventario">
+                <span
+                  [ngClass]="[
+                    'badge',
+                    item.inventarioActual ? 'badge-info' : 'badge-warning'
+                  ]"
+                >
+                  {{ item.inventarioActual }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </dx-list>
+      </div>
+    </dx-scroll-view>
+  </div>
+</dx-popup>
+<dx-popup
+  [maxWidth]="500"
+  [height]="400"
+  [showTitle]="true"
+  title="Detalles"
+  [dragEnabled]="false"
+  [closeOnOutsideClick]="true"
+  [(visible)]="detallePopupVisible"
+>
+  <div *dxTemplate="let data of 'content'">
+    <dx-scroll-view width="100%" height="100%">
+      <app-pedido-detalle
+        [pedidoProducto]="productoDetalle"
+        (guardarCambios)="CargarPedidos()"
+      ></app-pedido-detalle>
+    </dx-scroll-view>
+  </div>
+</dx-popup>
+
+<dx-popup
+  [maxWidth]="700"
+  [showTitle]="true"
+  title="Agregar Producto"
+  [dragEnabled]="false"
+  [closeOnOutsideClick]="true"
+  [(visible)]="agregarProductoPopupVisible"
+>
+  <div *dxTemplate="let data of 'content'">
+    <dx-scroll-view width="100%" height="100%">
+      <app-agregar-producto
+        [empresaId]="formReportePedidos.empresaId"
+        [cliente]="clienteSeleccionadoParaAgregarProducto"
+        (onAgregarProducto)="
+          agregarProductoPopupVisible = false; CargarPedidos()
+        "
+      ></app-agregar-producto>
+    </dx-scroll-view>
+  </div>
+</dx-popup>

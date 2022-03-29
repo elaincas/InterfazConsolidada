@@ -1,0 +1,108 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header card-header-icon" data-background-color="green">
+                <i class="material-icons">add</i>
+            </div>
+            <div class="card-content">
+                <h4 class="card-title">
+                    <strong>Recepción de Traslados</strong>
+                </h4>
+                <div class="row container">
+                    <br>
+                    <span>
+                        <strong>Seleccione una sucursal para el invnetario.</strong>
+                    </span>
+                    <div class="row">
+                        <div class="col-md-4 col-xs-4">
+                            <dx-lookup [dataSource]="dataSourceSucursales" [closeOnOutsideClick]="true" [(ngModel)]="sucursal" (onValueChanged)="onValueCha($event)" displayExpr="Nombre" valueExpr="SucursalId"></dx-lookup>
+                        </div>
+                        <div class="col-md-2 col-xs-2">
+                            <dx-button style="float:right" type="success" text="Buscar" (onClick)="ObtenerInventario()" ></dx-button>
+                        </div>
+                    </div>
+
+                    <div class="row ">
+                        <div class="col-md-11 col-xs-12 container">
+                            <dx-data-grid #gridInventario [dataSource]="inventarios" [showColumnLines]="true" [showRowLines]="true" [showBorders]="true"
+                                [columnAutoWidth]="true" [rowAlternationEnabled]="true">
+
+                                <dxo-filter-row [visible]="true"> </dxo-filter-row>
+                                <dxo-header-filter [visible]="true"></dxo-header-filter>
+                                <dxo-export [enabled]="true" fileName="Inventario Disponible" [allowExportSelectedData]="true"></dxo-export>
+                                <dxi-column dataField="ProductoId" caption="Cód. Prod" [hidingPriority]="0"></dxi-column>
+                                <dxi-column dataField="DescripcionProducto" caption="Nombre Producto"> </dxi-column>
+                                <dxi-column dataField="DescripcionTipoSalida" caption="Tipo Salida" [hidingPriority]="1"> </dxi-column>
+                                <dxi-column dataField="CantidadRestante" caption="Cantidad Actual" (witdh)="25" [hidingPriority]="3"></dxi-column>
+                                <dxi-column dataField="Precio" caption="Precio" (witdh)="25" cellTemplate="moneyCell"></dxi-column>
+
+                                <div *dxTemplate="let cellData of 'moneyCell'">
+                                    {{cellData.value | number:'.2-5'}}
+                                </div>
+                                <dxo-scrolling mode="virtual"></dxo-scrolling>
+                                <dxo-pager [allowedPageSizes]="[5, 10, 15, 20]" [showInfo]="true" [showNavigationButtons]="true" [showPageSizeSelector]="false"
+                                    [visible]="true">
+                                </dxo-pager>
+                            </dx-data-grid>
+                        </div>
+                    </div>
+                </div>
+                <div class="row container">
+                    <br>
+                    <div class="col-md-11 col-xs-12">
+                        <dx-button type="default" style="float:right" text="Imprimir de Inventario" (onClick)="Imprimir(gridInventario)"></dx-button>
+                    </div>
+                    <br>
+                </div>
+                <dx-popup class="popup" id="popupTrasladoRecepcion" width="45%" height="35%" [showTitle]="true" ng-controller="Ctrl" title="Ingreso Inventario"
+                    [dragEnabled]="false" [closeOnOutsideClick]="true" [(visible)]="habilitar" height="35%" [resizeEnabled]="true">
+                    <div *dxTemplate="let data of 'content'">
+                        <div class="container" id="dataInventario">
+                            <div class="row">
+                                <div class="col-md-8 col-xs-8 container">
+                                    <span>
+                                        <strong>Reporte de Inventario Actual {{sucursalNombre}}</strong>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <br>
+                                <div class="col-md-7 col-xs-4">
+                                    <table style="border: 1px solid black; text-align: center;  width: 100%;">
+                                        <tr>
+                                            <th style="border: 1px solid black; text-align: center;   height: 50px;">Código</th>
+                                            <th style="border: 1px solid black; text-align: center;   height: 50px;">Precio</th>
+                                            <th style="border: 1px solid black; text-align: center;   height: 50px;">Nombre Producto</th>
+                                            <th style="border: 1px solid black; text-align: center;   height: 50px;">Cantidad</th>
+                                            <th style="border: 1px solid black; text-align: center;   height: 50px;">Finalidad</th>
+
+                                        </tr>
+                                        <tr *ngFor="let data of inventarios">
+                                            <td style="border: 1px solid black; text-align: center; ">{{data.ProductoId}}</td>
+                                            <td style="border: 1px solid black; text-align: center; ">{{data.Precio}}</td>
+                                            <td style="border: 1px solid black; text-align: center; ">{{data.DescripcionProducto}}</td>
+                                            <td style="border: 1px solid black; text-align: center; ">{{data.CantidadRestante}}</td>
+                                            <td style="border: 1px solid black; text-align: center; ">{{data.DescripcionTipoSalida}}</td>
+
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <br>
+                            <div class="col-md-6 col-xs-6">
+                                <dx-button type="success" style="float: right  " (click)="printToCart('dataInventario')" text="Imprimir"></dx-button>
+                            </div>
+                            <div class="col-md-6 col-xs-6">
+                                <dx-button type="danger" style="float: left  " (click)="Cancelar()" text="Cancelar"></dx-button>
+                            </div>
+                            <br>
+
+                        </div>
+                    </div>
+                </dx-popup>
+            </div>
+        </div>
+    </div>
+</div>

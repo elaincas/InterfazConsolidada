@@ -1,0 +1,612 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="col-sm-10 col-sm-offset-1">
+            <div class="wizard-container">
+                <div class="card wizard-card" data-color="red" id="wizardServicios">
+                    <form action="" method="">
+                        <div class="wizard-header">
+                            <h3 class="wizard-title" *ngIf="!modoEdicion">
+                                <i class="material-icons" style="color:green">add_circle_outline</i> Crear Servicio
+                            </h3>
+                            <h3 class="wizard-title" *ngIf="modoEdicion">
+                                <i class="material-icons" *ngIf="modoEdicion" style="color:green">add_circle_outline</i>
+                                Agregar Sección
+                            </h3>
+                            <h5 class="card-description">
+                                Una sección sólo puede tener 2 columnas
+                            </h5>
+                        </div>
+                        <div class="wizard-navigation">
+                            <ul>
+                                <li>
+                                    <a href="#banner" data-toggle="tab">Banner</a>
+                                </li>
+                                <li>
+                                    <a href="#servicio" data-toggle="tab">Servicio</a>
+                                </li>
+                                <li>
+                                    <a href="#seccion" data-toggle="tab">Sección</a>
+                                </li>
+                                <li>
+                                    <a href="#columna" data-toggle="tab">Columnas</a>
+                                </li>
+                                <li>
+                                    <a href="#resumen" data-toggle="tab">Resumen</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="tab-content">
+                            <div class="tab-pane" id="servicio">
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="row">
+                                                <div class="col-md-6 col-lg-6">
+                                                    <dx-check-box text="¿Tiene fecha de finalización?" name="tieneFechaFin"
+                                                        [(ngModel)]=servicio.tieneFechaDeFinalizacion [value]=servicio.tieneFechaDeFinalizacion>
+                                                    </dx-check-box>
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <div class="row">
+                                                <div class="col-md-3 col-sm-6">
+                                                    <span class="labelsFormularios">Fecha de Inicio:</span>
+                                                    <dx-date-box accesskey="dx-fechaInicio" [displayFormat]="'dd/MM/yyyy'"
+                                                        [(ngModel)]="servicio.fechaInicio" [min]="minDate" [readOnly]=!servicio.tieneFechaDeFinalizacion
+                                                        type="date" name="fechaInicio">
+                                                    </dx-date-box>
+                                                </div>
+                                                <div class="col-md-3 col-sm-6">
+                                                    <span class="labelsFormularios">Fecha de Finalización:</span>
+                                                    <dx-date-box [displayFormat]="'dd/MM/yyyy'" [(ngModel)]="servicio.fechaFinalizacion"
+                                                        [min]="minDate" [readOnly]=!servicio.tieneFechaDeFinalizacion
+                                                        type="date" name="fechaFin">
+                                                    </dx-date-box>
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <div class="container-servicio">
+                                                <h3>Título</h3>
+                                                <hr class="hr-color rojo">
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-12 col-lg-5">
+                                                        <span class="labelsFormularios">Nombre:</span>
+                                                        <span class="labelsFormularios">
+                                                            <dx-text-box [(ngModel)]="servicio.descripcion" name="txtNombre"
+                                                                maxLength="150"></dx-text-box>
+                                                        </span>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-6 col-lg-3 items-v-align">
+                                                        <dx-check-box text="Mostrar sobre Banner" [(ngModel)]=detalleTitulo.mostrarSobreBanner
+                                                            [value]=detalleTitulo.mostrarSobreBanner name="chkMOstrarBanner">
+                                                        </dx-check-box>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-6 col-lg-4">
+                                                        <span class="labelsFormularios">Color para el Título</span>
+                                                        <dx-color-box [(value)]="detalleTitulo.color" applyValueMode="instantly"
+                                                            placeholder="Seleccionar Color"></dx-color-box>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-12 col-lg-5">
+                                                        <span class="labelsFormularios">Texto en URL:</span>
+                                                        <span class="labelsFormularios">
+                                                            <dx-text-box [(ngModel)]="servicio.paginaWebLink" name="txtPaginaWebLink" maxLength="150"></dx-text-box>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <div class="container-servicio">
+                                                <h3>Subtítulo 1</h3>
+                                                <hr class="hr-color rojo">
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
+                                                        <span class="labelsFormularios">Texto:</span>
+                                                        <span class="labelsFormularios">
+                                                            <dx-text-box [(ngModel)]="servicio.subtitulo1" name="txtSubtitulo1"
+                                                                maxLength="200"></dx-text-box>
+                                                        </span>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 items-v-align">
+                                                        <dx-check-box text="Mostrar sobre Banner" [(ngModel)]="detalleSubtitulo1.mostrarSobreBanner"
+                                                            [(value)]="detalleSubtitulo1.mostrarSobreBanner" name="chkMOstrarBanner">
+                                                        </dx-check-box>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-8">
+                                                        <div class="row">
+                                                            <div class="col-xs-12 col-sm-12 col-lg-4 items-v-align">
+                                                                <dx-check-box text="Es enlace" [(ngModel)]="detalleSubtitulo1.agregarEnlace"
+                                                                    [(value)]="detalleSubtitulo1.agregarEnlace" name="agregarEnlace1"></dx-check-box>
+                                                            </div>
+                                                            <div class="col-xs-12 col-sm-12 col-lg-4" *ngIf="detalleSubtitulo1.agregarEnlace">
+                                                                <span class="labelsFormularios">Color para el Fondo de Enlace</span>
+                                                                <dx-color-box [(value)]="detalleSubtitulo1.colorFondoEnlace"
+                                                                    applyValueMode="instantly" placeholder="Seleccionar Color"></dx-color-box>
+                                                            </div>
+                                                            <div class="col-xs-12 col-sm-12 col-lg-4">
+                                                                <span class="labelsFormularios">Color para el Texto</span>
+                                                                <dx-color-box [(value)]="detalleSubtitulo1.color"
+                                                                    applyValueMode="instantly" placeholder="Seleccionar Color"></dx-color-box>
+                                                            </div>
+                                                            <div class="col-xs-12 col-sm-12 col-lg-12" *ngIf="detalleSubtitulo1.agregarEnlace">
+                                                                <span class="labelsFormularios">Enlace</span>
+                                                                <dx-text-box name="txtEnlaceSub1" [(ngModel)]="detalleSubtitulo1.enlace"
+                                                                    placeholder="http://www.farmaciasiman.com/servicio"></dx-text-box>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-4" *ngIf="detalleSubtitulo1.agregarEnlace">
+                                                        <span class="labelsFormularios">Preview</span>
+                                                        <div class="col-md-12 preview-container">
+                                                            <a [ngStyle]="{'color': detalleSubtitulo1.color, 'background-color': detalleSubtitulo1.colorFondoEnlace}">{{
+                                                                servicio.subtitulo1 }}
+                                                                <i class="material-icons">keyboard_arrow_right</i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <div class="container-servicio">
+                                                <h3>Subtítulo 2</h3>
+                                                <hr class="hr-color rojo">
+                                                <div class="row">
+                                                    <div class="col-md-8">
+                                                        <span class="labelsFormularios">Texto:</span>
+                                                        <span class="labelsFormularios">
+                                                            <dx-text-box [(ngModel)]="servicio.subtitulo2" name="txtSubtitulo2" maxLength="200"></dx-text-box>
+                                                        </span>
+                                                    </div>
+                                                    <div class="col-lg-4 col-md-4" *ngIf="detalleSubtitulo2.agregarEnlace">
+                                                        <span class="labelsFormularios">Preview</span>
+                                                        <div class="col-md-12 preview-container">
+                                                            <a
+                                                                [ngStyle]="{'color': detalleSubtitulo2.color, 'background-color': detalleSubtitulo2.colorFondoEnlace}">{{
+                                                                                                        servicio.subtitulo2 }} <i
+                                                                    class="material-icons">keyboard_arrow_right</i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-12 col-lg-2 items-v-align">
+                                                        <dx-check-box text="Es enlace" [(ngModel)]="detalleSubtitulo2.agregarEnlace"
+                                                            [(value)]="detalleSubtitulo2.agregarEnlace" name="agregarEnlace2"></dx-check-box>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-12 col-lg-3">
+                                                        <span class="labelsFormularios">Color para el Subtítulo 2</span>
+                                                        <dx-color-box [(value)]="detalleSubtitulo2.color" applyValueMode="instantly"
+                                                            placeholder="Seleccionar Color"></dx-color-box>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-12 col-lg-3" *ngIf="detalleSubtitulo2.agregarEnlace">
+                                                        <span class="labelsFormularios">Color para el Fondo de Enlace</span>
+                                                        <dx-color-box [(value)]="detalleSubtitulo2.colorFondoEnlace" applyValueMode="instantly"
+                                                            placeholder="Seleccionar Color"></dx-color-box>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-12 col-lg-8" *ngIf="detalleSubtitulo2.agregarEnlace">
+                                                        <span class="labelsFormularios">Enlace</span>
+                                                        <dx-text-box name="txtEnlaceSub1" [(ngModel)]="detalleSubtitulo2.enlace"
+                                                            placeholder="http://www.farmaciasiman.com/servicio"></dx-text-box>
+                                                    </div>
+                                                </div>
+                                                <br>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12 container-imagenes">
+                                            <br>
+                                            <div class="container-servicio">
+                                                <div class="row">
+                                                    <div class="col-sm-12 col-md-12 col-lg-6">
+                                                        <h4 class="labelsFormularios">Icono para la App:</h4>
+                                                        <hr class="hr-color">
+                                                        <div class="row">
+                                                            <div class="col-xs-7 col-sm-4 col-md-6 col-lg-6">
+                                                                <dx-file-uploader #fuIconoApp id="fuIconoApp" [(value)]="nuevoServicio.archivoIconoApp"
+                                                                    selectButtonText="Seleccionar" labelText="" accept=".png, .JPG, .gif" uploadMode="userForm"
+                                                                    type="default" (onValueChanged)="onSeleccionar_DxFile($event)"
+                                                                    (onInitialized)="InicializarDXFileIconoApp($event)">
+                                                                </dx-file-uploader>
+                                                            </div>
+                                                            <div class="col-xs-5 col-sm-4 col-md-4 col-lg-6">
+                                                                <img class="dimensiones-icono-movil" [src]="urlIconoMovil" style="background-color: #f0f0f0">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-12 col-md-12 col-lg-6">
+                                                        <h4 class="labelsFormularios">Icono en la Web:</h4>
+                                                        <hr class="hr-color">
+                                                        <div class="row">
+                                                            <div class="col-xs-12 col-sm-4 col-md-6 col-lg-6">
+                                                                <dx-file-uploader #fuIconoWeb id="fuIconoWeb" [(value)]="nuevoServicio.archivoIconoWeb"
+                                                                    selectButtonText="Seleccionar" labelText="" accept=".png, .JPG, .gif" uploadMode="userForm"
+                                                                    type="default" (onValueChanged)="onSeleccionar_DxFile($event)">
+                                                                </dx-file-uploader>
+                                                            </div>
+                                                            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-6">
+                                                                <img class="dimensiones-icono-web" [src]="urlIconoWeb" style="background-color: #f0f0f0">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="banner">
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <h4 class="labelsFormularios">Banner Web:</h4>
+                                            <hr class="hr-color">
+                                            <br>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <dx-file-uploader #fuContenidoImagen id="fupBannerWeb" [(value)]="nuevoServicio.archivoBannerWeb"
+                                                        selectButtonText="Seleccionar Banner Web" labelText="" accept=".png, .JPG, .gif"
+                                                        uploadMode="userForm" showFileList="false" type="default"
+                                                        (onValueChanged)="onSeleccionar_DxFile($event)">
+                                                    </dx-file-uploader>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <dx-file-uploader #fuContenidoImagen id="fupBannerMovil" [(value)]="nuevoServicio.archivoBannerMovil"
+                                                        selectButtonText="Seleccionar Banner Móvil" labelText="" accept=".png, .JPG, .gif"
+                                                        uploadMode="userForm" showFileList="false" type="default"
+                                                        (onValueChanged)="onSeleccionar_DxFile($event)">
+                                                    </dx-file-uploader>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <img [src]="urlBanner">
+                                            </div>
+                                            <br>
+                                            <div class="dimensiones-banner-movil">
+                                                <img [src]="urlBannerMovil">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="seccion">
+                                <div class="col-md-7">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <span class="labelsFormularios">Título de Sección:</span>
+                                                    <dx-text-box [(ngModel)]="seccion.titulo" name="txtTituloSeccion"></dx-text-box>
+                                                </div>
+                                            </div>
+                                            <br>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <span class="labelsFormularios">Icono de Sección:</span>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <dx-file-uploader #fuContenidoImagen id="fupIconoSeccion" [(value)]="seccion.archivoSeccionIcono"
+                                                        selectButtonText="Seleccionar" labelText="" accept=".png, .JPG, .gif"
+                                                        uploadMode="userForm" type="default" (onValueChanged)="onSeleccionar_DxFile($event)">
+                                                    </dx-file-uploader>
+                                                </div>
+                                                <div class="col-md-6 dimensiones-icono-seccion container-imagenes-color">
+                                                    <img class="" *ngIf="urlIconoSeccion" [src]="urlIconoSeccion">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12  text-right">
+                                    <br>
+                                    <button class="btn btn-fill btn-danger" type="submit" (click)="onCancelarNuevaSeccion()"
+                                        *ngIf="agregarSeccion && nuevasSecciones.length > 0">
+                                        <i class="material-icons">close</i>Cancelar</button>
+                                    <br>
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="columna">
+                                <div class="col-md-12">
+                                    <div class="row" *ngIf="editandoContenido">
+                                        <div class="col-xs-12 col-md-8 col-lg-8">
+                                            <span class="labelsFormularios"><strong>Editando Columna:</strong></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-12 col-md-8 col-lg-8">
+                                            <span class="labelsFormularios">Título de la Columna:</span>
+                                            <dx-text-box [(ngModel)]="columna.titulo" name="txtTituloColumna"></dx-text-box>
+                                        </div>
+                                        <div class="col-xs-12 col-md-4 col-lg-4">
+                                            <span class="labelsFormularios">Tipo de Contenido:</span>
+                                            <dx-select-box #lueTipoContenido [dataSource]="tiposSecciones" displayExpr="descripcion"
+                                                valueExpr="id" (onValueChanged)="onTipoSeccionChanged(tipoContenido.id)"
+                                                [(value)]="tipoContenido.id">
+                                            </dx-select-box>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row">
+                                        <div class="col-md-12" *ngIf="mostrarTextoSeccion">
+                                            <span class="labelsFormularios">Ingrese el texto para esta
+                                                Columna:
+                                                <dx-text-area [(ngModel)]="columna.contenido" height="90" name="txaContenido"></dx-text-area>
+                                            </span>
+                                        </div>
+                                        <div class="col-md-12" *ngIf="mostrarVideoEnlaceSeccion">
+                                            <span class="labelsFormularios">Ingrese el Texto del Enlace:
+                                                <dx-text-box [(ngModel)]="columna.contenido" name="txtContenido"></dx-text-box>
+                                            </span>
+                                            <span class="labelsFormularios">Ingrese el Enlace:
+                                                <dx-text-box [(ngModel)]="columna.enlace" name="txtContenido"
+                                                    placeholder="http://www.farmaciasiman.com"></dx-text-box>
+                                            </span>
+                                        </div>
+                                        <div class="col-md-12" *ngIf="mostrarImagenSeccion">
+                                            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                                                <dx-file-uploader #fuContenidoImagen id="fuArchivoColumna" [(value)]="columna.archivoContenido"
+                                                    selectButtonText="Seleccionar" labelText="" accept=".png, .JPG, .gif"
+                                                    uploadMode="userForm" type="default" (onValueChanged)="onSeleccionar_DxFile($event)">
+                                                </dx-file-uploader>
+                                                <span class="labelsFormularios">Ingrese el Enlace:
+                                                    <dx-text-box [(ngModel)]="columna.enlace" name="txtContenido"
+                                                        placeholder="http://www.farmaciasiman.com"></dx-text-box>
+                                                </span>
+                                            </div>
+                                            <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8 container-imagenes-color dimensiones-img-contenido">
+                                                <img class="" *ngIf="urlContenido" [src]="urlContenido" style="width: auto">
+                                                <i class="material-icons md-dark md-inactive md-48" *ngIf="!urlContenido">image</i>
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <div class="col-md-12" *ngIf="mostrarListaSeccion">
+                                            <div class="row">
+                                                <div class="col-md-7">
+                                                    <dx-text-box #txtTextoListado></dx-text-box>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <button rel="tooltip" title="Agregar" type="button" style="margin-top:-5px"
+                                                        (click)="onAgregarTextoALista()" class="btn btn-just-icon btn-round mat-raised-button btn-success ">
+                                                        <i class="material-icons">add</i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12 borde-redondeado" *ngIf="columna.contenidoLista.length > 0">
+                                                    <table style="width: 100%">
+                                                        <tr>
+                                                            <th class="text-center">Texto</th>
+                                                            <th colspan="2" class="text-center" style="width: 10%">Acción</th>
+                                                        </tr>
+                                                        <tr *ngFor="let item of columna.contenidoLista; let i = index"
+                                                            class="items-listado">
+                                                            <td class="items-listado">
+                                                                <span *ngIf="!editandoContenido || item != contenido">{{item}}</span>
+                                                                <dx-text-box #txtEditar name="txtedit" [(ngModel)]="txtEditarElementoLista"
+                                                                    *ngIf="editandoContenido && item == contenido"></dx-text-box>
+                                                            </td>
+                                                            <td>
+                                                                <button type="button" class="btn-link mat-button" (click)="onEliminarElementoLista(item)">
+                                                                    <span class="mat-button-wrapper">
+                                                                        <i class="material-icons" style="color:red">close</i>
+                                                                    </span>
+                                                                </button>
+                                                            </td>
+                                                            <td>
+                                                                <button type="button" class="btn-link mat-button" (click)="onEditarElementoLista(item)">
+                                                                    <i *ngIf="!editandoContenido || item !== contenido" class="material-icons" style="color:green">edit</i>
+                                                                    <i *ngIf="editandoContenido && item === contenido" class="material-icons" style="color:red">save</i>
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                        <tr *ngIf="columna.contenidoLista.length > 1">
+                                                            <td colspan="3">
+                                                                <button class="btn btn-fill btn-success" style="width: 100%" type="button" (click)="onOrdenarElementosLista()">
+                                                                    <i class="material-icons">format_list_numbered</i>  Ordenar Items de Lista
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12  text-right" *ngIf="mostrarBotonAgregarColumna">
+                                            <br>
+                                            <button class="btn btn-fill btn-Azulsiman" style="width: 100%" type="button" (click)="onAgregarColumna(true)">
+                                                <i class="material-icons">add</i>Agregar Columna
+                                            </button>
+                                            <br>
+                                        </div>
+                                        <div class="col-md-12" *ngIf="listaColumnas.length > 0">
+                                            <br>
+                                            <table class="tabla-resumen-col" id="tablaResumen-col">
+                                                <tr>
+                                                    <th colspan="4" class="text-center"><span class="labelsFormularios">COLUMNAS
+                                                            AGREGADAS</span></th>
+                                                </tr>
+                                                <tr>
+                                                    <th class="text-center">#</th>
+                                                    <th class="text-center">Título</th>
+                                                    <th class="text-center">Contenido</th>
+                                                    <th class="text-center">Acción</th>
+                                                </tr>
+                                                <tr *ngFor="let col of listaColumnas; let i = index">
+                                                    <td>{{ i+1 }}</td>
+                                                    <td>
+                                                        <span>{{ col.titulo}} </span>
+                                                        <span *ngIf="col.titulo == ''"> -- </span>
+                                                    </td>
+                                                    <td>
+                                                        <span>{{ col.contenido}}</span>
+                                                        <i class="material-icons" *ngIf="col.contenidoTipo == 2">image</i>
+                                                    </td>
+                                                    <td>
+                                                        <button type="button" class="btn-link mat-button" (click)="onEditarColumna(col)">
+                                                            <i class="material-icons" style="color:green" *ngIf="!editandoContenido || col !== columna">edit</i>
+                                                            <i class="material-icons" style="color:red" *ngIf="editandoContenido && col == columna">save</i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- <div class="row">
+                                        <div class="col-md-12  text-right">
+                                            <button class="btn btn-fill btn-Azulsiman" type="submit" (click)="onAgregarColumna()">
+                                                <i class="material-icons">add</i>Agregar</button>
+                                            <br>
+                                        </div>
+                                    </div> -->
+                            </div>
+                            <div class="tab-pane" id="resumen">
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <h3 class="card-title">Servicio</h3>
+                                        <div class="borde-redondeado">
+                                            <table id="tablaResumen">
+                                                <tr class="text-center">
+                                                    <th>Servicio</th>
+                                                    <th>Subtítulo 1</th>
+                                                    <th>Subtítulo 2</th>
+                                                    <th>Icono Web</th>
+                                                    <th>Icono App</th>
+                                                </tr>
+                                                <tr class="items-listado">
+                                                    <td>{{servicio.descripcion}}</td>
+                                                    <td>{{servicio.subtitulo2}}</td>
+                                                    <td>{{servicio.subtitulo1}}</td>
+                                                    <td>
+                                                        <span>
+                                                            <i class="material-icons" *ngIf="siTieneIconoWeb" style="color:green">check</i>
+                                                            <i class="material-icons" *ngIf="!siTieneIconoWeb" style="color:red">close</i>
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <span>
+                                                            <i class="material-icons" *ngIf="siTieneIconoMovil" style="color:green">check</i>
+                                                            <i class="material-icons" *ngIf="!siTieneIconoMovil" style="color:red">close</i>
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <div class="col-md-12">
+                                                        <dx-check-box text="Habilitar en Página Web" name="paginaWebVisible"
+                                                            [(ngModel)]=servicio.paginaWebVisible [value]=servicio.paginaWebVisible>
+                                                        </dx-check-box>
+                                                    </div>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <h4 class="labelsFormularios">Secciones Agregadas</h4>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card-body">
+                                                <ul class="nav nav-pills nav-pills-warning" role="tablist">
+                                                    <li class="nav-item" *ngFor="let seccion of nuevasSecciones">
+                                                        <a class="nav-link" data-toggle="tab" href="#{{seccion.titulo}}"
+                                                            (click)="onSeccionSeleccionada(seccion)" role="tablist">{{seccion.titulo}}</a>
+                                                    </li>
+                                                </ul>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div class="tab-content tab-space">
+                                                            <div class="tab-pane" *ngFor="let seccion of nuevasSecciones; let i = index"
+                                                                id="{{seccion.titulo}}" [ngClass]="{'active': seccion === seccionSeleccionada}">
+                                                                <h3>{{seccion.titulo}}</h3>
+                                                                <div class="col-md-6" *ngFor="let columna of seccion.columnas; let even = even; let i = index"
+                                                                    [ngClass]="{'columnas-resumen': even}">
+                                                                    Columna # {{i + 1}}
+                                                                    <h4>{{columna.titulo}}</h4>
+                                                                    <span *ngIf="columna.contenidoTipo === 1 || columna.contenidoTipo === 3">{{columna.contenido}}</span>
+                                                                    <img [src]="columna.contenido" *ngIf="columna.contenidoTipo == 2"
+                                                                        style="width: 30%">
+                                                                    <ul *ngIf="columna.contenidoTipo == 3">
+                                                                        <li *ngFor="let item of columna.contenidoLista">
+                                                                            {{item}}
+                                                                        </li>
+                                                                    </ul>
+                                                                    <a *ngIf="columna.contenidoTipo == 4" href="{{columna.enlace}}">{{columna.contenido}}</a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <button id="nSeccion" class="btn btn-fill btn-Azulsiman" style="width: 100%"
+                                                            type="submit" (click)="onNuevaSeccion()">
+                                                            <i class="material-icons">add</i>Nueva Sección
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <br>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="wizard-footer">
+                            <div class="pull-right">
+                                <button class='btn btn-next btn-fill btn-AzulFarsiman btn-wd' (click)="onSiguienteButton()"
+                                    type="button" *ngIf="!modoEdicion">Siguiente</button>
+                                <button class='btn btn-next btn-fill btn-AzulFarsiman btn-wd' *ngIf="modoEdicion"
+                                    (click)="guardarServicio()">Guardar Cambios</button>
+                                <button class='btn btn-finish  btn-fill btn-Verde btn-wd' (click)="guardarServicio()"
+                                    type="submit">Crear</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<dx-popup class="popup" [width]="500" [height]="500" [showTitle]="true" title="Ordenar Items de Lista"
+    [dragEnabled]="false" [closeOnOutsideClick]="false" [(visible)]="mostrarPopUpOrdenarLista">
+
+    <div *dxTemplate="let data of 'content'">
+        <div class="row" >
+            <div class="col-md-12">
+                <div class="col-md-offset-10">
+                    <button rel="tooltip" title="Subir" type="button" class="btn btn-grid btn-default"
+                        (click)="cambiarOrdenItem(grid.instance.getSelectedRowsData()[0], true)">
+                        <i class="material-icons">arrow_upward</i>
+                    </button>
+                    <button rel="tooltip" title="Bajar" type="button" class="btn btn-grid btn-default"
+                        (click)="cambiarOrdenItem(grid.instance.getSelectedRowsData()[0], false)">
+                        <i class="material-icons">arrow_downward</i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <dx-data-grid #grid [showBorders]="true" [dataSource]="contenidoLista" [hoverStateEnabled]="true" [selectedRowKeys]="[]">
+                    <dxo-selection mode="single"></dxo-selection>
+                    <dxi-column caption="#" dataField="orden" [width]="30" [allowEditing]="false"></dxi-column>
+                    <dxi-column caption="Item" dataField="valor" [allowEditing]="false"></dxi-column>
+                </dx-data-grid>
+            </div>
+            <div class="col-md-12">
+                <button id="nSeccion" class="btn btn-fill btn-Azulsiman" style="width: 100%" type="submit"
+                    (click)="OrdenarElementosLista()">
+                    <i class="material-icons">save</i> Guardar Cambios
+                </button>
+            </div>
+        </div>
+    </div>
+</dx-popup>

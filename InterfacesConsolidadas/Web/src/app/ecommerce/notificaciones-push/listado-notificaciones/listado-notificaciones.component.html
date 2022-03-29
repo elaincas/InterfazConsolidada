@@ -1,0 +1,186 @@
+<!-- <app-main-loader></app-main-loader> -->
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="card">
+          <div class="card-header card-header-icon" data-background-color="green">
+            <i class="material-icons">notifications_active</i>
+          </div>
+          <div class="card-content">
+            <h4 class="card-title">Listado de notificaciones</h4>
+          </div>
+          <div class="card-content">
+            <div class="row">
+              <div *ngIf="MostrarFormularioDatos" class="col-xs-12">
+                <h3>Nueva notificación</h3>
+                <div *ngIf="!MostrarPanelAceptacionPruebas">
+                  <h4>¿Cuándo desea enviar esta notificación?</h4>
+                  <hr class="hr-color">
+                  <div class="row">
+                    <div class="col-xs-12 col-sm-3">
+                      <span class="labelsFormularios">Tiempo de entrega:</span>
+                      <dx-select-box [dataSource]="listaTiposEnvio" displayExpr="texto" valueExpr="id"
+                        title="Seleccione el tiempo de entrega" placeholder="Seleccione el tiempo de entrega"
+                        [(value)]="tipoEnvioSeleccionado" (onValueChanged)="TipoDeEntregaChange(tipoEnvioSeleccionado)">
+                      </dx-select-box>
+                    </div>
+
+                    <div *ngIf="esEnvioAFuturo" class="col-xs-12 col-sm-5">
+                      <span class="labelsFormularios">Fecha y hora de envío:</span>
+                      <dx-date-box [displayFormat]="'dd/MM/yyyy hh:mm a'" [(ngModel)]="notificacionEnvioFecha"
+                        [min]="now" [value]="now" type="datetime">
+                      </dx-date-box>
+                    </div>
+                  </div>
+
+                  <br>
+                  <h4>¿A quién desea enviar esta notificación?</h4>
+                  <hr class="hr-color">
+                  <div class="row">
+                    <div class="col-xs-12 col-sm-3">
+                      <span class="labelsFormularios">Destino:</span>
+                      <dx-select-box [dataSource]="listaTiposDestinatario" displayExpr="texto" valueExpr="id"
+                        title="Seleccione el destino" placeholder="Seleccione el destino"
+                        [(value)]="tipoDestinatarioSeleccionado"
+                        (onValueChanged)="TipoDestinatarioChange(tipoDestinatarioSeleccionado)">
+                      </dx-select-box>
+                    </div>
+
+                    <div *ngIf="esEnvioATema" class="col-xs-12 col-sm-3">
+                      <span class="labelsFormularios">Nombre del tema:</span>
+                      <dx-text-box [(ngModel)]="notificacionDestinatarioTema"></dx-text-box>
+                    </div>
+
+                    <!-- <span *ngIf="esEnvioATodosLosUsuarios">Todos</span>
+                  <span *ngIf="esEnvioATema">Tema</span>
+                  <span *ngIf="esEnvioAUsuariosEspecificos">Especificos</span> -->
+                  </div>
+
+                  <br>
+                  <h4>Textos de la notificación</h4>
+                  <hr class="hr-color">
+                  <div class="row">
+                    <div class="col-xs-12 col-sm-5 col-md-5 col-lg-4">
+                      <span class="labelsFormularios">Título:</span>
+                      <dx-text-box [(ngModel)]="notificacionTitulo"></dx-text-box>
+                    </div>
+                    <div class="col-xs-12 col-sm-7">
+                      <span class="labelsFormularios">Contenido:</span>
+                      <dx-text-box [(ngModel)]="notificacionContenido"></dx-text-box>
+                    </div>
+                    <div class="col-xs-12">
+                      <span class="labelsFormularios">Url a redireccionar:</span>
+                      <dx-text-box [(ngModel)]="urlToRedirect"></dx-text-box>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <br>
+                    <div class="col-xs-12 col-sm-2 col-md-3 col-lg-2">
+                      <button class="btn btn-block btn-Azulsiman" type="submit"
+                        (click)="GuardarNotificacion()" [disabled]="estaEnviandoNotificaciones">{{TextoBotonEnviar}}</button>
+                    </div>
+                    <div class="col-xs-12 col-sm-2 col-md-3 col-lg-2">
+                      <button class="btn btn-block btn-danger" type="submit" (click)="Limpiar()">Limpiar</button>
+                    </div>
+                    <div class="col-xs-12 col-sm-2 col-md-3 col-lg-2">
+                      <button class="btn btn-block btn-secondary" type="submit" (click)="Cancelar()">Cancelar</button>
+                    </div>
+                    <br>
+                  </div>
+                </div>
+                <div *ngIf="MostrarPanelAceptacionPruebas" class="col-xs-12">
+                  <div class="row">
+                    <h6>La notificación de prueba ha sido enviada</h6>
+                    <h4>¿Desea enviar esta notificación a los clientes?</h4>
+                  </div>
+                  <div class="row">
+                    <br>
+                    <div class="col-xs-12 col-sm-2 col-md-3 col-lg-2">
+                      <button class="btn btn-block btn-Azulsiman" type="submit"
+                        (click)="GuardarNotificacion()" [disabled]="estaEnviandoNotificaciones">Sí</button>
+                    </div>
+                    <div class="col-xs-12 col-sm-2 col-md-3 col-lg-2">
+                      <button class="btn btn-block btn-secondary" type="submit"
+                        (click)="CancelarEnvioNotificacion()">No</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xs-12">
+                <br *ngIf="MostrarFormularioDatos">
+                <div class="row" *ngIf="!MostrarFormularioDatos">
+                  <div class="col-xs-12 col-sm-3 col-md-4 col-lg-3">
+                    <button class="btn btn-block btn-success" type="submit" (click)="NuevaNotificacion()">Nueva
+                      notificación</button>
+                  </div>
+                </div>
+                <h3>Historial de notificaciones</h3>
+              </div>
+              <div class="col-md-12">
+                <dx-data-grid [showBorders]="true" [dataSource]="historialNotificaciones"
+                  rowTemplate="notificacionesEnLista" [columnAutoWidth]="true">
+                  <!-- <dxo-selection mode="single"></dxo-selection> -->
+                  <dxi-column caption="Se registró" dataField="fechaRegistro" sortOrder="desc" width="100"
+                    dataType="date">
+                  </dxi-column>
+                  <dxi-column caption="Notificación" wordWrapEnabled="true">
+                    <!--  cellTemplate="emojiCell" -->
+                  </dxi-column>
+                  <!-- <div *dxTemplate="let cellData of 'emojiCell'">
+                    <div class="emoji-container"><span>{{cellData.value}}</span></div>
+                  </div> -->
+                  <!-- <dxi-column caption="Contenido" dataField="contenido" [allowEditing]="false"></dxi-column> -->
+                  <!-- <dxi-column caption="Enviar" dataField="tipoEnvio" width="120px"></dxi-column> -->
+                  <dxi-column caption="Detalle de envío" dataField="destinatario" width="170" [allowEditing]="false">
+                  </dxi-column>
+                  <dxi-column caption="Estado" dataField="estado" width="80" [allowEditing]="false"></dxi-column>
+                  <dxi-column caption="Abierta" dataField="cantidadAbierta" width="60" [allowEditing]="false"></dxi-column>
+                  <dxi-column caption="Fecha de envío" dataField="fechaEnvio" width="110" dataType="date"></dxi-column>
+
+                  <tbody class="dx-row" *dxTemplate="let notificacion of 'notificacionesEnLista'">
+                    <td>
+                      {{ notificacion.data.fechaRegistro | date: 'dd/MM/yyyy' }}
+                    </td>
+                    <td>
+                      <p>
+                        <strong>
+                          {{ notificacion.data.titulo }}
+                        </strong>
+                      </p>
+                      <p>
+                        {{ notificacion.data.contenido }}
+                      </p>
+                    </td>
+                    <td>
+                      <p>
+                        <strong>
+                          {{ notificacion.data.tipoEnvio }}
+                        </strong>
+                      </p>
+                      <p>
+                        {{ notificacion.data.destinatario }}
+                      </p>
+                    </td>
+                    <td>
+                      {{ notificacion.data.estado }}
+                    </td>
+                    <td>
+                      {{ notificacion.data.cantidadAbierta }}
+                    </td>
+                    <td>
+                      {{ notificacion.data.fechaEnvio | date: 'dd/MM/yyyy' }}
+                    </td>
+                  </tbody>
+
+                  <dxo-paging [pageSize]="30" [pageIndex]="0"></dxo-paging>
+                </dx-data-grid>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

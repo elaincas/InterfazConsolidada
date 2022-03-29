@@ -1,0 +1,10 @@
+::ng-deep #fileuploader-container {
+  border: 1px solid #d3d3d3;
+}
+
+::ng-deep .imagen-sello {
+  margin: 0 auto;
+  margin-top: 2em;
+  width: 300px;
+  display: block;
+}

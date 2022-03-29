@@ -1,0 +1,121 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="card col-xs-12">
+        <div class="card-header card-header-icon" data-background-color="red">
+          <i class="material-icons">block</i>
+        </div>
+        <div class="card-content">
+          <h4 class="card-title">Bloqueo de procesos por atributo</h4>
+          <form (submit)="guardarConfiguracionBloqueAtributo()" class="row">
+            <div class="col-md-12">
+              <dx-form #formAtributosProcesos [(formData)]="usuarioAtributoBloqueoConfiguracionRequest" colCount="7"
+                [showValidationSummary]="true" validationGroup="atributosGroupName">
+                <dxi-item dataField="usuarioAtributoId" editorType="dxSelectBox" [colSpan]="2"
+                  [editorOptions]="{ dataSource: atributos, displayExpr: 'atributo', valueExpr: 'id' }">
+                  <dxo-label text="Atributo"></dxo-label>
+                  <dxi-validation-rule type="required" message="Atributo es requerido">
+                  </dxi-validation-rule>
+                </dxi-item>
+                <dxi-item dataField="valor" [colSpan]="2" [editorOptions]="{ showClearButton: true }">
+                  <dxi-validation-rule type="required" message="Valor es requerido">
+                  </dxi-validation-rule>
+                  <dxi-validation-rule *ngIf="usuarioAtributoBloqueoConfiguracionRequest.usuarioAtributoId === 1"
+                    type="email" message="El email es invalido">
+                  </dxi-validation-rule>
+                  <dxi-validation-rule *ngIf="usuarioAtributoBloqueoConfiguracionRequest.usuarioAtributoId === 2"
+                    type="numeric" message="La numero de identidad es invalido">
+                  </dxi-validation-rule>
+                  <dxi-validation-rule *ngIf="usuarioAtributoBloqueoConfiguracionRequest.usuarioAtributoId === 3"
+                    type="numeric" message="El numero de celular es invalido">
+                  </dxi-validation-rule>
+                </dxi-item>
+                <dxi-item dataField="procesosId" editorType="dxTagBox" [colSpan]="3"
+                  [editorOptions]="{ dataSource: procesosDataSource, displayExpr: 'proceso', valueExpr: 'id', showClearButton: true }">
+                  <dxo-label text="Procesos"></dxo-label>
+                </dxi-item>
+              </dx-form>
+            </div>
+            <div class="col-md-2">
+              <dx-button style="margin-top: 10px;" validationGroup="atributosGroupName" stylingMode="contained"
+                icon="save" text="Agregar" type="default" [useSubmitBehavior]="true">
+              </dx-button>
+            </div>
+          </form>
+          <div class="row">
+            <div class="col-xs-12">
+              <dx-load-panel #loadPanelProducto shadingColor="rgba(0,0,0,0.4)" [position]="{ of: '#datagridBloqueos' }"
+                [(visible)]="loadingDataGridVisible" [showIndicator]="true" [showPane]="true" [shading]="true">
+              </dx-load-panel>
+              <dx-data-grid id="datagridBloqueos" [dataSource]="atributosProcesosBloqueados"
+                [masterDetail]="{ enabled: true, template: 'detail' }" [showBorders]="true"
+                keyExpr="usuarioAtributoBloqueoConfiguracionId" [rowAlternationEnabled]="true">
+                <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+                <dxo-filter-row [visible]="true"> </dxo-filter-row>
+                <dxo-header-filter [visible]="true"></dxo-header-filter>
+                <dxo-search-panel [visible]="true" [width]="240" placeholder="Buscar..."></dxo-search-panel>
+
+                <dxi-column dataField="atributo" [minWidth]="100"></dxi-column>
+                <dxi-column dataField="valor" [width]="300"></dxi-column>
+                <dxi-column dataField="fecha" dataType="date" [minWidth]="100"></dxi-column>
+                <dxi-column dataField="esActivo" dataType="boolean" caption="Activo" [minWidth]="100"></dxi-column>
+                <dxi-column caption="Procesos" alignment="center" cellTemplate="accion1Template" [width]="70">
+                </dxi-column>
+                <div *dxTemplate="let d of 'accion1Template'">
+                  <button rel="tooltip" title="Agregar proceso" (click)="modalBloquearProcesoAtributo(d.data)"
+                    type="button" class="btn btn-grid btn-Azulsiman ">
+                    <i class="material-icons">add</i>
+                  </button>
+                </div>
+                <dxi-column caption="Estado" alignment="center" cellTemplate="accion2Template" [width]="100">
+                </dxi-column>
+                <div *dxTemplate="let d of 'accion2Template'">
+                  <button rel="tooltip" title="Cambiar estado" (click)="cambiarEstadoAtributo(d.data)" type="button"
+                    class="btn btn-grid" [ngClass]="d.data.esActivo ? 'btn-danger' : 'btn-info'">
+                    {{ d.data.esActivo ? 'Desactivar' : 'Activar' }}
+                  </button>
+                </div>
+
+                <div *dxTemplate="let atributoBloqueado of 'detail'">
+                  <strong>Procesos asignados</strong>
+                  <dx-data-grid [dataSource]="atributoBloqueado.data.procesos" [showBorders]="true"
+                    [columnAutoWidth]="true">
+                    <dxi-column dataField="proceso"></dxi-column>
+                    <dxi-column dataField="descripcion"></dxi-column>
+                    <dxi-column dataField="fecha" dataType="date"></dxi-column>
+                    <dxi-column dataField="esActivo" dataType="boolean" caption="Activo"></dxi-column>
+                    <dxi-column caption="Estado" alignment="center" cellTemplate="accionProcesoTemplate" [width]="100">
+                    </dxi-column>
+                    <div *dxTemplate="let d of 'accionProcesoTemplate'">
+                      <button rel="tooltip" title="Cambiar estado" (click)="cambiarEstadoProceso(d.data)" type="button"
+                        class="btn btn-grid" [ngClass]="d.data.esActivo ? 'btn-danger' : 'btn-info'">
+                        {{ d.data.esActivo ? 'Desactivar' : 'Activar' }}
+                      </button>
+                    </div>
+                  </dx-data-grid>
+                </div>
+              </dx-data-grid>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<dx-popup [maxWidth]="400" [height]="230" [showTitle]="true" title="Seleccionar proceso a bloquear"
+  [dragEnabled]="false" [closeOnOutsideClick]="true" [(visible)]="popupProcesosVisible">
+  <div *dxTemplate="let data of 'content'">
+    <div class="row">
+      <div class="form-group" style="margin-top: 0px;">
+        <span class="labelsFormularios">Poceso:</span>
+        <dx-select-box [dataSource]="procesosList" displayExpr="proceso" valueExpr="id"
+          [(value)]="usuarioProcesoBloqueoConfiguracionRequest.procesoId"></dx-select-box>
+      </div>
+    </div>
+
+    <div class="row">
+      <button class="btn btn-block btn-Azulsiman" (click)="bloquearProcesoAtributo()" type="submit"
+        [disabled]="!usuarioProcesoBloqueoConfiguracionRequest.procesoId">Agregar</button>
+    </div>
+  </div>
+</dx-popup>

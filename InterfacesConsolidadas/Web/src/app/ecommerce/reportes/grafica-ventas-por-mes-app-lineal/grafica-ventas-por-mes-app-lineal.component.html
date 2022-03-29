@@ -1,0 +1,23 @@
+<div class="col-lg-4 col-md-12 col-sm-6">
+  <div class="card card-stats">
+    <div class="card-header" data-background-color="green">
+      <i class="material-icons">{{icon}}</i>
+    </div>
+    <div class="card-content">
+      <p class="category">{{title}}</p>
+      <dx-chart  palette="violet" [dataSource]='dataSource'>
+        <dxi-series valueField="total" name="Ventas" ></dxi-series>
+        <dxo-common-series-settings argumentField="mes" type="line" hoverMode="allArgumentPoints" selectionMode="allArgumentPoints">
+          <dxo-label [visible]="true" [format]="{
+                      type: 'fixedPoint',
+                      precision: '2'
+                  }">
+          </dxo-label>
+
+        </dxo-common-series-settings>
+        <dxo-legend verticalAlignment="bottom" horizontalAlignment="center" itemTextPosition="bottom">
+        </dxo-legend>
+      </dx-chart>
+    </div>
+  </div>
+</div>

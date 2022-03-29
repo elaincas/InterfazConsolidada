@@ -1,0 +1,89 @@
+<div class="main-content">
+  <div class="container-flui">
+
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-icon" data-background-color="red">
+            <i class="material-icons">label</i>
+          </div>
+
+          <div class="card-content">
+            <h4 class="card-title">Listado de Laboratorios</h4>
+
+            <div class="form-group">
+              <button
+                type="button"
+                class="btn btn-Azulsiman btn-round btn-fab btn-fab-mini"
+                (click)="NuevoLaboratorio()"
+              >
+                <i class="material-icons">add</i>
+                <div class="ripple-container"></div>
+              </button>
+            </div>
+
+            <dx-data-grid
+              [showBorders]="true"
+              [rowAlternationEnabled]="true"
+              [dataSource]="laboratorios"
+            >
+              <dxo-load-panel
+                [enabled]="true"
+                text="Cargando Información"
+              ></dxo-load-panel>
+
+              <dxo-paging [pageSize]="10"> </dxo-paging>
+              <dxo-pager
+                [showPageSizeSelector]="true"
+                [allowedPageSizes]="[10, 25, 50, 100]"
+                [showInfo]="true"
+              ></dxo-pager>
+
+              <dxo-filter-row [visible]="true"> </dxo-filter-row>
+
+              <dxo-header-filter [visible]="true"></dxo-header-filter>
+              <dxo-search-panel
+                [visible]="true"
+                [width]="240"
+                placeholder="Buscar..."
+              ></dxo-search-panel>
+
+              <dxi-column caption="Código Laboratorio" dataField="id">
+              </dxi-column>
+              <dxi-column caption="Nombre" dataField="nombre"> </dxi-column>
+              <dxi-column caption="Microbiólogo" dataField="microbiologoValidaResultados"> </dxi-column>
+              <dxi-column dataField="activo"> </dxi-column>
+              <dxi-column
+                caption="Acciones"
+                cellTemplate="accionTemplate"
+                [width]="100"
+              >
+              </dxi-column>
+              <div *dxTemplate="let accion of 'accionTemplate'">
+
+                <button
+                  rel="tooltip"
+                  (click)="EditarLaboratorio(accion.data)"
+                  type="button"
+                  class="btn btn-grid btn-Azulsiman"
+                >
+                  <i class="material-icons">mode_edit</i>
+                </button>
+                <button
+                  rel="tooltip"
+                  (click)="EliminarLaboratorio(accion.data)"
+                  type="button"
+                  class="btn btn-grid btn-danger"
+                >
+                  <i class="material-icons">delete</i>
+                </button>
+
+              </div>
+            </dx-data-grid>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<app-laboratorios-frm-modal *ngIf="mostrarPopUp" [tituloModal]="titulo" [laboratorio] = "laboratorio" [Modo]="modo" [(Mostrar)] = "mostrarPopUp" (onSubmit)="ControlEventoModal($event)"></app-laboratorios-frm-modal>

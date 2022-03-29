@@ -1,0 +1,71 @@
+<dx-form
+  [formData]="busquedaMetaOncologico"
+  labelLocation="top"
+  [colCount]="3"
+  [showValidationSummary]="true"
+  validationGroup="vgBusquedaReporteMetaOncologicos"
+>
+  <dxi-item
+    editorType="dxSelectBox"
+    dataField="tipoReporte"
+    [label]="{ text: 'Tipo Reporte' }"
+    [editorOptions]="{
+      dataSource: tiposReporte,
+      valueExpr: 'id',
+      displayExpr: 'descripcion',
+      placeholder: 'Seleccione un tipo',
+      title: 'Seleccione un tipo'
+    }"
+  >
+    <dxi-validation-rule
+      type="required"
+      message="Debe ingresar un tipo de reporte."
+    ></dxi-validation-rule>
+  </dxi-item>
+  <dxi-item
+    editorType="dxSelectBox"
+    dataField="anio"
+    [label]="{ text: 'Año' }"
+    [editorOptions]="{
+      searchEnabled: true,
+      dataSource: anios,
+      placeholder: 'Seleccione un año',
+      title: 'Seleccione un año'
+    }"
+  >
+    <dxi-validation-rule
+      type="required"
+      message="Debe ingresar un año."
+    ></dxi-validation-rule>
+  </dxi-item>
+  <dxi-item
+    editorType="dxSelectBox"
+    dataField="mes"
+    [label]="{ text: 'Mes' }"
+    [editorOptions]="{
+      searchEnabled: true,
+      dataSource: meses,
+      valueExpr: 'id',
+      displayExpr: 'descripcion',
+      placeholder: 'Seleccione un mes',
+      title: 'Seleccione un mes'
+    }"
+  >
+    <dxi-validation-rule
+      type="required"
+      message="Debe ingresar un mes."
+    ></dxi-validation-rule>
+  </dxi-item>
+</dx-form>
+<div class="btn-contenedor float-right">
+  <div class="btn-item">
+    <dx-button
+      text="Mostrar"
+      type="default"
+      [useSubmitBehavior]="true"
+      validationGroup="vgBusquedaReporteMetaOncologicos"
+      (onClick)="mostrarReporte($event)"
+    >
+    </dx-button>
+  </div>
+</div>

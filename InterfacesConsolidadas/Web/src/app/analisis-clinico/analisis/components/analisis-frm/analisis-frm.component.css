@@ -1,0 +1,10 @@
+.pt-15{
+  padding-top: 15px;
+}
+.title-panel{
+  display: inline-block;
+  position: absolute;
+  align-items: center;
+  line-height: 23px;
+  padding-left: 5%;
+}

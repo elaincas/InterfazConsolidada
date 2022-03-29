@@ -1,0 +1,102 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-icon" data-background-color="green">
+            <i class="material-icons">mode_edit</i>
+          </div>
+
+          <div class="card-content">
+            <h4 class="card-title">Reporte de Ventas</h4>
+            <form [formGroup]="formReporte">
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label for="lookupEmpresa">Empresa: </label>
+                    <dx-lookup
+                      formControlName="lookupEmpresa"
+                      id="lookupEmpresa"
+                      [dataSource]="listadoEmpresas"
+                      displayExpr="descripcion"
+                      valueExpr="empresaId"
+                      [showClearButton]="false"
+                      [searchEnabled]="false"
+                      >
+                    </dx-lookup>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label for=""> Fecha Desde</label>
+                    <dx-date-box formControlName="dateDesde" type="datetime" [showClearButton]="true"></dx-date-box>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label for=""> Fecha Hasta</label>
+                    <dx-date-box formControlName="dateHasta" type="datetime" [showClearButton]="true"></dx-date-box>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <dx-button text="Mostrar" type="success" (onClick)="cargarReporte()">
+                    </dx-button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <dx-data-grid style="width: 100%;" #gridColonias  (onCellPrepared)="OnRowPrepared($event)"[dataSource]="reporteVenta" [showBorders]="true"
+                  [columnAutoWidth]="true" [wordWrapEnabled]="true">
+                  <dxo-paging [pageSize]="10"></dxo-paging>
+                  <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10, 20, 30]" [showInfo]="true">
+                  </dxo-pager>
+                  <dxo-filter-row [visible]="true"></dxo-filter-row>
+                  <dxo-header-filter [visible]="true"></dxo-header-filter>
+                  <dxo-search-panel [visible]="true" [width]="240" placeholder="Search..."></dxo-search-panel>
+                  <dxo-editing mode="cell" [allowUpdating]="true"></dxo-editing>
+                  <dxi-column caption="Pedido ID" dataField="pedidoId" [allowEditing]="false" [width]="90">
+                  </dxi-column>
+                  <dxi-column caption="Factura ID" dataField="facturaId" [allowEditing]="false" [width]="100">
+                  </dxi-column>
+                  <dxi-column caption="Agente" dataField="nombreAgente" [allowEditing]="false" [width]="150">
+                  </dxi-column>
+                  <dxi-column caption="Hora Factura" dataField="horaFactura" [allowEditing]="false" [width]="160"
+                    dataType="date" cellTemplate="dateCell">
+                  </dxi-column>
+                  <div *dxTemplate="let cellData of 'dateCell'">
+                    {{cellData.value | date: 'dd/MM/yyyy hh:mm a'}}
+                  </div>
+                  <dxi-column caption="Total" dataField="totalFactura" [allowEditing]="false" [width]="100"
+                    format="###,##0.00">
+                  </dxi-column>
+                  <dxi-column caption="Tipo Pedido" dataField="tipoPedido" [allowEditing]="false" [width]="150">
+                  </dxi-column>
+                  <dxi-column caption="Sucursal" dataField="sucursal" [allowEditing]="false" [width]="150">
+                  </dxi-column>
+                  <dxi-column caption="Nombre Cliente" dataField="nombreCliente" [allowEditing]="false" [width]="150">
+                  </dxi-column>
+                  <dxi-column caption="Identidad" dataField="identidad" [allowEditing]="false" [width]="120">
+                  </dxi-column>
+                  <dxo-summary [calculateCustomSummary]="calculateSelectedRow">
+                    <dxi-total-item column="nombreCliente" summaryType="count">
+                    </dxi-total-item>
+                    <dxi-total-item   name="totalFactura"
+                    summaryType="custom" showInColumn="totalFactura"    displayFormat="Total: {0}"  valueFormat="###,###,###,##0.00">
+                    </dxi-total-item>
+                  </dxo-summary>
+                  <dxo-export [enabled]="true" [fileName]="nombreArchivoExcel()" [allowExportSelectedData]="true">
+                  </dxo-export>
+                </dx-data-grid>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

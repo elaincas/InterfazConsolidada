@@ -1,0 +1,211 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="col-sm-8 col-sm-offset-2">
+      <!--      Wizard container        -->
+      <div class="wizard-container">
+        <div class="card wizard-card" data-color="blue" id="wizardProfile">
+          <form action="" method="">
+            <!--        You can switch " data-color="purple" "  with one of the next bright colors: "green", "orange", "red", "blue"       -->
+            <div class="wizard-header">
+              <h3 class="wizard-title">
+                Crear Planimetrías
+              </h3>
+            </div>
+
+            <div class="wizard-navigation ">
+              <ul>
+                <li>
+                  <a href="#planimetria" data-toggle="tab">Datos Planimetría</a>
+                </li>
+                <li>
+                  <a href="#archivos" data-toggle="tab">Subir Archivos</a>
+                </li>
+                <li>
+                  <a href="#envio" data-toggle="tab">Enviar Planimetría</a>
+                </li>
+              </ul>
+            </div>
+
+            <div class="tab-content">
+              <div class="tab-pane" id="planimetria">
+                <div class="row">
+                  <h4 class="info-text"> A continuación ingrese los datos de la planimetría. </h4>
+                  <div class="col-lg-offset-3 col-lg-6 col-md-12 col-sm-12 col-xs-12">
+                    <div class="row">
+                      <div class="col-md-4">
+                        <span>Tipo Planimetría:</span>
+                        <dx-lookup name="cmbPlanimetria" [dataSource]="tiposPlanimetrias" [grouped]="false" [closeOnOutsideClick]="true" [showPopupTitle]="false"
+                          placeholder="Seleccione Tipo de Planimetría" displayExpr="descripcion" valueExpr="id" [(ngModel)]="planimetria.TipoPlanimetriaID">
+                        </dx-lookup>
+                      </div>
+                      <div class="col-md-2">
+                        <br>
+                        <dx-button name="btn" icon="add" type="success" (onClick)="MostrarPopupTipoPlanimetrias(1)">
+                        </dx-button>
+                      </div>
+                      <div class="col-md-6">
+                        <span>Nombre Planimetría:</span>
+                        <dx-text-box name="txtNombre" [(ngModel)]="planimetria.Descripcion" placeholder="Nombre planimetría..."></dx-text-box>
+                      </div>
+                    </div>
+                    <br/>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <span>Fecha Inicial:</span>
+                        <dx-date-box name="cmbFechaInicio" style="width:100%" [displayFormat]="'dd/MM/yyyy'" [(ngModel)]="planimetria.FechaInicial"
+                          type="date">
+                        </dx-date-box>
+                      </div>
+                      <div class="col-md-6">
+                        <span>Fecha Final:</span>
+                        <dx-date-box name="cmbFechaFinal" style="width:100%" [displayFormat]="'dd/MM/yyyy'" [(ngModel)]="planimetria.FechaFinal"
+                          type="date">
+                        </dx-date-box>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="tab-pane" id="archivos">
+                <div class="row">
+                  <div class="col-lg-offset-3 col-lg-6 col-md-12 col-sm-12 col-xs-12">
+                    <div class="row">
+                      <dx-gallery #gallery id="gallery" [dataSource]="urlImage" width="100%" [height]="300" [slideshowDelay]="2000" [loop]="true"
+                        [showNavButtons]="true" [showIndicator]="true" [showIndicator]="true">
+                        <div *dxTemplate="let galleryItem of 'item'">
+                          <div>
+                            <img [src]="galleryItem" />
+                          </div>
+                        </div>
+                      </dx-gallery>
+                    </div>
+                  </div>
+                  <div class="col-lg-offset-3 col-lg-6 col-md-12 col-sm-12 col-xs-12">
+                    <br/>
+                    <div class="row " style="margin-left: 35%;margin-right: 35%">
+                      <dx-button name="btnSubir" (onClick)="MostrarPopup(1)" text="Archivos" icon="fa fa-upload"></dx-button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="tab-pane" id="envio">
+                <h4 class="info-text"> Resumen </h4>
+                <div class="row">
+                  <div class="col-lg-10 col-lg-offset-1">
+                    <div class="col-lg-6 col-md-12 col-sm-6 col-xs-6">
+                      <dx-data-grid #sucursal [rowAlternationEnabled]="true" [dataSource]="sucursales" (onSelectionChanged)="ObtenerSucursalesSeleccionadas($event)"
+                        showCheckBoxesMode="onClick">
+                        <dxo-filter-row [visible]="true"></dxo-filter-row>
+                        <dxo-selection mode="multiple" showCheckBoxesMode="onClick"></dxo-selection>
+                        <dxo-header-filter [visible]="true"></dxo-header-filter>
+                        <dxo-search-panel [visible]="true" [width]="240" placeholder="Search..."></dxo-search-panel>
+                        <dxo-paging [pageSize]="5"></dxo-paging>
+                        <dxi-column caption="Nombre" dataField="descripcion" [visible]="true"></dxi-column>
+                      </dx-data-grid>
+                    </div>
+                    <div class="col-lg-6 col-md-12 col-sm-6 col-xs-6">
+                      <div class="row">
+                        <span>Nombre Planimetría:</span>
+                        <dx-text-box name="txtNombreq" disabled="true" [(ngModel)]="planimetria.Descripcion" placeholder="Nombre planimetría..."></dx-text-box>
+                      </div>
+                      <div class="row">
+                        <br/>
+                        <span>Tipo Planimetría:</span>
+                        <dx-lookup name="cmbPlanimetriaq" [dataSource]="tiposPlanimetrias" [grouped]="false" [closeOnOutsideClick]="true" [showPopupTitle]="false"
+                          disabled="true" placeholder="Seleccione Tipo de Planimetría" displayExpr="descripcion" valueExpr="id"
+                          [(ngModel)]="planimetria.TipoPlanimetriaID">
+                        </dx-lookup>
+                      </div>
+                      <div class="row">
+                        <br>
+                        <dx-text-area name="txtObs" placeholder="Observaciones..." [height]="90" [maxLength]="150" [(ngModel)]="planimetria.Observacion">
+                        </dx-text-area>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="wizard-footer">
+              <div class="pull-right">
+                <button class='btn btn-next btn-fill  btn-AzulFarsiman btn-wd' type="submit">Siguiente</button>
+                <button class='btn btn-finish  btn-fill btn-Verde btn-wd' (click)="GuardarPlanimetria()" type="submit">Crear y Enviar</button>
+              </div>
+              <div class="pull-left">
+                <button class='btn btn-previous btn-fill btn-Anterior btn-wd' type="submit">Anterior</button>
+              </div>
+              <div class="clearfix"></div>
+            </div>
+          </form>
+        </div>
+        <dx-popup class="popup" id="nuevoTipoPlanimetria" height="15%" width="45%" [showTitle]="true" title="Tipo Planimetría" [dragEnabled]="false" [closeOnOutsideClick]="true" [(visible)]="_mostrarPopupTipoPlanimetria"
+          [showCloseButton]="true" [resizeEnabled]="true">
+          <div *dxTemplate="let data of 'content'">
+            <div class="row">
+              <div class="col-md-6">
+                <dx-text-box name="txtNomnreTipo" [(ngModel)]="tipoPlanimetriaDescripcion" placeholder="Nuevo tipo..."></dx-text-box>
+              </div>
+              <div class="col-md-3">
+                  <dx-button icon="fa fa-check" type="success" text="Guardar" (onClick)="GuardarTipoPlanimetria()">
+                    </dx-button>
+              </div>
+              <div class="col-md-3">
+                  <dx-button icon="fa fa-close" type="danger" text="Cancelar" (onClick)="MostrarPopupTipoPlanimetrias(0)">
+                    </dx-button>
+              </div>
+            </div>
+          </div>
+        </dx-popup>
+        <dx-popup class="popup" id="ingresoNuevaPlanimetria" style="height: 65%;" width="45%" [showTitle]="true" ng-controller="Ctrl"
+          title="Subir Archivos" [dragEnabled]="false" [closeOnOutsideClick]="false" [(visible)]="_mostrarPopup" [showCloseButton]="false"
+          [resizeEnabled]="true">
+          <div *dxTemplate="let data of 'content'">
+            <div class="row">
+              <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6" style="margin: auto">
+                <dx-file-uploader name="SubirArvhivoImagen" selectButtonText="Adjuntar Imagen" labelText="Este campo es obligatorio" (onValueChanged)="subirArvhivoImagen($event)"
+                  accept=".jpg,.png" uploadMode="userForm" type="default">
+                </dx-file-uploader>
+              </div>
+            </div>
+            <div class="row">
+              <dx-data-grid [rowAlternationEnabled]="true" width="100%" [dataSource]="archivos">
+                <dxo-filter-row [visible]="true"></dxo-filter-row>
+                <dxo-header-filter [visible]="true"></dxo-header-filter>
+                <dxo-paging [pageSize]="3"></dxo-paging>
+                <dxi-column caption="Nombre Imagen" dataField="ArchivoImagen.FileName" [visible]="true"></dxi-column>
+                <dxi-column caption="Acción" [width]="60" cellTemplate="accionTemplateImagen"></dxi-column>
+                <dxi-column caption="Nombre Excel" dataField="ArchivoExcel.FileName" [visible]="true"></dxi-column>
+                <dxi-column caption="Acción" [width]="200" cellTemplate="accionTemplateExcel"></dxi-column>
+
+                <div *dxTemplate="let d of 'accionTemplateImagen'">
+                  <div class="row">
+                    <div class="col-md-3">
+                      <button rel="tooltip" type="button" (click)="EliminarFila(d)" class="btn btn-grid btn-danger ">
+                        <i class="material-icons">delete_forever</i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div *dxTemplate="let d of 'accionTemplateExcel'">
+                  <div class="col-md-8">
+                    <dx-file-uploader name="SubirArvhivoExcel" selectButtonText="Subir" editorType="" labelText="" item-width="100%" (onValueChanged)="subirArvhivoExcel($event,d.data)"
+                      accept=".xls,.xlsx" uploadMode="userForm" type="default">
+                    </dx-file-uploader>
+                  </div>
+                </div>
+              </dx-data-grid>
+            </div>
+            <br/>
+            <div class="row" style="float: right;">
+              <dx-button icon="fa fa-check" type="success" text="Aceptar" (onClick)="MostrarPopup(0)">
+              </dx-button>
+            </div>
+          </div>
+        </dx-popup>
+      </div>
+      <!-- wizard container -->
+    </div>
+  </div>
+
+</div>

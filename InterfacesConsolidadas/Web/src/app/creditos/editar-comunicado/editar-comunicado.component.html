@@ -1,0 +1,114 @@
+<div class="main-content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header card-header-icon" data-background-color="green">
+              <i class="material-icons">360</i>
+            </div>
+            <div class="card-content">
+              <h4 class="card-title">
+                <strong>Búsqueda Comunicado Créditos</strong>
+              </h4>
+              <div class="row">
+                <div class="col-lg-offset-1 col-lg-10 col-md-10 col-sm-12 col-xs-12">
+                  <div class="row">
+                    <div class="col-md-6" style="margin-top: 20px;">
+                      <span class="labelsFormularios">Polizas:</span>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
+                      <dx-lookup #dropPolizas [(ngModel)]="filtro.noPoliza"
+                        displayExpr="nombrePoliza" valueExpr="noPoliza" placeholder="Select una Póliza" [showClearButton]="true"
+                        [dataSource]="polizas" closeOnOutsideClick="true" name="dropPolizas">
+                      </dx-lookup>
+                    </div>
+                    <!-- <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                      <dx-button type="success" icon="add" style="float: right" (onClick)="MostrarPopup()"></dx-button>
+                    </div> -->
+                  </div>
+                  <br>
+                  <div class="row">
+                    <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
+                      <div class="row">
+                        <div class="col-md-6" style="margin-top: 20px;">
+                          <span class="labelsFormularios">Clientes:</span>
+                        </div>
+                      </div>
+                      <dx-lookup #dropCliente [(ngModel)]="filtro.clienteId"
+                      displayExpr="nombreCliente" valueExpr="clienteID" placeholder="Select una Póliza" [showClearButton]="true"
+                      [dataSource]="clientes" closeOnOutsideClick="true" name="dropCliente">
+                    </dx-lookup>
+                    </div>
+                  </div>
+                  <br>
+                  <div class="row">
+                    <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
+                      <div class="row">
+                        <div class="col-md-6" style="margin-top: 20px;">
+                          <span class="labelsFormularios">Fecha Inicio:</span>
+                          <dx-date-box [value]="now" [(ngModel)]="filtro.fechaInicio" type="date" id="dbDesde"
+                            #dbDesde stylingMode="outlined">
+                          </dx-date-box>
+                        </div>
+                        <div class="col-md-6" style="margin-top: 20px;">
+                          <span class="labelsFormularios">Fecha Fin:</span>
+                          <dx-date-box [value]="now" [(ngModel)]="filtro.fechaFin" type="date" id="dbDesde"
+                            #dbDesde stylingMode="outlined">
+                          </dx-date-box>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <br>
+  
+                  <div class="row">
+                    <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
+                      <div class="row" style="float: right;">
+                          <dx-button type="button" text="Limpiar" type="default" (click)="Limpiar()"
+                          >
+                        </dx-button>
+                        <dx-button icon="fa fa-plus-circle" type="success" text="Buscar" (onClick)="BuscarComunicados()">
+                        </dx-button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
+                      <div class="row">
+                        <div class="col-md-6" style="margin-top: 20px;">
+                          <span class="labelsFormularios">Resultado Por:</span>
+                        </div>
+                      </div>
+                      <dx-data-grid #gridCliente id="gridCliente" name ="gridCliente" [dataSource]="documento" [showColumnLines]="true" [showRowLines]="true" [showBorders]="true"
+                      [columnAutoWidth]="true" [rowAlternationEnabled]="true" >
+                      <dxo-selection mode="multiple" showCheckBoxesMode="onClick"></dxo-selection>
+                        <dxo-filter-row [visible]="true"> </dxo-filter-row>
+                        <dxo-header-filter [visible]="true"></dxo-header-filter>
+                        <dxo-export [enabled]="true" fileName="Categorias" [allowExportSelectedData]="true">
+                        </dxo-export>
+                        <dxi-column dataField="documento" caption="Documento"></dxi-column>
+                        <dxi-column caption="Eliminar" cellTemplate="accionTemplate" [width]="130"></dxi-column>
+                        <div *dxTemplate="let accion of 'accionTemplate'">
+                          <div style="text-align: center">
+                            <dx-button type="button" type="danger" (click)="DEsactivarDocumento(accion.data)"
+                              icon="fa fa-close">
+                            </dx-button>
+                           
+                          </div>
+                        </div>
+                        <dxo-paging [pageSize]="10" [pageIndex]="0"></dxo-paging>
+                    </dx-data-grid>
+                    </div>
+                  </div>
+                  <br>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+  

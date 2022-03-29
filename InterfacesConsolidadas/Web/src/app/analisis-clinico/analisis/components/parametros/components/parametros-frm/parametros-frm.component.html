@@ -1,0 +1,204 @@
+<div class="main-content">
+  <div class="container-flui">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-icon" data-background-color="red">
+            <i class="material-icons">assessment</i>
+          </div>
+
+          <dx-load-panel
+            #loadPanel
+            shadingColor="rgba(0,0,0,0.4)"
+            [position]="{ of: '#tabCon' }"
+            [(visible)]="loadingVisible || cargandoParametroLoader"
+            [showIndicator]="true"
+            [showPane]="true"
+            [shading]="true"
+            [closeOnOutsideClick]="false"
+          >
+          </dx-load-panel>
+
+          <div class="card-content" id="tabCon">
+            <h4 class="card-title">Registrar Nuevo Parámetro</h4>
+
+            <div id="tabs" class="pt-15">
+              <dx-tabs
+                #tabsFrmParametro
+                [dataSource]="tabs"
+                [showNavButtons]="true"
+                [(selectedIndex)]="indexTab"
+                (onItemClick)="selectDirectTab(tabsFrmParametro)"
+                (onInitialized)="mostrarLoader()"
+                (onContentReady)="ocultarLoader()"
+                itemTemplate="item"
+                [focusStateEnabled]="false"
+                deferRendering="true"
+              >
+                <div *dxTemplate="let tab of 'item'">
+                  <span class="dx-tab-text">
+                    <i class="{{ tab.icon }}" style="color: #e53935">{{
+                      tab.iconName
+                    }}</i>
+                    <p class="">{{ tab.text }}</p>
+                  </span>
+                </div>
+              </dx-tabs>
+              <div class="content dx-fieldset" id="contentTabs">
+                <div *ngIf="tabComponent == 'Parametro'">
+                  <div class="long-title"></div>
+                  <div id="form-container">
+                    <dx-form
+                      id="form"
+                      [formData]="parametro"
+                      labelLocation="top"
+                      (onFieldDataChanged)="CambioEnItem($event)"
+                      (onContentReady)="ocultarLoader()"
+                      (onInitialized)="mostrarLoader()"
+                      [showValidationSummary]="true"
+                      validationGroup="validarParametro"
+                    >
+                      <dxi-item itemType="group" [colCount]="12">
+                        <dxi-item
+                          itemType="group"
+                          id="GrupoDatos"
+                          [colSpan]="6"
+                        >
+                          <dxi-item dataField="nombre">
+                            <dxi-validation-rule
+                              type="required"
+                              message="Dato requerido"
+                            >
+                            </dxi-validation-rule>
+                          </dxi-item>
+                          <dxi-item
+                            dataField="descripcion"
+                            [label]="{ text: 'Descripción' }"
+                            ><dxi-validation-rule
+                              type="required"
+                              message="Dato requerido"
+                            >
+                            </dxi-validation-rule
+                          ></dxi-item>
+                        </dxi-item>
+
+                        <dxi-item
+                          itemType="group"
+                          id="GrupoSelectBox"
+                          [colSpan]="6"
+                        >
+                          <dxi-item
+                            [label]="{ text: 'Unidad Medida' }"
+                            dataField="unidadDeMedidaId"
+                            editorType="dxSelectBox"
+                            [editorOptions]="{
+                              placeholder: 'Seleccione la unidad de medida',
+                              searchEnabled: 'true',
+                              dataSource: unidadesMedida,
+                              displayExpr: 'nombre',
+                              valueExpr: 'id',
+                              showClearButton: true
+                            }"
+                          >
+                            <dxi-validation-rule
+                              type="required"
+                              message="{{ msj.requerido }}"
+                            ></dxi-validation-rule>
+                          </dxi-item>
+                          <dxi-item
+                            [label]="{ text: 'Tipo Resultado' }"
+                            dataField="resultadoTipoId"
+                            editorType="dxSelectBox"
+                            [editorOptions]="{
+                              searchEnabled: true,
+                              placeholder: 'Seleccione el tipo de resultado',
+                              dataSource: tiposResultado,
+                              displayExpr: 'descripcion',
+                              valueExpr: 'id',
+                              showClearButton: true
+                            }"
+                          >
+                            <dxi-validation-rule
+                              type="required"
+                              message="{{ msj.requerido }}"
+                            ></dxi-validation-rule>
+                          </dxi-item>
+
+                          <dxi-item itemType="group" [colCount]="12">
+                            <dxi-item
+                              dataField="activo"
+                              editorType="dxCheckBox"
+                              [colSpan]="6"
+                              [editorOptions]="{
+                                readOnly: readOnlyAgregar
+                              }"
+                            ></dxi-item>
+                            <dxi-item
+                              [colSpan]="6"
+                              dataField="fechaAgrega"
+                              editorType="dxDateBox"
+                              [editorOptions]="{
+                                displayFormat: 'dd/MM/yyyy',
+                                disabled: true,
+                                width: '100%'
+                              }"
+                            ></dxi-item>
+                          </dxi-item>
+                        </dxi-item>
+                      </dxi-item>
+                    </dx-form>
+                  </div>
+                </div>
+
+                <div *ngIf="tabComponent == 'ParametroRangos'">
+                  <app-parametros-rangos
+                    [modo]="modo"
+                    [(parametrosRangos)]="parametro.parametroRangos"
+                    [parametroId]="parametro.id"
+                  ></app-parametros-rangos>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer">
+            <div class="pull-left">
+              <dx-button
+                ngClass="btn btn-Azulsiman"
+                *ngIf="tabsFrmParametro.selectedIndex != 0"
+                text="Anterior"
+                type="default"
+                [useSubmitBehavior]="true"
+                validationGroup="validarParametro"
+                (onClick)="AnteriorTab(tabsFrmParametro, $event)"
+              >
+              </dx-button>
+            </div>
+            <div class="pull-right">
+              <dx-button
+              ngClass="btn btn-Azulsiman"
+              *ngIf="tabsFrmParametro.selectedIndex != tabs.length - 1"
+              text="Siguiente"
+              type="default"
+              [useSubmitBehavior]="true"
+              validationGroup="validarParametro"
+              (onClick)="SiguienteTab(tabsFrmParametro, $event)"
+            >
+            </dx-button>
+
+            <dx-button
+                ngClass="btn btn-Azulsiman"
+                *ngIf="tabsFrmParametro.selectedIndex == tabs.length - 1"
+                text="Guardar"
+                type="default"
+                [useSubmitBehavior]="true"
+                validationGroup="validarParametro"
+                (onClick)="Guardar($event)"
+              >
+              </dx-button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

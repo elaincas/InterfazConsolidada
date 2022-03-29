@@ -1,0 +1,55 @@
+.sidebar-item-principal{
+  text-align: center;
+  padding: 10px 5px;
+  margin:0 15px;
+  display: block;
+  color: white;
+  font-size: 1.4em;
+  background: rgba(255,255,255,.1);
+  border-radius: 2px;
+}
+
+
+.sidebar-item{
+  text-align: center;
+  padding: 10px 5px;
+  margin:10px 15px;
+  display: block;
+  color: white;
+  font-size: 1.2em;
+  background: rgba(255,255,255,.1);
+  border-radius: 2px;
+}
+
+
+.nav-menu-icon{
+  position: absolute;
+  left: 25px;
+  top: 5px;
+  cursor: pointer;
+}
+
+.nav-menuActual-iconBack{
+  cursor: pointer;
+}
+
+.logo-img{
+  width: auto;
+  height: 70px;
+}
+
+.nav-menu-title{
+  color: rgb(169, 175, 187);
+  display: block;
+  margin: 20px;
+  overflow: auto;
+}
+
+.nav-menu-title-items{
+  float: left;
+}
+
+.nav-menu-title-text{
+  line-height: 24px;
+  padding-left: 5px;
+}

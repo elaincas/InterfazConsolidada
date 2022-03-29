@@ -1,0 +1,57 @@
+<dl class="dl-horizontal">
+  <dt>Producto ID</dt>
+  <dd>{{pedidoProducto.productoId}}</dd>
+  <dt>Descripción</dt>
+  <dd>{{pedidoProducto.prod_Desc}}</dd>
+  <dt>Observaciones</dt>
+  <dd>
+    <div *ngIf="!verFormularioObservaciones else elseBlockObservaciones" [@inOutAnimation]>
+      {{pedidoProducto.observaciones}} <br *ngIf="pedidoProducto.observaciones" />
+      <button type="button" class="btn btn-primary btn-xs" (click)="mostrarFormularioObservaciones()">Editar</button>
+    </div>
+    <ng-template #elseBlockObservaciones>
+      <div [@inOutAnimation]>
+        <dx-form [formData]="formularioObservaciones">
+          <dxi-item dataField="observaciones" editorType="dxTextArea"
+            [editorOptions]="{ height: 100, maxLength: 1500 }">
+            <dxo-label [visible]="false"></dxo-label>
+          </dxi-item>
+        </dx-form>
+        <button type="button" class="btn btn-success btn-xs"
+          (click)="guardarCambiosFormularioObservaciones()">Guardar</button>
+        <button type="button" class="btn btn-danger btn-xs"
+          (click)="verFormularioObservaciones = false">Cancelar</button>
+      </div>
+    </ng-template>
+  </dd>
+  <dt>Fecha a realizar</dt>
+  <dd>{{pedidoProducto.fechaDebeRealizarsePedido | date:'EEEE, MMMM d, y'}}</dd>
+  <dt>Hora de entrega</dt>
+  <dd>
+    <ng-container>
+      {{pedidoProducto.horaPrefiereEntrega | date:'hh:mm a'}} <br *ngIf="pedidoProducto.horaPrefiereEntrega" />
+      <button *ngIf="!verFormularioHoraEntrega" type="button" class="btn btn-primary btn-xs"
+        (click)="mostrarFormularioHoraEntrega()">Editar</button>
+    </ng-container>
+    <ng-container *ngIf="verFormularioHoraEntrega">
+      <dx-form [formData]="formularioHoraEntrega" [@inOutAnimation]>
+        <dxi-item dataField="time" editorType="dxDateBox" [editorOptions]="{ type: 'time' }">
+          <dxo-label [visible]="false"></dxo-label>
+        </dxi-item>
+      </dx-form>
+      <button type="button" class="btn btn-success btn-xs" (click)="guardarCambiosFormularioHoraEntrega()"
+        [@inOutAnimation]>Guardar</button>
+      <button type="button" class="btn btn-danger btn-xs" (click)="verFormularioHoraEntrega = false"
+        [@inOutAnimation]>Cancelar</button>
+    </ng-container>
+  </dd>
+  <dt>Tipo de Pago</dt>
+  <dd>{{pedidoProducto.tipoDePago}}</dd>
+  <dt>¿Realizado?</dt>
+  <dd>
+    <i *ngIf="pedidoProducto.pedidoRealizado else elseBlock" class="material-icons">check</i>
+    <ng-template #elseBlock>
+      <i class="material-icons">close</i>
+    </ng-template>
+  </dd>
+</dl>

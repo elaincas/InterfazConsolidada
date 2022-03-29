@@ -1,0 +1,68 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-icon" data-background-color="green">
+            <i class="material-icons">list</i>
+          </div>
+          <div class="card-content">
+            <h4 class="card-title">Listado de Cupones</h4>
+          </div>
+          <div class="card-content">
+            <div class="row">
+              <div class="col-md-12">
+                <dx-data-grid [showBorders]="true"
+                              [masterDetail]="{ enabled: true, template:'sucursalesTemplate'}"
+                              [rowAlternationEnabled]="true"
+                              [dataSource]="listaCuponesConSucursales"
+                >
+                  <dxo-filter-row [visible]="true"></dxo-filter-row>
+                  <dxo-header-filter [visible]="true"></dxo-header-filter>
+                  <dxi-column caption="Código" dataField="cuponID" [width]="70"></dxi-column>
+                  <dxi-column caption="Cupón" dataField="descripcion"></dxi-column>
+                  <dxi-column caption="Rango de Boletos" dataField="rangoBoletos"></dxi-column>
+                  <dxi-column caption="Porcentaje Puntos extra" dataField="factorPuntosExtra" format="percent"></dxi-column>
+                  <dxi-column caption="Sólo Medicamentos" dataField="soloMedicamentos"></dxi-column>
+                  <dxi-column caption="Todas las Sucursales" dataField="todasLasSucursales"></dxi-column>
+                  <dxi-column caption="Activo" dataField="activo"></dxi-column>
+                  <dxi-column caption="Acciones" cellTemplate="accionTemplate" [width]="100"> </dxi-column>
+                  <dxo-paging [pageSize]="10" [pageIndex]="0"></dxo-paging>
+                  <div *dxTemplate="let c of 'accionTemplate'">
+                    <button rel="tooltip" title="Desactivar" (click)="ActivarDesactivarCupon(c.data, false)" *ngIf="c.data.activo" type="button" class="btn btn-grid btn-danger ">
+                      <i class="material-icons">arrow_downward</i>
+                    </button>
+                    <button rel="tooltip" title="Activar" (click)="ActivarDesactivarCupon(c.data, true)" *ngIf="!c.data.activo" type="button" class="btn btn-grid btn-success ">
+                      <i class="material-icons">arrow_upward</i>
+                    </button>
+                    <button rel="tooltip" title="Editar" (click)="EditarCupon(c.data)" *ngIf="c.data.activo" type="button" class="btn btn-grid btn-Azulsiman ">
+                      <i class="material-icons">mode_edit</i>
+                    </button>
+                  </div>
+
+                  <div *dxTemplate="let cupon of 'sucursalesTemplate'" >
+                    <dx-data-grid [rowAlternationEnabled]="true" [dataSource]="cupon.data.sucursales" *ngIf="!cupon.data.todasLasSucursales && cupon.data.activo">
+                      <dxi-column caption="Código" dataField="codigo" [width]="70">  </dxi-column>
+                      <dxi-column caption="Sucursal" dataField="nombre" [width]="400">  </dxi-column>
+                      <dxi-column caption="Acciones" cellTemplate="accionTemplate" [width]="155"> </dxi-column>
+                      <dxo-paging [pageSize]="15" [pageIndex]="1"></dxo-paging>
+                      <div *dxTemplate="let sucursal of 'accionTemplate'">
+                        <button rel="tooltip" title="Eliminar" (click)="DesactivarSucursal(cupon.data.sucursales, sucursal.data, cupon.data.cuponID)" type="button" class="btn btn-grid btn-danger ">
+                          <i class="material-icons">close</i>
+                        </button>
+                      </div>
+                    </dx-data-grid>
+                    <label class="labelsFormularios" *ngIf="!cupon.data.activo && !cupon.data.todasLasSucursales">Active este cupón para ver las sucursales asignadas.</label>
+                    <label class="labelsFormularios" *ngIf="cupon.data.todasLasSucursales">Este cupón aplica para todas las sucursales.</label>
+                  </div>
+                </dx-data-grid>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+

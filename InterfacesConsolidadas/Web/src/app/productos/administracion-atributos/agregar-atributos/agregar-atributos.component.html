@@ -1,0 +1,342 @@
+<!-- <app-main-loader></app-main-loader> -->
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-icon" data-background-color="red">
+            <i class="material-icons">widgets</i>
+          </div>
+          <div class="card-content">
+            <h4 class="card-title">Agregar Características a Producto</h4>
+          </div>
+          <div class="card-content">
+            <div class="row">
+              <div class="col-md-12">
+                 <div class="row">
+                   <div class="col-xs-10 col-sm-8 col-md-8">
+                      <span class="labelsFormularios">Seleccionar Producto:</span>
+                      <dx-lookup class="field-customization"
+                                 noDataText="No se encontraron productos."
+                                 searchPlaceholder="Ingrese el código o descripción del producto"
+                                 [(value)]="producto_seleccionado"
+                                 searchExpr="descripcion"
+                                 displayExpr="descripcion"
+                                 [(dataSource)]="dsProductos"
+                                 placeholder="Seleccione un producto"
+                                 itemTemplate="item">
+                        <div *dxTemplate="let item of 'item'">
+                          <div class="custom-field">
+                            {{item.id}} - {{item.descripcion}}
+                          </div>
+                        </div>
+                      </dx-lookup>
+                   </div>
+                   <div class="col-xs-2 col-sm-1 col-md-1">
+                     <button rel="tooltip" title="Agregar" type="button" (click)="OnAgregarProducto(producto_seleccionado)"
+                             style="margin-top:15px" class="btn btn-sm btn-just-icon btn-round mat-raised-button btn-Azulsiman ">
+                       <i class="material-icons">add</i>
+                     </button>
+                   </div>
+                 </div>
+                <br>
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="row">
+                      <div class="col-xs-10 col-sm-5 col-md-5 col-lg-6">
+                        <span class="labelsFormularios">Género Meta:</span>
+                        <dx-select-box #GeneroMeta
+                          [dataSource]="generos"
+                          [(value)]="generoSeleccionado"
+                          showClearButton="true"
+                          searchExpr="genero"
+                          displayExpr="genero"
+                          valueExpr="genero"
+                          placeholder="Seleccionar Género"
+                          [searchEnabled]="true">
+                        </dx-select-box>
+                      </div>
+                      <div class="col-xs-2 col-sm-1 col-md-1">
+                        <button rel="tooltip" title="Agregar" type="button" (click)="onAgregarAtributo('GeneroMeta', generoSeleccionado)"
+                                style="margin-top:15px" class="btn btn-sm btn-just-icon btn-round mat-raised-button btn-success ">
+                          <i class="material-icons">chevron_right</i>
+                        </button>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-xs-10 col-sm-5 col-md-5 col-lg-6">
+                        <span class="labelsFormularios">Área de Uso:</span>
+                        <dx-select-box #AreaDeUso
+                          [dataSource]="areasDeUso"
+                          [(value)]="areaDeUsoSeleccionada"
+                          showClearButton="true"
+                          searchExpr="nombre"
+                          displayExpr="nombre"
+                          valueExpr="areaDeUsoId"
+                          placeholder="Seleccione el Área de Uso"
+                          [searchEnabled]="true">
+                        </dx-select-box>
+                      </div>
+                      <div class="col-xs-2 col-sm-1 col-md-1">
+                        <button rel="tooltip" title="Agregar" type="button" (click)="onAgregarAtributo('AreaDeUso', areaDeUsoSeleccionada)"
+                                style="margin-top:15px" class="btn btn-sm btn-just-icon btn-round mat-raised-button btn-success ">
+                          <i class="material-icons">chevron_right</i>
+                        </button>
+                      </div>
+                      <div class="col-sm-4 col-md-4 col-lg-4">
+                        <button rel="tooltip" title="Agregar" type="button" style="margin-top:25px" (click)="OnAgregarAreaDeUso()" class="btn btn-sm btn-round mat-raised-button btn-info ">
+                          <i class="material-icons">photo_filter</i> ¿Agregar nueva área de uso?
+                        </button>
+                        <dx-popup
+                          class="popup"
+                          [width]="400"
+                          [height]="220"
+                          [showTitle]="true"
+                          title="Agregar Área de Uso"
+                          [dragEnabled]="false"
+                          [closeOnOutsideClick]="false"
+                          [(visible)]="popPupAgregarAreaDeUso">
+                          <div *dxTemplate="let data of 'content'">
+                            <div class="row">
+                              <div class="col-md-12">
+                                <span class="labelsFormularios">Nombre:</span>
+                                <dx-text-box [(value)]="nuevaAreaDeUso.nombre"></dx-text-box>
+                              </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                              <div class="col-md-4" >
+                                <button class="btn btn-fill btn-success" (click)="AgregarAreaDeUso()" type="submit" >
+                                  <i class="material-icons">add</i>Agregar</button>
+                              </div>
+                              <div class="col-md-6">
+                              </div>
+                            </div>
+                          </div>
+                        </dx-popup>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-xs-10 col-sm-6 col-md-6 col-lg-6">
+                        <span class="labelsFormularios">Color:</span>
+                        <dx-select-box #Color
+                          [dataSource]="colores"
+                          [(value)]="colorSeleccionado"
+                          showClearButton="true"
+                          searchExpr="nombre"
+                          displayExpr="nombre"
+                          valueExpr="hEX"
+                          placeholder="Seleccionar Color"
+                          (onValueChanged)="hexToRgb(colorSeleccionado)"
+                          [searchEnabled]="true">
+                          <div *dxTemplate="let data of 'item'" class="custom-item">
+                            <div class="col-xs-1">
+                              <i class="material-icons" [ngStyle]="{ color: data.hEX }">brightness_1</i>
+                            </div>
+                            <div class="col-xs-10">
+                              <span> {{data.nombre}}</span>
+                            </div>
+                          </div>
+                        </dx-select-box>
+                      </div>
+                      <div class="col-xs-2 col-sm-1 col-md-1">
+                        <button rel="tooltip" title="Agregar" type="button" (click)="onAgregarAtributo('Color', colorSeleccionado)"
+                                style="margin-top:15px" class="btn btn-sm btn-just-icon btn-round mat-raised-button btn-success ">
+                          <i class="material-icons">chevron_right</i>
+                        </button>
+                      </div>
+                      <div class="col-sm-4 col-md-4 col-lg-4">
+                        <button rel="tooltip" title="Agregar" type="button" style="margin-top:25px" (click)="OnAgregarColor()" class="btn btn-sm btn-round mat-raised-button btn-info ">
+                          <i class="material-icons">color_lens</i> ¿No encuentras el color?
+                        </button>
+                        <dx-popup
+                          class="popup"
+                          [width]="550"
+                          [height]="300"
+                          [showTitle]="true"
+                          title="Agregar Color"
+                          [dragEnabled]="false"
+                          [closeOnOutsideClick]="false"
+                          [(visible)]="popPupAgregarColor">
+                          <div *dxTemplate="let data of 'content'">
+                            <div class="row">
+                              <div class="col-md-8">
+                                <span class="labelsFormularios">Nombre:</span>
+                                <dx-text-box [(value)]="nuevoColor.nombre"></dx-text-box>
+                              </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                              <div class="col-md-12">
+                                <span class="labelsFormularios">Selecciona el Color</span>
+                                <div class="value">
+                                  <dx-color-box
+                                    [(value)]="nuevoColor.hEX"
+                                    applyValueMode="instantly"
+                                    placeholder="Seleccionar Color"
+                                    (onValueChanged)="hexToRgb(nuevoColor.hEX)"
+                                  ></dx-color-box>
+                                </div>
+                              </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                              <div class="col-md-4" >
+                                <button class="btn btn-fill btn-success" (click)="AgregarColor()" type="submit" >
+                                  <i class="material-icons">add</i>Agregar</button>
+                              </div>
+                              <div class="col-md-6">
+                              </div>
+                            </div>
+                          </div>
+                        </dx-popup>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-xs-10 col-sm-6 col-md-6">
+                        <span class="labelsFormularios">Tamaño:</span>
+                        <dx-text-box #Tamaño [(value)]="tamanoIngresado"></dx-text-box>
+                      </div>
+                      <div class="col-xs-2 col-sm-1 col-md-1">
+                        <button rel="tooltip" title="Agregar" type="button" (click)="onAgregarAtributo('Tamaño', tamanoIngresado)"
+                                style="margin-top:15px" class="btn btn-sm btn-just-icon btn-round mat-raised-button btn-success ">
+                          <i class="material-icons">chevron_right</i>
+                        </button>
+                      </div>
+                    </div>
+                    <span class="labelsFormularios">Rango de Edad:</span>
+                    <div class="row">
+                      <div class="col-xs-4 col-sm-2 col-md-2">
+                        <dx-number-box
+                          [(value)]="edadInicio"
+                          [min]="0"
+                          [max]="120"
+                          [showSpinButtons]="true"
+                        ></dx-number-box>
+                      </div>
+                      <div class="col-xs-2 text-center">
+                        <span class="labelsFormularios" style="margin:8px 0px auto 10px" >a</span>
+                      </div>
+                      <div class="col-xs-4 col-sm-2 col-md-2">
+                        <dx-number-box
+                          [(value)]="edadFin"
+                          [min]="0"
+                          [max]="120"
+                          [showSpinButtons]="true"
+                        ></dx-number-box>
+                      </div>
+                      <div class="col-xs-2 col-sm-1 col-md-1">
+                        <button rel="tooltip" title="Agregar" type="button" (click)="onAgregarAtributo('RangoEdad', null)"
+                                style="margin-top: -5px" class="btn btn-sm btn-just-icon btn-round mat-raised-button btn-success ">
+                          <i class="material-icons">chevron_right</i>
+                        </button>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-xs-10 col-sm-6 col-md-6">
+                        <span class="labelsFormularios">Peso:</span>
+                        <dx-text-box #Peso [(value)]="pesoIngresado"></dx-text-box>
+                      </div>
+                      <div class="col-xs-2 col-sm-1 col-md-1">
+                        <button rel="tooltip" title="Agregar" type="button" (click)="onAgregarAtributo('Peso', pesoIngresado)"
+                                style="margin-top:15px" class="btn btn-sm btn-just-icon btn-round mat-raised-button btn-success ">
+                          <i class="material-icons">chevron_right</i>
+                        </button>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-xs-10 col-sm-6 col-md-6">
+                        <span class="labelsFormularios">Resolución:</span>
+                        <dx-text-box #Resolución [(value)]="resolucionIngresada"></dx-text-box>
+                      </div>
+                      <div class="col-xs-2 col-sm-1 col-md-1">
+                        <button rel="tooltip" title="Agregar" type="button" (click)="onAgregarAtributo('Resolución', resolucionIngresada)"
+                                style="margin-top:15px" class="btn btn-sm btn-just-icon btn-round mat-raised-button btn-success ">
+                          <i class="material-icons">chevron_right</i>
+                        </button>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-xs-10 col-sm-6 col-md-6">
+                        <span class="labelsFormularios">Presentación:</span>
+                        <dx-text-box #Presentación [(value)]="presentacionIngresada"></dx-text-box>
+                      </div>
+                      <div class="col-xs-2 col-sm-1 col-md-1">
+                        <button rel="tooltip" title="Agregar" type="button" (click)="onAgregarAtributo('Presentación', resolucionIngresada)"
+                                style="margin-top:15px" class="btn btn-sm btn-just-icon btn-round mat-raised-button btn-success ">
+                          <i class="material-icons">chevron_right</i>
+                        </button>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-xs-10 col-sm-8 col-md-8">
+                        <span class="labelsFormularios">URL de Video:</span>
+                        <dx-text-box #Video [(value)]="urlVideoIngresado" placeholder="http://videomuestra.mp4"></dx-text-box>
+                      </div>
+                      <div class="col-xs-2 col-sm-1 col-md-1">
+                        <button rel="tooltip" title="Agregar" type="button" (click)="onAgregarAtributo('Video', urlVideoIngresado)"
+                                style="margin-top:15px" class="btn btn-sm btn-just-icon btn-round mat-raised-button btn-success ">
+                          <i class="material-icons">chevron_right</i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="row">
+                      <div class="col-md-10">
+                        <span class="labelsFormularios text-center"><strong>Las características se agregarán a los Productos:</strong></span>
+                        <dx-data-grid [showBorders]="true" [rowAlternationEnabled]="true" [dataSource]="productosSeleccionados">
+                          <dxi-column caption="Código" dataField="id" width="120px"></dxi-column>
+                          <dxi-column caption="Producto" dataField="descripcion" ></dxi-column>
+                          <dxo-paging [pageSize]="5" [pageIndex]="0"></dxo-paging>
+                        </dx-data-grid>
+                      </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <span class="labelsFormularios"><strong>Características seleccionadas:</strong></span>
+                        <dx-data-grid [showBorders]="true" [rowAlternationEnabled]="true" [dataSource]="nuevosAtributos">
+                          <dxi-column caption="Característica" dataField="nombre" width="120px"></dxi-column>
+                          <dxi-column caption="Valor" dataField="valor" [visible]="false" ></dxi-column>
+                          <dxi-column caption="Valor" dataField="valorMostrar" ></dxi-column>
+                          <dxi-column caption="Eliminar" cellTemplate="accionTemplate" [width]="70"></dxi-column>
+                          <div *dxTemplate="let atributo of 'accionTemplate'">
+                            <button rel="tooltip" title="Eliminar" type="button" class="btn btn-grid btn-danger"
+                              (click)="quitarAtributoDeLista(atributo.data)">
+                              <i class="material-icons">close</i>
+                            </button>
+                          </div>
+                          <dxo-paging [pageSize]="10" [pageIndex]="0"></dxo-paging>
+                        </dx-data-grid>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-offset-6">
+                  <div class="row" style="float: right;">
+                    <div class="col-xs-5 col-sm-2 col-md-4 col-lg-5">
+                      <button class="btn btn-fill btn-Azulsiman" type="submit" (click)="GuardarProductosConAtributos()">
+                        <i class="material-icons">done</i>
+                        Guardar
+                      </button>
+                      <br>
+                    </div>
+                    <div class="col-xs-5 col-sm-2 col-md-4 col-lg-4">
+                      <button class="btn btn-fill btn-danger" type="submit" >
+                        <i class="material-icons">close</i>Cancelar
+                      </button>
+                      <br>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

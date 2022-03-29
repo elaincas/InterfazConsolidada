@@ -1,0 +1,166 @@
+<!-- <app-main-loader></app-main-loader> -->
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-icon" data-background-color="green">
+            <i class="material-icons">mode_edit</i>
+          </div>
+          <div class="card-content">
+            <h4 class="card-title">Editar Banner</h4>
+          </div>
+        <div class="card-content">
+            <div class="row">
+              <div class="col-md-3 col-lg-3">
+                <dx-check-box
+                  text = "¿Tiene fecha de finalización?"
+                  [(ngModel)] = banner.tieneFechaFinalizacion
+                  [value] = banner.tieneFechaFinalizacion>
+                </dx-check-box>
+              </div>
+              <div class="col-md-9 col-lg-9">
+                    <span class="labelsFormularios" *ngIf="!banner.tieneFechaFinalizacion">
+                      <strong>*El banner empezará a ser visible en la página después de guardarlo y dejará de ser visible hasta que se desactive.</strong>
+                    </span>
+                <span class="labelsFormularios" *ngIf="banner.tieneFechaFinalizacion">
+                      <strong>*El banner empezará a ser visible en la página del {{fechaInicio | date: 'dd MMM, yyyy' : '' : 'es'}}
+                                al {{fechaFin | date: 'dd MMM, yyyy' : '' : 'es'}}</strong>
+                </span>
+              </div>
+            </div>            
+            <br>
+            <div class="row">
+              <div class="col-md-3 col-sm-6">
+                <span class="labelsFormularios">Fecha de Inicio:</span>
+                <dx-date-box
+                  accesskey="dx-fechaInicio"
+                  [value]="fechaInicio"
+                  [displayFormat]="'dd/MM/yyyy'"
+                  [(ngModel)] = "fechaInicio"
+                  [min] = "minDate"
+                  [readOnly] = !banner.tieneFechaFinalizacion
+                  type="date">
+                </dx-date-box>
+              </div>
+              <div class="col-md-3 col-sm-6">
+                <span class="labelsFormularios">Fecha de Finalización:</span>
+                <dx-date-box
+                  [displayFormat]="'dd/MM/yyyy'"
+                  [(ngModel)]="fechaFin"
+                  [min] = "minDate"
+                  [readOnly] =  !banner.tieneFechaFinalizacion
+                  type="date">
+                </dx-date-box>
+              </div>
+            </div>
+            <div class="row" *ngIf="banner.posicion > 0">
+              <div class="col-md-3" >
+                <br>
+                <span class="labelsFormularios">Posición</span>
+                <dx-select-box
+                  [dataSource] = "posicionBanner"
+                  [(ngModel)]="banner.posicion">
+                </dx-select-box>
+              </div>
+            </div>
+            <br>
+            <div class="row">
+              <div class="col-md-6">
+                <span class="labelsFormularios">Descripción del Banner</span>
+                <dx-text-box
+                  [(ngModel)]="banner.descripcion"
+                  placeholder = ""
+                ></dx-text-box>
+              </div>
+            </div>
+          <br>
+          <div class="row">
+            <div class="col-md-6">
+              <span class="labelsFormularios" >Enlace a otra página (Opcional)</span>
+              <dx-text-box
+                [(ngModel)]="banner.enlace"
+                placeholder = "{{placeHolderEnlace}}"
+              ></dx-text-box>
+            </div>
+          </div>
+          <div class="row" style="margin-top: 10px;">
+            <div class="col-md-3">
+              <dx-check-box
+                text = "¿Es un enlace en www.farmaciasiman.com?"
+                [(ngModel)] = banner.esEnlaceDeLaPagina
+                [value] = banner.esEnlaceDeLaPagina
+                (onValueChanged)="OnEsEnlaceDeLaPagina($event)">
+              </dx-check-box>
+            </div>
+            <div class="col-md-3">
+              <dx-check-box
+                text = "¿El enlace se abre en una nueva pestaña?"
+                [(ngModel)] = banner.abrirEnlaceEnNuevaPestana
+                [value] = banner.abrirEnlaceEnNuevaPestana
+                (onValueChanged)="OnEsEnlaceDeLaPagina($event)">
+              </dx-check-box>
+            </div>
+          </div>
+          <br>
+            <div class="row">
+              <div class="col-md-12">
+                      <div class="row banner-margin-bottom">
+                        <div class="col-md-4 fileUpload-container">
+                          <fieldset class="form-section-title">
+                            Seleccione el Banner <br>({{ banner.banner.dimensionX }}x{{banner.banner.dimensionY}})px
+                          </fieldset>
+                          <dx-file-uploader #fuArchivoWeb id="fuplBannerWeb"
+                                            [(value)]="banner.rutaBanner"
+                                            selectButtonText="Seleccionar Banner"
+                                            labelText=""
+                                            accept=".png, .JPG, .jpeg, .gif"
+                                            uploadMode="userForm"
+                                            type="default"
+                                            labelText = " o arrastrelo aquí"
+                                            (onValueChanged)="ObtenerBannerSeleccionadoDxFileUploader($event)">
+                          </dx-file-uploader>
+                        </div>
+                        <div class="col-md-7" *ngIf="url">
+                          <br>
+                          <div class="row">
+                            <div class="col-xs-1" >
+                              <i *ngIf="ocultarBanner" (click)="OnOcultarBanner(!ocultarBanner)" class="material-icons btnVerBanner" style="cursor: pointer">visibility</i>
+                              <i *ngIf="!ocultarBanner" (click)="OnOcultarBanner(!ocultarBanner)" class="material-icons btnVerBanner" style="cursor: pointer">visibility_off</i>
+                            </div>
+                            <div class="col-md-10" style="margin-top: -2px; display: flex">
+                              <strong style="align-self: center">
+                                <span *ngIf="ocultarBanner" class="labelsFormularios"> Banner Actual</span>
+                                <span *ngIf="!ocultarBanner" class="labelsFormularios"> Banner Actual</span>
+                                <span [ngClass]="{'text-danger': !esDimensionCorrecta, 'text-success': esDimensionCorrecta}">
+                                ({{ banner.dimensionX }}x{{banner.dimensionY}})
+                                </span>
+                              </strong>
+                              <i class="material-icons text-danger" style="margin-left: 5px" *ngIf="!esDimensionCorrecta">warning</i>
+                              <i class="material-icons text-success" style="margin-left: 5px" *ngIf="esDimensionCorrecta">check</i>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <img style="max-height: 400px; width: 100%" *ngIf="!ocultarBanner" [src]="url">
+                          </div>
+                          <br>
+                        </div>
+                      </div>
+                  </div>
+              </div>
+            <div class="row">
+              <div class="col-md-2 col-sm-6">
+                <button class="btn btn-fill btn-Azulsiman" type="submit" (click)="EditarBanner()">Guardar</button>
+                <br>
+              </div>
+              <div class="col-md-2 col-sm-6">
+                <button class="btn btn-fill btn-danger" type="submit" (click)="Cancelar()">Cancelar</button>
+                <br>
+              </div>
+            </div>
+        </div>
+          </div>
+        </div>
+    </div>
+  </div>
+</div>

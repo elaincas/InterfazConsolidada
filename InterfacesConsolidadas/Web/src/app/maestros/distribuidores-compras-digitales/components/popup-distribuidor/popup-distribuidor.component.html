@@ -1,0 +1,55 @@
+<dx-popup
+  [width]="700"
+  [height]="300"
+  [showTitle]="true"
+  title="Modificar Distribuidor"
+  [dragEnabled]="true"
+  [closeOnOutsideClick]="false"
+  [showCloseButton]="true"
+  [visible]="esPopupModificarDistribuidorVisible"
+  [resizeEnabled]="true"
+  contentTemplate="popup-content"
+  (onHiding)="onCerrarModal($event)"
+>
+  <div *dxTemplate="let data of 'popup-content'">
+    <dx-scroll-view width="100%" height="100%">
+      <dx-form
+        [formData]="distribuidor"
+        labelLocation="top"
+        [colCount]="2"
+        [showValidationSummary]="true"
+        validationGroup="vgModificarDistribuidor"
+      >
+        <dxi-item
+          dataField="id"
+          [label]="{ text: 'Id' }"
+          [editorOptions]="{ disabled: true }"
+        ></dxi-item>
+        <dxi-item
+          dataField="nombre"
+          [label]="{ text: 'Distribuidor' }"
+          [editorOptions]="{ disabled: true }"
+        ></dxi-item>
+        <dxi-item dataField="email" [label]="{ text: 'Email' }">
+          <dxi-validation-rule
+            type="email"
+            message="Correo inválido."
+          ></dxi-validation-rule>
+        </dxi-item>
+        <dxi-item dataField="enviarCorreoDeCompra"></dxi-item>
+      </dx-form>
+      <div class="btn-contenedor float-right">
+        <div class="btn-item">
+          <dx-button
+            text="Guardar"
+            type="default"
+            [useSubmitBehavior]="true"
+            validationGroup="vgModificarDistribuidor"
+            (onClick)="modificarDistribuidor($event)"
+          >
+          </dx-button>
+        </div>
+      </div>
+    </dx-scroll-view>
+  </div>
+</dx-popup>

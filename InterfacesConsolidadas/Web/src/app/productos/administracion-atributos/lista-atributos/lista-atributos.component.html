@@ -1,0 +1,49 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-icon" data-background-color="green">
+            <i class="material-icons">list</i>
+          </div>
+          <div class="card-content">
+            <h4 class="card-title">Listado de Productos con sus Características</h4>
+          </div>
+          <div class="card-content">
+            <div class="row">
+              <div class="col-md-12">
+                <dx-data-grid [showBorders]="true"
+                              [masterDetail]="{ enabled: true, template:'sucursalesTemplate'}"
+                              [rowAlternationEnabled]="true"
+                              [dataSource]="listadoProductosConAtributos"
+                >
+                  <dxo-filter-row [visible]="true"></dxo-filter-row>
+                  <dxo-header-filter [visible]="true"></dxo-header-filter>
+                  <dxi-column caption="Código" dataField="id" [width]="100"></dxi-column>
+                  <dxi-column caption="Producto" dataField="descripcion"></dxi-column>
+                  <dxo-paging [pageSize]="20" [pageIndex]="0"></dxo-paging>
+
+                  <div *dxTemplate="let producto of 'sucursalesTemplate'" >
+                    <dx-data-grid [rowAlternationEnabled]="true" [dataSource]="producto.data.atributos">
+                      <dxi-column caption="Característica" dataField="atributo.nombre" [width]="200">  </dxi-column>
+                      <dxi-column caption="Valor" dataField="valor" [width]="400">  </dxi-column>
+                      <dxi-column caption="Acciones" cellTemplate="accionTemplate" [width]="155"> </dxi-column>
+                      <dxo-paging [pageSize]="20" [pageIndex]="1"></dxo-paging>
+                      <div *dxTemplate="let atributo of 'accionTemplate'">
+                        <button rel="tooltip" title="Eliminar" type="button" class="btn btn-grid btn-danger ">
+                          <i class="material-icons">close</i>
+                        </button>
+                      </div>
+                    </dx-data-grid>
+                  </div>
+                </dx-data-grid>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+

@@ -1,0 +1,105 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div
+            class="card-header card-header-icon"
+            data-background-color="green"
+          >
+            <i class="material-icons">description</i>
+          </div>
+          <div class="card-content">
+            <h4 class="card-title">Administrar Firmas de Agentes</h4>
+          </div>
+          <div class="card-content">
+            <button
+              class="btn btn-fill btn-Azulsiman"
+              (click)="mostrarPopupFirmasAgentesAgregar()"
+            >
+              Agregar Firma
+            </button>
+            <div class="row">
+              <div class="col-md-12">
+                <dx-data-grid
+                  #dgSucursalesSellos
+                  [dataSource]="agentesFirmas"
+                  keyExpr="id"
+                  [showBorders]="true"
+                  [showRowLines]="true"
+                  [showColumnLines]="true"
+                  [rowAlternationEnabled]="true"
+                  [allowColumnResizing]="true"
+                >
+                  <dxo-paging [pageSize]="10"> </dxo-paging>
+                  <dxo-pager
+                    [showPageSizeSelector]="true"
+                    [allowedPageSizes]="[10, 25, 50, 100]"
+                    [showInfo]="true"
+                  ></dxo-pager>
+                  <dxo-filter-row [visible]="true"> </dxo-filter-row>
+                  <dxi-column
+                    dataField="agenteId"
+                    caption="Código"
+                    [width]="80"
+                  ></dxi-column>
+                  <dxi-column
+                    dataField="agenteNombre"
+                    caption="Agente"
+                    alignment="left"
+                  ></dxi-column>
+                  <dxi-column
+                    dataField="fechaAgrega"
+                    dataType="date"
+                    format="dd/MM/yyyy"
+                    [width]="200"
+                  ></dxi-column>
+                  <dxi-column
+                    dataField="activo"
+                    caption="Activo"
+                    [width]="100"
+                  ></dxi-column>
+                  <dxi-column
+                    caption="Acciones"
+                    cellTemplate="accionTemplate"
+                    alignment="center"
+                    [width]="100"
+                  ></dxi-column>
+                  <div *dxTemplate="let accion of 'accionTemplate'">
+                    <button
+                      rel="tooltip"
+                      type="button"
+                      class="btn btn-grid btn-Azulsiman"
+                      (click)="mostrarPopupConsulta(accion.data)"
+                    >
+                      <i class="material-icons">edit</i>
+                    </button>
+                    <button
+                      rel="tooltip"
+                      type="button"
+                      class="btn btn-grid btn-Azulsiman"
+                      (click)="
+                        abrirImagenNuevaVentana(accion.data.rutaImagenFirma)
+                      "
+                    >
+                      <i class="material-icons">image</i>
+                    </button>
+                  </div>
+                </dx-data-grid>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<app-agentes-firmas-popup
+  [gridBoxValue]="gridBoxValueAgenteId"
+  [agenteFirma]="agenteFirmaPopup"
+  [accionPopup]="accionPopup"
+  [esPopupAgentesFirmasVisible]="esPopupAgentesFirmasVisible"
+  [esModoEditar]="esModoEditar"
+  (obtenerAgentesFirmas)="obtenerAgentesFirmas()"
+  (onCerrarPopup)="onCerrarPopup()"
+></app-agentes-firmas-popup>

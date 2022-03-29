@@ -1,0 +1,53 @@
+hr {
+  margin-top: -1em;
+}
+
+.hr-color{
+  border-color: rgba(0, 87, 168, 0.4);
+}
+
+::ng-deep .list-container {
+  height: auto;
+}
+
+::ng-deep .producto > div {
+  padding-left: 10px;
+  vertical-align: top;
+  float: left;
+}
+
+::ng-deep .producto > div.inventario {
+  float: right;
+}
+
+.badge-info {
+  background-color: #3a87ad;
+}
+
+.badge-warning {
+  background-color: #f89406;
+}
+
+.badge-pill {
+  cursor: pointer;
+}
+
+.badge-llamada-contestada {
+  background-color: green;
+}
+
+.badge-llamada-perdida {
+  background-color: red;
+}
+
+.badge-acepto-terminos {
+  background-color: rgb(54, 4, 4);
+}
+
+.badge-no-acepto-terminos {
+  background-color: orange;
+}
+
+.badge-tiene-receta {
+  background-color: navy;
+}

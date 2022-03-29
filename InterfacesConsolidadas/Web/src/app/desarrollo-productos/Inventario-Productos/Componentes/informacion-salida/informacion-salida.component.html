@@ -1,0 +1,67 @@
+<div class="card">
+  <div class="card-content">
+    <div class="card-title">Salida:{{TrasladosEnviados.MovimientoProductoId}}, Producto: {{TrasladosEnviados.DescripcionProducto}}</div>
+    <form [formGroup]="_formGrupInfoCliente">
+      <div class="row">
+        <div class="col-md-2">
+          <label class="control-label" for="ProdIdPOS">Código Agente:</label>
+          <dx-text-box formControlName="agenteId" (onValueChanged)="onAgenteIdChange($event)"></dx-text-box>
+        </div>
+
+
+      </div>
+
+      <div class="row">
+        <div class="col-md-4">
+          <label class="control-label" for="ProdIdPOS">Identidad:</label>
+          <dx-text-box formControlName="identidad" mask="0000-0000-00000"></dx-text-box>
+        </div>
+        <div class="col-md-8">
+          <label class="control-label" for="ProdIdPOS">Nombre:</label>
+          <dx-text-box formControlName="nombre"></dx-text-box>
+        </div>
+        <div class="col-md-4">
+          <label class="control-label" for="ProdIdPOS">Cantidad:</label>
+          <dx-number-box formControlName="cantidad"></dx-number-box>
+        </div>
+        <div class="col-md-4">
+          <label class="control-label" for="ProdIdPOS">Fecha:</label>
+          <dx-date-box
+            formControlName="fechaEntrega"
+            displayFormat="dd/MM/yyyy"
+            type="date"
+          ></dx-date-box>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4">
+          <label class="control-label" for="ProdIdPOS">Telefono:</label>
+          <dx-text-box formControlName="telefono" mask="0000-0000#"></dx-text-box>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-5">
+          <dx-file-uploader
+            #ImagenAgregar
+            selectButtonText="Seleccionar"
+            labelText="o arrastrar la imagen"
+            accept=".png,.JPG"
+            uploadMode="useform"
+            type="default"
+            allowCanceling="true"
+            uploadButtonText=""
+            readyToUploadMessage="Listo para subir"
+            (onValueChanged)="ObtenerImagenSeleccionadoDxFileUploader($event)"
+            (onOptionChanged)="QuitarImagen($event)"
+          >
+          </dx-file-uploader>
+          <img
+            *ngIf="fileDataUri"
+            [src]="fileDataUri"
+            style="max-height: 350px; max-width: 350px"
+          />
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

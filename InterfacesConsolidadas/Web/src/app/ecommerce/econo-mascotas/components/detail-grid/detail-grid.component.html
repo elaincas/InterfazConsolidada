@@ -1,0 +1,21 @@
+<dx-data-grid [dataSource]="_productosAtributosGrid" [showBorders]="true" [columnAutoWidth]="true">
+  <dxo-filter-row [visible]="true"> </dxo-filter-row>
+  <dxo-header-filter [visible]="true"></dxo-header-filter>
+  <dxi-column dataField="productoAtributo"  caption="Atributo" dataType="string"></dxi-column>
+  <dxi-column dataField="productoAtributoValor"  caption="Atributo Valor"dataType="string"></dxi-column>
+  <dxi-column dataField="fechaAgrega" caption="Fecha Agrega" dataType="date"></dxi-column>
+  <dxi-column dataField="valor"  caption="Valor"dataType="string"></dxi-column>
+  <dxi-column caption="Acciones" dataField="id" cellTemplate="cellTemplate"> </dxi-column>
+
+  <div *dxTemplate="let data of 'cellTemplate'">
+   
+    <dx-button type="danger"  icon="remove" (onClick)="delete(data.data)">Cancelar</dx-button>
+  </div>
+  <dxo-summary>
+    <dxi-total-item
+        column="productoAtributo"
+        summaryType="count"
+       
+        displayFormat="Atributos Asignados:{0}">
+    </dxi-total-item></dxo-summary>
+</dx-data-grid>

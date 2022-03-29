@@ -1,0 +1,116 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-icon" data-background-color="green">
+                        <i class="material-icons">storage</i>
+                    </div>
+                    <div class="card-content">
+                        <h4 class="card-title">
+                            <strong>Reporte Compensación de Reembolsos</strong>
+                        </h4>
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" >
+                                <h4>
+                                    <strong>Nota: </strong>
+                                </h4>
+                                <p>
+                                    <strong>Se listará la información según la fecha de cierre de planilla(24 mes anterior - 08 mes
+                                        actual (Quincena 1) ; 09-23 (Quincena 2)).</strong>
+                                </p>
+                                <div class="row">
+                                    <div class="col-lg-8 col-md-8 col-sm-10 col-xs-10" >
+                                        <div class="row">
+                                            <div class="col-lg-3 col-md-3 col-sm-7 col-xs-7" >
+                                                <span class="labelsFormulario">Seleccione Año/Mes:</span>
+                                            </div>
+                                            <div class="col-lg-3 col-md-3 col-sm-5 col-xs-5" >
+                                                <span class="labelsFormulario">Seleccione Quincena:</span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-3 col-md-3 col-sm-7 col-xs-7" >
+                                                <dx-date-box (onValueChanged)="ObtenerAnoMesSeleccionado($event)" maxZoomLevel="year" minZoomLevel="year" displayFormat="yyyy/MM">
+                                                </dx-date-box>
+                                                <br/>
+                                            </div>
+                                            <div class="col-lg-3 col-md-3 col-sm-4 col-xs-4" >
+                                                <dx-number-box [(ngModel)]="compensacion.quincena" [showSpinButtons]="true" min=1 max=2></dx-number-box>
+                                                <br/>
+                                            </div>
+                                            <div class="col-lg-4 col-md-4 col-sm-2 col-xs-2" >
+                                                <dx-button type="default" icon="fa fa-search" (onClick)="ObtenerSolicitudes()" [disabled]="bloquearBusqueda"></dx-button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <dx-data-grid #grid id="gridCompensacion" [dataSource]="compensaciones" [showColumnLines]="true" [showRowLines]="true" [showBorders]="true"
+                                    [columnAutoWidth]="true" [rowAlternationEnabled]="true" (onEditorPreparing)="onEditorPreparing($event)">
+                                    <dxo-selection mode="multiple" showCheckBoxesMode="onClick">
+                                    </dxo-selection>
+                                    <dxo-editing mode="cell" [allowUpdating]="true">
+                                    </dxo-editing>
+                                    <dxo-filter-row [visible]="true"> </dxo-filter-row>
+                                    <dxo-header-filter [visible]="true"></dxo-header-filter>
+                                    <dxo-paging [pageSize]="10">
+                                    </dxo-paging>
+                                    <dxo-export [enabled]="true" fileName="Reembolsos_Por_Aceptar" [allowExportSelectedData]="true"></dxo-export>
+                                    <dxi-column [hidingPriority]="0" caption="Código Colab." width="150px" dataField="colaboradorID"> </dxi-column>
+                                    <dxi-column dataField="colaborador" caption="Nombre Colaborador"></dxi-column>
+                                    <dxi-column [hidingPriority]="3" caption="Tipo de Reembolso" width="200px" dataField="tipoReembolso"> </dxi-column>
+                                    <dxi-column [hidingPriority]="4" caption="Fecha Pago" dataField="fechaReembolso" dataType="date" cellTemplate="dateCell">
+                                    </dxi-column>
+                                    <dxi-column caption="Valor a Pagar" dataField="valorAPagar" dataType="number" cellTemplate="moneyCell"> </dxi-column>
+                                    <dxi-column caption="Observaciones" dataField="observaciones"> </dxi-column>
+                                    <div *dxTemplate="let cellData of 'dateCell'">
+                                        {{cellData.value | date: 'dd/MM/yyyy'}}
+                                    </div>
+                                    <div *dxTemplate="let cellData of 'moneyCell'">
+                                        {{cellData.value | number:'.2-5'}}
+                                    </div>
+                                    <dxo-scrolling mode="virtual"></dxo-scrolling>
+                                </dx-data-grid>
+                                <br/>
+                                <dx-button style="float: right" type="success" (onClick)="IngresarInformacion(grid)" text="Enviar a Planilla"></dx-button>
+                                <dx-button style="float: left" type="default" (onClick)="AnularSolicitud(grid)" text="Anular Solicitud"></dx-button>
+
+                            </div>
+                        </div>
+                        <dx-popup class="popup" id="popupReembolso" [width]="450" [height]="360" [showTitle]="true" ng-controller="Ctrl" title="Anular Solicitud"
+                            [dragEnabled]="false" [closeOnOutsideClick]="true" [(visible)]="_mostrarPopup" [resizeEnabled]="true">
+                            <div *dxTemplate="let data of 'content'">
+                                <h4>
+                                    <strong>Solicitud Reembolso</strong>
+                                </h4>
+                                <div class="row">
+                                    <div class="col-md-5 col-xs-4">
+                                        <span>Cód. Colaborador:</span>
+                                        <dx-text-box placeholder="Código" [(ngModel)]="this.anularSolicitud[0].colaboradorID" [disabled]="true"></dx-text-box>
+                                    </div>
+                                    <div class="col-md-7 col-xs-4">
+                                        <span>Nombre Colaborador:</span>
+                                        <dx-text-box placeholder="Nombre" [(ngModel)]="this.anularSolicitud[0].colaborador" [disabled]="true"></dx-text-box>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12 col-xs-10">
+                                        <br>
+                                        <span>Observación:</span>
+                                        <dx-text-box placeholder="Observaciones..." [(ngModel)]="this.anularSolicitud[0].observaciones"></dx-text-box>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <br>
+                                    <div class="col-md-12 col-xs-10">
+                                        <dx-button style="float: right" type="success" (onClick)="AnularSolicitudServicio()" text="Aceptar"></dx-button>
+                                    </div>
+                                </div>
+                            </div>
+                        </dx-popup>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

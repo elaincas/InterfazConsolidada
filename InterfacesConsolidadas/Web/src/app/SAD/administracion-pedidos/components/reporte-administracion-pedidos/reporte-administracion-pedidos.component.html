@@ -1,0 +1,310 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="card">
+          <div class="card-header card-header-icon" data-background-color="green">
+            <i class="material-icons fa-2x">people</i>
+          </div>
+          <div class="card-content pb-0">
+            <h4 class="card-title">Administracion de Pedidos</h4>
+              <div class="row">
+                <dx-data-grid style="width: 100%;"
+                              id="gridReportePedidos"
+                              #gridReportePedidos
+                              [dataSource]="dataSource"
+                              [showBorders]="true"
+                              [showColumnLines]="true"
+                              [showRowLines]="true"
+                              [hoverStateEnabled]="true"
+                              [columnAutoWidth]="true"
+                              [wordWrapEnabled]="true"
+                              [remoteOperations]="true"
+                              noDataText="No se encontraron registros."
+                              [masterDetail]="{ enabled: true, template: 'detail' }"
+                              (onToolbarPreparing)="onToolbarPreparing($event)">
+                  <dxo-paging [pageSize]="20"></dxo-paging>
+                  <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10, 20, 30]" [showInfo]="true"></dxo-pager>
+                  <dxi-column caption="Pedido #" dataField="pedidoID" [width]="80" alignment="center"></dxi-column>
+                  <dxi-column caption="Codigo" dataField="codigoPedido" [width]="80" alignment="center"></dxi-column>
+                  <dxi-column caption="Factura" dataField="facturaID" [width]="80" alignment="center"></dxi-column>
+                  <dxi-column caption="Conserje" dataField="conserje.nombre" [minWidth]="200" cellTemplate="conserjeCell"></dxi-column>
+                  <dxi-column caption="Cliente" dataField="noIdentidad" [minWidth]="200" cellTemplate="clienteCell"></dxi-column>
+                  <dxi-column caption="Fecha Asig." dataField="fechaCrea" [width]="100" cellTemplate="dateCell"></dxi-column>
+                  <dxi-column caption="Sucursal" dataField="sucursal.nombre" [minWidth]="180" [allowEditing]="false"></dxi-column>
+                  <dxi-column caption="Estado" dataField="estadoPedidoID" [minWidth]="140" alignment="center" cellTemplate="estadoCell"></dxi-column>
+                  <dxi-column caption="Total" dataField="total" [width]="90" format="###,##0.00"></dxi-column>
+                  <dxo-summary>
+                    <dxi-total-item column="total" summaryType="sum" valueFormat="###,###,###,##0.00"></dxi-total-item>
+                  </dxo-summary>
+                  <dxo-load-panel [enabled]="true" text="Cargando reporte"></dxo-load-panel>
+                  <div *dxTemplate="let d of 'conserjeCell'">
+                    {{d.value}} <br> <span class="text-muted">{{conserjeCustomText(d)}}</span>
+                  </div>
+                  <div *dxTemplate="let d of 'clienteCell'">
+                    {{clienteCustomText(d)}} <br> <span class="text-muted">ID: {{d.value}}</span>
+                  </div>
+                  <div *dxTemplate="let cellData of 'dateCell'">
+                    {{ cellData.value | date: "dd/MM/yyyy" }} <br/> <span class="text-muted text-uppercase"> {{ cellData.value | date: "hh:mm a" }} </span>
+                  </div>
+                  <div *dxTemplate="let estadoPedidoID of 'estadoCell'">
+                    <div class="badge"
+                        [ngClass]="{'badge-info': estadoPedidoID.value == 1, 'badge-success': estadoPedidoID.value == 2, 'badge-warning': estadoPedidoID.value == 3}">
+                        {{ObtenerEstadoPedidoPorId(estadoPedidoID.value)}}
+                    </div>
+                  </div>
+                  <div *dxTemplate="let pedido of 'detail'">
+                    <div class="container" style="background-color: white;">
+                      <div class="content">
+                          <div class="title-container">
+                            <div class="row">
+                              <div class="col-md-6">
+                                <h4>
+                                  Detalles del Pedido #{{ pedido.data.pedidoID}}
+                                  <span class="badge"
+                                        [ngClass]="{'badge-info': pedido.data.estadoPedidoID == 1, 'badge-success': pedido.data.estadoPedidoID == 2, 'badge-warning': pedido.data.estadoPedidoID == 3}">
+                                        {{ObtenerEstadoPedidoPorId(pedido.data.estadoPedidoID)}}
+                                  </span>
+                                </h4>
+                              </div>
+                              <div class="col-md-6 text-right">
+                                <button type="button" class="btn btn-primary" (click)="VisualizarMarcadorEnMapa(pedido.data)" *ngIf="pedido.data.latitudFacturaRecibida != null && pedido.data.longitudFacturaRecibida != null && pedido.data.conserje != undefined">
+                                  <i class="glyphicon glyphicon-map"></i> Ver ubicacion de entrega
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="stats">
+                            <div>
+                              <div class="sub-title">Sub Total</div>
+                              <div class="stat-value">L. {{pedido.data.subTotal}}</div>
+                            </div>
+                            <div>
+                              <div class="sub-title">Descuento</div>
+                              <div class="stat-value">L. {{pedido.data.totalDescuento}}</div>
+                            </div>
+                            <div>
+                              <div class="sub-title">Descuento Puntos</div>
+                              <div class="stat-value">L. {{pedido.data.totalDescuentoPorPuntos}}</div>
+                            </div>
+                            <div>
+                              <div class="sub-title">ISV</div>
+                              <div class="stat-value">L. {{pedido.data.totalImpuestoVenta}}</div>
+                            </div>
+                            <div>
+                              <div class="sub-title">Impuesto selectivo</div>
+                              <div class="stat-value">L. {{pedido.data.totalImpuestoSelectivo}}</div>
+                            </div>
+                            <div>
+                              <div class="sub-title">Total</div>
+                              <div class="stat-value">L. {{pedido.data.total}}</div>
+                            </div>
+                          </div>
+                          <div class="row" style="margin-bottom: 5px;">
+                            <div class="col-sm-3">
+                              Factura ID:
+                              <dx-text-box [readOnly]="true" [value]="pedido.data.facturaID"></dx-text-box>
+                            </div>
+                            <div class="col-sm-3">
+                              Fecha Factura:
+                              <dx-date-box [readOnly]="true" [value]="pedido.data.fechaFactura" [displayFormat]="'dd/MM/yyyy hh:mm a'" type="datetime">
+                              </dx-date-box>
+                            </div>
+                            <div class="col-sm-3">
+                              Fecha Asignacion:
+                              <dx-date-box [readOnly]="true" [value]="pedido.data.fechaCrea" [displayFormat]="'dd/MM/yyyy hh:mm a'" type="datetime">
+                              </dx-date-box>
+                            </div>
+                            <div class="col-sm-3">
+                              Fecha Entregado:
+                              <dx-date-box [readOnly]="true" [value]="pedido.data.fechaDeRecepcionPorCliente" [displayFormat]="'dd/MM/yyyy hh:mm a'" type="datetime">
+                              </dx-date-box>
+                            </div>
+                            <div class="col-sm-6">
+                              Observaciones Pedido Web:
+                              <dx-text-area [readOnly]="true" [value]="pedido.data.ObservacionPedidoWeb"></dx-text-area>
+                            </div>
+                            <div class="col-sm-6">
+                              Indicaciones de entrega:
+                              <dx-text-area [readOnly]="true" [value]="pedido.data.indicacionesDeEntrega"></dx-text-area>
+                            </div>
+                          </div>
+                          <dx-tab-panel id="tabpanel" [animationEnabled]="true">
+                            <dxi-item title="Productos">
+                              <dx-data-grid [dataSource]="pedido.data.detalle"
+                                            [showBorders]="true"
+                                            [rowAlternationEnabled]="true"
+                                            [hoverStateEnabled]="true">
+                                <dxi-column dataField="prodID" caption="Código" alignment="center" width="110"></dxi-column>
+                                <dxi-column dataField="prodDescripcion" caption="Producto"></dxi-column>
+                                <dxi-column dataField="cantidad" caption="Cantidad" alignment="center" width="110"></dxi-column>
+                                <dxi-column dataField="precioPublico" caption="Precio Publico" width="110" format="###,##0.00"></dxi-column>
+                                <dxi-column dataField="descAplicado" caption="Descuento" width="110" format="###,##0.00"></dxi-column>
+                                <dxi-column dataField="totalFacturado" caption="Total Facturado" [width]="110" format="###,##0.00"></dxi-column>
+                              </dx-data-grid>
+                            </dxi-item>
+                            <dxi-item *ngIf="pedido.data.cliente != null" title="Cliente">
+                              <div class="row">
+                                <div class="col-sm-3">
+                                  Celular:
+                                  <dx-text-box [readOnly]="true" [value]="pedido.data.cliente.celular"></dx-text-box>
+                                </div>
+                                <div class="col-sm-3">
+                                  Email:
+                                  <dx-text-box [readOnly]="true" [value]="pedido.data.cliente.email"></dx-text-box>
+                                </div>
+                                <div class="col-sm-3">
+                                  Ciudad:
+                                  <dx-text-box [readOnly]="true" [value]="pedido.data.cliente.ciudad"></dx-text-box>
+                                </div>
+                                <div class="col-sm-3">
+                                  Colonia:
+                                  <dx-text-box [readOnly]="true" [value]="pedido.data.cliente.colonia"></dx-text-box>
+                                </div>
+                                <div class="col-sm-12">
+                                  Direccion:
+                                  <dx-text-area [readOnly]="true" [value]="pedido.data.cliente.direccion"></dx-text-area>
+                                </div>
+                              </div>
+                            </dxi-item>
+                            <dxi-item title="Documentos" *ngIf="pedido.data.rutaImagenFirmaDeRecepcion != null && pedido.data.rutaImagenFirmaDeRecepcion != ''">
+                              <img
+                              *ngIf="pedido.data.rutaImagenFirmaDeRecepcion != null && pedido.data.rutaImagenFirmaDeRecepcion != ''"
+                                  [src]="pedido.data.rutaImagenFirmaDeRecepcion"
+                                  style="max-height: 400px; max-width: 400px"
+                                />
+                              <h6 *ngIf="pedido.data.rutaImagenFirmaDeRecepcion  == null || pedido.data.rutaImagenFirmaDeRecepcion .length == 0" class="text-danger text-center">
+                                No se han registrado documentos
+                              </h6>
+                            </dxi-item>
+                          </dx-tab-panel>
+                      </div>
+                  </div>
+                  </div>
+                </dx-data-grid>
+              </div>
+          </div>
+          <dx-popup class="popup"
+                    [showTitle]="true"
+                    title="Panel de Filtros"
+                    [dragEnabled]="false"
+                    [closeOnOutsideClick]="true"
+                    [(visible)]="popupFiltrosVisible"
+                    [width]= 600
+                    [height] = 520>
+              <div *dxTemplate="let data of 'content'" class="container">
+                <form [formGroup]="formReporte">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label>Factura ID:</label>
+                        <dx-text-box formControlName="facturaId" placeholder="Buscar por factura"></dx-text-box>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label>Codigo Pedido:</label>
+                        <dx-text-box formControlName="codigoPedido" placeholder="Buscar codigo pedido"></dx-text-box>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label>Identidad Cliente:</label>
+                        <dx-text-box formControlName="noIdentidad" placeholder="Buscar por identidad"></dx-text-box>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label>Conserje:</label>
+                        <dx-lookup formControlName="conserjeId"
+                          [dataSource]="conserjes"
+                          displayExpr="nombre"
+                          valueExpr="codigoVhur"
+                          [showClearButton]="true"
+                          [searchEnabled]="true"
+                          placeholder="Seleccionar"
+                          clearButtonText="Quitar filtro"
+                          cancelButtonText="Cancelar"
+                          noDataText="No se encontraron registros">
+                        </dx-lookup>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label>Sucursal:</label>
+                        <dx-lookup formControlName="sucursalId"
+                          [dataSource]="sucursales"
+                          displayExpr="nombrePublico"
+                          valueExpr="codigo"
+                          [showClearButton]="true"
+                          [searchEnabled]="true"
+                          placeholder="Seleccionar"
+                          clearButtonText="Quitar filtro"
+                          cancelButtonText="Cancelar"
+                          noDataText="No se encontraron registros">
+                        </dx-lookup>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label>Estado:</label>
+                        <dx-lookup formControlName="estadoPedidoId"
+                          [dataSource]="estados"
+                          displayExpr="descripcion"
+                          valueExpr="estadoPedidoID"
+                          [searchEnabled]="false"
+                          [showClearButton]="true"
+                          placeholder="Seleccionar"
+                          clearButtonText="Quitar filtro"
+                          cancelButtonText="Cancelar"
+                          noDataText="No se encontraron registros">
+                        </dx-lookup>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label>Fecha Pedido:</label>
+                        <dx-date-box
+                          formControlName="fechaPedidoRealizado"
+                          accesskey="dx-fechaPedidoRealizado"
+                          [displayFormat]="'dd/MM/yyyy'"
+                          type="date"
+                          width="auto"
+                          [(ngModel)]="fechaPedidoRealizado">
+                      </dx-date-box>
+                      </div>
+                    </div>
+                    <div class="col-md-12 text-center m-b-5">
+                      <button type="button" class="btn btn-default" (click)="cargarReporte()">
+                        <i class="material-icons fa-2x">filter_list</i> Cargar Reporte
+                      </button>
+                      <br>
+                    </div>
+                  </div>
+              </form>
+            </div>
+          </dx-popup>
+          <dx-popup class="popup"
+                    [showTitle]="true"
+                    title="Ubicacion de la entrega"
+                    [dragEnabled]="false"
+                    [closeOnOutsideClick]="true"
+                    [(visible)]="popupMapaGeneralVisible"
+                    [width]= 700
+                    [height] = 700>
+              <div *dxTemplate="let data of 'content'" class="container">
+                <dx-map
+                    [zoom]="16"
+                    [markerIconSrc]="customMarkerUrl"
+                    [height]="600"
+                    width="100%"
+                    [controls]="true"
+                    [markers]="markers">
+                </dx-map>
+              </div>
+          </dx-popup>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

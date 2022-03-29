@@ -1,0 +1,798 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div
+            class="card-header card-header-icon"
+            data-background-color="green"
+          >
+            <i class="material-icons">list</i>
+          </div>
+          <div class="card-content">
+            <h4 class="card-title">Listado de Encuestas</h4>
+          </div>
+          <div class="card-content" id="listadoEncuestas">
+            <div class="row">
+              <div class="col-md-12">
+                <dx-data-grid
+                  #dxDataGridListadoPreguntas
+                  [showBorders]="true"
+                  [rowAlternationEnabled]="true"
+                  [masterDetail]="{
+                    enabled: true,
+                    template: 'tiposPedidosPorPregunta'
+                  }"
+                  [dataSource]="listaPreguntas"
+                >
+                  <dxo-filter-row [visible]="true"></dxo-filter-row>
+                  <dxo-header-filter [visible]="true"></dxo-header-filter>
+                  <dxi-column
+                    caption="Pregunta"
+                    [width]="400"
+                    dataField="descripcion"
+                  ></dxi-column>
+                  <dxi-column
+                    caption="Momento a Evaluar"
+                    [width]="250"
+                    cellTemplate="momentoEvaluarTemplate"
+                  ></dxi-column>
+                  <dxi-column
+                    caption="Tipo de Pregunta"
+                    [width]="150"
+                    cellTemplate="tipoPreguntaTemplate"
+                  ></dxi-column>
+                  <dxi-column
+                    caption="Acciones"
+                    cellTemplate="accionTemplate"
+                    [width]="125"
+                  >
+                  </dxi-column>
+                  <dxo-paging [pageSize]="10" [pageIndex]="0"></dxo-paging>
+                  <div *dxTemplate="let c of 'momentoEvaluarTemplate'">
+                    <span
+                      *ngIf="
+                        c.data.momentoAEvaluar ===
+                        tiposMomentosTipo.Inmediatamente
+                      "
+                      >Al momento de hacer el pedido web</span
+                    >
+                    <span
+                      *ngIf="
+                        c.data.momentoAEvaluar ===
+                        tiposMomentosTipo.AlSerEntregado
+                      "
+                      >Cuanto el pedido haya sido entregado</span
+                    >
+                  </div>
+                  <div *dxTemplate="let c of 'tipoPreguntaTemplate'">
+                    <span
+                      *ngIf="
+                        c.data.tipoPregunta ===
+                        tiposPreguntasTipo.SatisfechoInsatisfecho
+                      "
+                      >Satisfecho/Insatisfecho</span
+                    >
+                    <span *ngIf="c.data.tipoPregunta === tiposPreguntasTipo.NPS"
+                      >NPS del 0 al 10</span
+                    >
+                  </div>
+                  <div *dxTemplate="let c of 'accionTemplate'">
+                    <button
+                      rel="tooltip"
+                      title="Preview"
+                      (click)="mostrarPreview(c.data)"
+                      type="button"
+                      class="btn btn-grid btn-default"
+                    >
+                      <i class="fa fa-eye"></i>
+                    </button>
+                    <button
+                      rel="tooltip"
+                      title="Desactivar"
+                      *ngIf="c.data.activo"
+                      (click)="inactivar(c.data.id)"
+                      type="button"
+                      class="btn btn-grid btn-success"
+                    >
+                      <i class="material-icons">arrow_downward</i>
+                    </button>
+                    <button
+                      rel="tooltip"
+                      title="Activar"
+                      *ngIf="!c.data.activo"
+                      (click)="activar(c.data.id)"
+                      type="button"
+                      class="btn btn-grid btn-danger"
+                    >
+                      <i class="material-icons">arrow_upward</i>
+                    </button>
+                    <button
+                      rel="tooltip"
+                      title="Editar"
+                      (click)="actualizar(c.data)"
+                      type="button"
+                      class="btn btn-grid btn-Azulsiman"
+                    >
+                      <i class="material-icons">mode_edit</i>
+                    </button>
+                  </div>
+                  <div
+                    *dxTemplate="
+                      let detallePedidoTipo of 'tiposPedidosPorPregunta'
+                    "
+                  >
+                    <dx-data-grid
+                      [rowAlternationEnabled]="true"
+                      [dataSource]="detallePedidoTipo.key.pedidosTipos"
+                    >
+                      <dxi-column
+                        caption="Tipo de pedido"
+                        dataField="descripcion"
+                        [width]="400"
+                      >
+                      </dxi-column>
+                      <dxi-column
+                        caption="Acciones"
+                        cellTemplate="accionTemplate"
+                        [width]="155"
+                      >
+                      </dxi-column>
+                      <dxo-paging [pageSize]="15" [pageIndex]="1"></dxo-paging>
+                      <div
+                        *dxTemplate="
+                          let dataBtnDetallePedido of 'accionTemplate'
+                        "
+                      >
+                        <button
+                          rel="tooltip"
+                          title="Eliminar"
+                          (click)="
+                            eliminarDetalle(
+                              dataBtnDetallePedido.data.id,
+                              detallePedidoTipo.key.pedidosTipos
+                            )
+                          "
+                          type="button"
+                          class="btn btn-grid btn-danger"
+                        >
+                          <i class="material-icons">close</i>
+                        </button>
+                      </div>
+                    </dx-data-grid>
+                  </div>
+                </dx-data-grid>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div
+            class="card-header card-header-icon"
+            data-background-color="green"
+          >
+            <i class="material-icons">mode_edit</i>
+          </div>
+
+          <div class="card-content" id="administrarEncuestasPedidos">
+            <h4 class="card-title">Encuestas para Pedidos</h4>
+            <form [formGroup]="formGroupEncuestas">
+              <div class="row">
+                <div class="col-md-6 contenido-izquierdo">
+                  <div class="form-group">
+                    <label for=""
+                      >Pregunta:
+                      <dx-text-box
+                        [readOnly]="false"
+                        [maxLength]="100"
+                        [width]="400"
+                        #pregunta
+                        formControlName="pregunta"
+                      >
+                      </dx-text-box>
+                    </label>
+                    <div *ngIf="submit && validacion.pregunta.error">
+                      <span class="text-danger">{{
+                        validacion.pregunta.mensaje
+                      }}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6 mt-2rem text-center">
+                  <div class="form-group">
+                    <label for="">
+                      Es Pregunta Activa
+                      <dx-check-box formControlName="checkActivo">
+                      </dx-check-box>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="col-md-12 mt-2rem">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label class=""
+                          >¿En que momento se aplicará la evaluación?</label
+                        >
+                        <dx-radio-group
+                          #radioGroupMomentoEvaluacion
+                          [(value)]="momento"
+                          displayExpr="descripcionMomento"
+                          valueExpr="id"
+                          [items]="momentos"
+                        >
+                        </dx-radio-group>
+                        <div *ngIf="submit && validacion.momento.error">
+                          <span class="text-danger">{{
+                            validacion.momento.mensaje
+                          }}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label class="">¿Cuál es el tipo de evaluación?</label>
+                        <dx-radio-group
+                          #radioGroupTiposPreguntas
+                          [(value)]="tipoPregunta"
+                          displayExpr="descripcionPregunta"
+                          valueExpr="id"
+                          [disabled]="
+                            (esEdicion && calificaciones > 0) || estadoOriginal
+                          "
+                          [items]="tiposPreguntas"
+                        >
+                        </dx-radio-group>
+                        <div *ngIf="submit && validacion.tipoPregunta.error">
+                          <span class="text-danger">{{
+                            validacion.tipoPregunta.mensaje
+                          }}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  class="col-md-12 mt-2rem"
+                  *ngIf="tipoPregunta === tiposPreguntasTipo.NPS"
+                >
+                  <div class="row">
+                    <div class="col-md-6 contenido-izquierdo">
+                      <div class="form-group">
+                        <label for=""
+                          >Texto extremo Inferior de la Calificación:
+                          <dx-text-box
+                            [readOnly]="false"
+                            [maxLength]="50"
+                            [width]="400"
+                            formControlName="extremoInferiorTexto"
+                          >
+                          </dx-text-box>
+                        </label>
+                        <div
+                          *ngIf="
+                            submit && validacion.extremoInferiorTexto.error
+                          "
+                        >
+                          <span class="text-danger">{{
+                            validacion.extremoInferiorTexto.mensaje
+                          }}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for=""
+                          >Texto extremo Superior de la Calificación:
+                          <dx-text-box
+                            [readOnly]="false"
+                            [maxLength]="50"
+                            [width]="400"
+                            formControlName="extremoSuperiorTexto"
+                          >
+                          </dx-text-box>
+                        </label>
+                        <div
+                          *ngIf="
+                            submit && validacion.extremoSuperiorTexto.error
+                          "
+                        >
+                          <span class="text-danger">{{
+                            validacion.extremoSuperiorTexto.mensaje
+                          }}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="col-md-12 mt-2rem"
+                  *ngIf="
+                    tipoPregunta === tiposPreguntasTipo.SatisfechoInsatisfecho
+                  "
+                >
+                  <div class="row">
+                    <div class="col-md-6 contenido-izquierdo">
+                      <label class="">Subir imagen de Satisfecho:</label>
+                      <dx-file-uploader
+                        #fileUploader
+                        uploadUrl="{{
+                          url
+                        }}/ExperienciaUsuariosPreguntas/SubirImagen"
+                        [multiple]="false"
+                        (onUploaded)="onUploaded($event, 'aprobación')"
+                        accept="image/*"
+                        [(value)]="fileUploaderAprobacion"
+                        uploadMode="instantly"
+                        labelText="Subir o Soltar la imagen aquí"
+                        selectButtonText="Imagen Satisfecho"
+                      >
+                      </dx-file-uploader>
+                      <div
+                        *ngIf="
+                          urlImagenAprobacion &&
+                          urlImagenAprobacion !== '' &&
+                          urlImagenAprobacion !== null &&
+                          urlImagenAprobacion !== undefined
+                        "
+                      >
+                        <h4>Imagen Satisfecho</h4>
+                        <img
+                          src="{{ urlImagenAprobacion }}"
+                          class="imagen"
+                          alt="Imagen de Aprobación"
+                        />
+                      </div>
+                      <div *ngIf="submit && validacion.imagenAprobacion.error">
+                        <span class="text-danger">{{
+                          validacion.imagenAprobacion.mensaje
+                        }}</span>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <label class="">Subir imagen de Insatisfecho:</label>
+                      <dx-file-uploader
+                        ondrag="onDrag()"
+                        onended="imagenSubida(e)"
+                        uploadUrl="{{
+                          url
+                        }}/ExperienciaUsuariosPreguntas/SubirImagen"
+                        [multiple]="false"
+                        uploadedMessage="false"
+                        (onUploaded)="onUploaded($event, 'desaprobación')"
+                        accept="image/*"
+                        [(value)]="fileUploaderDesaprobacion"
+                        uploadMode="instantly"
+                        labelText="Subir o Soltar la imagen aquí"
+                        selectButtonText="Imagen Insatisfecho"
+                      >
+                      </dx-file-uploader>
+
+                      <div
+                        *ngIf="
+                          urlImagenDesaprobacion &&
+                          urlImagenDesaprobacion !== '' &&
+                          urlImagenDesaprobacion !== null &&
+                          urlImagenDesaprobacion !== undefined
+                        "
+                      >
+                        <h4>Imagen Insatisfecho</h4>
+                        <img
+                          src="{{ urlImagenDesaprobacion }}"
+                          class="imagen"
+                          alt="Imagen de Desaprobación"
+                        />
+                      </div>
+                      <div
+                        *ngIf="submit && validacion.imagenDesaprobacion.error"
+                      >
+                        <span class="text-danger">{{
+                          validacion.imagenAprobacion.mensaje
+                        }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-12 mt-2rem espacio-lados-sm">
+                  <div class="row">
+                    <div class="col-md-3">
+                      <div class="form-group">
+                        <label class="">Tipos de pedidos:</label>
+                        <dx-drop-down-box
+                          #dropdownPedidoTipo
+                          stylingMode="outlined"
+                          displayExpr="pedido"
+                          valueExpr="id"
+                          [deferRendering]="false"
+                          placeholder="Seleccione los tipos de Pedido"
+                          [showClearButton]="true"
+                          [dataSource]="dataSourcePedidosTipos"
+                        >
+                          <div *dxTemplate="let data of 'content'">
+                            <dx-list
+                              #listPedidosTipos
+                              [dataSource]="listaPedidosTipos"
+                              [showSelectionControls]="true"
+                              [(selectedItemKeys)]="
+                                pedidosTiposKeysSeleccionadas
+                              "
+                              [(selectedItems)]="pedidosTiposSeleccionadosDDL"
+                              selectionMode="multiple"
+                              keyExpr="value"
+                              (onSelectionChanged)="
+                                agregarPedidosTiposGrid($event)
+                              "
+                              id="gridPedidosTipos"
+                            >
+                            </dx-list>
+                          </div>
+                        </dx-drop-down-box>
+                        <div
+                          *ngIf="
+                            submit && validacion.pedidosTiposAgregados.error
+                          "
+                        >
+                          <span class="text-danger">{{
+                            validacion.pedidosTiposAgregados.mensaje
+                          }}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div
+                      class="col-md-12"
+                      *ngIf="
+                        !validacionPedidoTipo.esCorrecto &&
+                        validacionPedidoTipo.mensajes.length > 0 &&
+                        formGroupEncuestas.get('checkActivo').value
+                      "
+                    >
+                      <div class="row">
+                        <div class="col-md-5">
+                          <div class="mt-1rem">
+                            <div class="alert alert-warning" role="alert">
+                              <span
+                                class="glyphicon glyphicon-exclamation-sign"
+                                aria-hidden="true"
+                                ><b style="margin-left: 5px">Nota:</b></span
+                              >
+                              <p class="mt-1rem">
+                                Se inactivarán las preguntas asociadas a éstos
+                                Tipos de Pedido:
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div
+                          class="col-md-5"
+                          *ngFor="let mensajes of validacionPedidoTipo.mensajes"
+                        >
+                          <div class="alert alert-info">
+                            <h4>{{ mensajes.tipoPedido }}</h4>
+                            <p>{{ mensajes.pregunta }}</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-9"></div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-12 espacio-lados-sm">
+                      <dx-data-grid
+                        [dataSource]="pedidosTiposSeleccionadosDDL"
+                        [remoteOperations]="true"
+                        [hoverStateEnabled]="true"
+                        [filterRow]="{ visible: true }"
+                        [scrolling]="{ mode: 'infinite' }"
+                        keyExpr="value"
+                        [(keyExpr)]="idSeleccionados"
+                        [showBorders]="true"
+                        [height]="250"
+                      >
+                        <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+                        <dxi-column
+                          dataField="text"
+                          caption="Tipo de Pedido"
+                        ></dxi-column>
+                        <dxi-column
+                          caption="Acción"
+                          cellTemplate="accionTemplate"
+                          [width]="100"
+                        ></dxi-column>
+
+                        <div *dxTemplate="let d of 'accionTemplate'">
+                          <button
+                            rel="tooltip"
+                            (click)="emitEliminarPedidoTipo(d.data.value)"
+                            type="button"
+                            class="btn btn-grid btn-danger"
+                          >
+                            <i class="material-icons">close</i>
+                          </button>
+                        </div>
+                      </dx-data-grid>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div
+                class="col-md-12"
+                style="display: flex; justify-content: left"
+              >
+                <div
+                  *ngIf="!esEdicion"
+                  class="form-group"
+                  style="margin-left: 5px"
+                >
+                  <dx-button
+                    text="Agregar"
+                    type="success"
+                    (onClick)="guardarCreacion()"
+                  >
+                  </dx-button>
+                </div>
+
+                <div
+                  *ngIf="esEdicion"
+                  class="form-group"
+                  style="margin-left: 5px"
+                >
+                  <dx-button
+                    text="Guardar"
+                    type="success"
+                    (onClick)="guardarEdicion()"
+                  >
+                  </dx-button>
+                </div>
+
+                <div class="form-group" style="margin-left: 5px">
+                  <dx-button text="Limpiar" type="danger" (onClick)="limpiar()">
+                  </dx-button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <dx-popup
+    class="popup"
+    id="popup"
+    height="auto"
+    width="60%"
+    [showTitle]="true"
+    title=""
+    [dragEnabled]="false"
+    [closeOnOutsideClick]="true"
+    [(visible)]="_mostrarPopupInactivar"
+    [showCloseButton]="true"
+    [resizeEnabled]="true"
+    [deferRendering]="false"
+  >
+    <div *dxTemplate="let data of 'content'">
+      <br />
+      <div class="row text-center">
+        <div class="col-12">
+          <h3>¿Estás seguro de que deseas activar la pregunta?</h3>
+        </div>
+      </div>
+      <div class="row">
+        <div
+          class="col-md-12"
+          *ngIf="
+            !validacionPedidoTipoModal.esCorrecto &&
+            validacionPedidoTipoModal.mensajes.length > 0
+          "
+        >
+          <div class="row">
+            <div class="col-md-12">
+              <div class="mt-1rem">
+                <div class="alert alert-warning" role="alert">
+                  <span
+                    class="glyphicon glyphicon-exclamation-sign"
+                    aria-hidden="true"
+                    ><b style="margin-left: 5px">Nota:</b></span
+                  >
+                  <p class="mt-1rem">
+                    Si la activas, se inactivarán las preguntas asociados a
+                    éstos Tipos de Pedido:
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <dx-data-grid
+                [showBorders]="true"
+                [rowAlternationEnabled]="true"
+                [dataSource]="validacionPedidoTipoModal.mensajes"
+              >
+                <dxi-column
+                  caption="Tipo de Pedido"
+                  [width]="200"
+                  dataField="tipoPedido"
+                ></dxi-column>
+                <dxi-column
+                  caption="Pregunta"
+                  [width]="400"
+                  dataField="pregunta"
+                ></dxi-column>
+                <dxo-paging [pageSize]="10" [pageIndex]="0"></dxo-paging>
+              </dx-data-grid>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row" style="float: right; padding-bottom: 1rem">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+          <br />
+          <dx-button
+            icon="fa fa-floppy-o"
+            type="success"
+            text="Activar"
+            (onClick)="activarPregunta()"
+          >
+          </dx-button>
+          <dx-button
+            icon="fa fa-times-circle"
+            type="defult"
+            text="Cerrar"
+            (onClick)="cerrarPreviewPedidosTipos()"
+          >
+          </dx-button>
+          <br />
+        </div>
+      </div>
+    </div>
+  </dx-popup>
+  <dx-popup
+    class="popup"
+    id="popup"
+    width="50%"
+    height="68%"
+    [dragEnabled]="false"
+    [closeOnOutsideClick]="true"
+    [(visible)]="_mostrarPopup"
+    [showCloseButton]="true"
+    [resizeEnabled]="true"
+    [deferRendering]="false"
+  >
+    <div *dxTemplate="let data of 'content'">
+      <br />
+      <div class="row text-center">
+        <div class="col-12">
+          <h3>{{ informacionPreview.descripcion }}</h3>
+        </div>
+      </div>
+      <div class="row text-center">
+        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2"></div>
+        <div
+          *ngIf="
+            informacionPreview.tipoPregunta ===
+            tiposPreguntasTipo.SatisfechoInsatisfecho
+          "
+          class="col-xs-4 col-sm-4 col-md-4 col-lg-4"
+        >
+          <img
+            src="{{ informacionPreview.imagenSatisfechoURL }}"
+            [ngClass]="{
+              'imagen-seleccionada': satisfechoSeleccionado,
+              'imagen-seleccionar': !satisfechoSeleccionado
+            }"
+            (click)="seleccionarSatisfechoInsatisfecho('satisfecho')"
+            class="satisfecho-insatisfecho imagen-seleccionar"
+            alt=""
+          />
+        </div>
+
+        <div
+          *ngIf="
+            informacionPreview.tipoPregunta ===
+            tiposPreguntasTipo.SatisfechoInsatisfecho
+          "
+          class="col-xs-4 col-sm-4 col-md-4 col-lg-4"
+        >
+          <img
+            src="{{ informacionPreview.imagenInsatisfechoURL }}"
+            [ngClass]="{
+              'imagen-seleccionada': insatisfechoSeleccionado,
+              'imagen-seleccionar': !insatisfechoSeleccionado
+            }"
+            class="satisfecho-insatisfecho"
+            (click)="seleccionarSatisfechoInsatisfecho('insatisfecho')"
+            alt=""
+          />
+        </div>
+        <div
+          class="col-xs-8 col-sm-8 col-md-8 col-lg-8"
+          *ngIf="informacionPreview.tipoPregunta === tiposPreguntasTipo.NPS"
+        >
+          <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+              <span class="pull-left">{{
+                informacionPreview.extremoInferiorTexto
+              }}</span>
+              <span class="pull-right">{{
+                informacionPreview.extremoSuperiorTexto
+              }}</span>
+            </div>
+            <div class="col-xs-12">
+              <span class="pull-left">0</span>
+              <span class="pull-right">10</span>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+              <dx-slider
+                [min]="0"
+                [max]="10"
+                [value]="0"
+                [(value)]="calificacion"
+              >
+                <dxo-tooltip
+                  [enabled]="true"
+                  showMode="onHover"
+                  position="bottom"
+                ></dxo-tooltip>
+              </dx-slider>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2"></div>
+        <div class="row">
+          <div
+            class="col-md-7"
+            [ngClass]="{
+              'col-md-offset-2':
+                informacionPreview.tipoPregunta === tiposPreguntasTipo.NPS,
+              'col-md-offset-3':
+                informacionPreview.tipoPregunta ===
+                tiposPreguntasTipo.SatisfechoInsatisfecho
+            }"
+            [ngStyle]="{ 'margin-top': '2rem' }"
+          >
+            <div [formGroup]="formGroupResultadoEncuesta" class="">
+              <label for="comentario" class=""
+                >Comentario:
+                <dx-text-area
+                  [readOnly]="false"
+                  [width]="400"
+                  #pregunta
+                  formControlName="comentario"
+                >
+                </dx-text-area>
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="row" style="float: right; padding-bottom: 1rem">
+          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <br />
+            <dx-button
+              icon="fa fa-floppy-o"
+              type="primary"
+              text="Guardar"
+              (onClick)="guardarPreviewFalsamente()"
+            >
+            </dx-button>
+            <dx-button
+              icon="fa fa-times-circle"
+              type="defult"
+              text="Cerrar"
+              (onClick)="cerrarPreview()"
+            >
+            </dx-button>
+            <br />
+          </div>
+        </div>
+      </div>
+    </div>
+  </dx-popup>
+</div>

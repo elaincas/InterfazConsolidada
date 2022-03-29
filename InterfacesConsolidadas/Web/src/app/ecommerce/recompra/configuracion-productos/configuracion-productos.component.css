@@ -1,0 +1,7 @@
+hr {
+  margin-top: -1em;
+}
+
+.hr-color {
+  border-color: rgba(0, 87, 168, 0.4);
+}

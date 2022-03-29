@@ -1,0 +1,125 @@
+<dx-popup class="popup" [width]="540" [height]="540" [showTitle]="true" title="Usuario" [dragEnabled]="true"
+  [closeOnOutsideClick]="false" [(visible)]="visible" [resizeEnabled]="true">
+  <div *dxTemplate="let data of 'content'">
+    <dx-scroll-view #scrollViewContent id="scrollViewContent" style="height:400px" scrollByContent="true" showScrollbar="always">
+      <form [formGroup]="usuarioForm" (ngSubmit)="guardar()" class="horizontal-form" style="margin-bottom: 2rem;">
+        <div class="row">
+          <div class="col-md-6">
+            <div formGroupName="datosPersonales">
+              <div class="form-group">
+                <label>Nombre:</label>
+                <dx-text-box [readOnly]="true" formControlName="nombre" required [maxLength]="50">
+                </dx-text-box>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Email:</label>
+              <dx-text-box [readOnly]="false" formControlName="correoElectronico" required [maxLength]="50">
+              </dx-text-box>
+            </div>
+          </div>
+          <div class="col-md-6" formGroupName="datosPersonales">
+            <div class="form-group">
+              <label>Identidad:</label>
+              <dx-text-box [readOnly]="true" formControlName="noIdentidad" required [maxLength]="50">
+              </dx-text-box>
+            </div>
+          </div>
+          <div class="col-md-6" formGroupName="datosPersonales">
+            <div class="form-group">
+              <label>Celular:</label>
+              <dx-text-box formControlName="celular" required [maxLength]="50">
+              </dx-text-box>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div formGroupName="datosPersonales">
+              <div class="form-group">
+                <dx-check-box formControlName="identidadConfirmada" text="Identidad Confirmada"></dx-check-box>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <dx-check-box formControlName="bloqueado" text="Bloqueado"></dx-check-box>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <dx-check-box [readOnly]="true" formControlName="envioRecargasHabilitado" text="Puede Enviar de Recargas">
+              </dx-check-box>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div formGroupName="datosPersonales">
+              <div class="form-group">
+                <dx-check-box formControlName="celularConfirmado" text="Celular Confirmado"></dx-check-box>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <dx-check-box formControlName="activo" text="Activo"></dx-check-box>
+            </div>
+          </div>
+          <div class="col-md-6" *ngIf="usuario.esUsuarioAWS === true">
+            <div class="form-group">
+              <span><strong>Estado:</strong> {{usuario.usuarioEstado}}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="documentos-contenedor">
+          <label>Documentos:</label>
+          <hr>
+            <a [href]="imagen" target="_blank" *ngFor="let imagen of usuario.datosPersonales.documentos;index as i">
+              Documento {{i +1}} </a>
+          </div>
+          <div class="btn-item" *ngIf="tieneDocumentos">
+            <button id="btnDelete" class="btn btn-danger" type="button" (click)="eliminarDocumentos()">Eliminar
+              Documentos</button>
+          </div>
+          <br>
+        <div class="btn-contenedor">
+          <div class="btn-item">
+             <dx-button *ngIf="usuario.esUsuarioAWS === true" text="Reenviar Código" type="default"
+              (onClick)="reembiarCodigoDeActivacion()">
+            </dx-button>
+             <dx-button text="Codigos" type="default" (onClick)="obtenercodigos()">
+            </dx-button>
+            <dx-button *ngIf="usuario.esUsuarioAWS === true && usuario.usuarioEstadoId !== 3" text="¿Confirmar Usuario?"
+              type="default" (onClick)="confirmarUsuario()">
+            </dx-button>
+
+          </div>
+        </div>
+        
+      </form>
+    </dx-scroll-view>
+    <div class="btn-item" style="margin-top: 1rem">
+      <dx-button text="Guardar" [useSubmitBehavior]="true" type="default" (onClick)="guardar()" style="float: right;">
+      </dx-button> 
+    </div>
+    <dx-button *ngIf="usuario.esUsuarioAWS === true" text="Eliminar" type="danger" style="float: right; margin-right: 0.5rem;"
+        (onClick)="eliminarUsuario()">
+      </dx-button>
+           
+  </div>
+</dx-popup>
+<dx-popup class="popup" [width]="540" [height]="520" [showTitle]="true" title="Códigos Usuario" [dragEnabled]="true"
+  [closeOnOutsideClick]="true" [(visible)]="visibleCodigoPopup" [resizeEnabled]="true">
+  <div *dxTemplate="let data of 'content'">
+
+    <dx-data-grid id="grid1" [(dataSource)]="codigosUsuario" 
+      [allowColumnReordering]="true" [rowAlternationEnabled]="true" [showBorders]="true">
+      <dxi-column dataField="codigo" dataType="string"></dxi-column>
+      <dxi-column dataField="activo" dataType="boolean"></dxi-column>
+    </dx-data-grid>
+
+  </div>
+
+</dx-popup>

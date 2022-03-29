@@ -1,0 +1,60 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="form-group" style="margin-top: 0px;">
+        <label for="producto">Buscar Producto:</label>
+        <dx-select-box id="producto" [dataSource]="productosBusquedaDataSource" displayExpr="prod_Desc"
+          valueExpr="productoId" searchMode="contains" [(value)]="productoSeleccionadoId" searchExpr="prod_Desc"
+          [searchTimeout]="500" [minSearchLength]="3" [searchEnabled]="true"
+          (onValueChanged)="comprobarRecompraDeProducto()">
+        </dx-select-box>
+      </div>
+      <dx-check-box [(value)]="incluirInventarioCiudad" text="Incluir inventario de ciudad"
+        (onValueChanged)="comprobarRecompraDeProducto()"></dx-check-box>
+    </div>
+  </div>
+  <dx-load-panel #loadPanelProducto shadingColor="rgba(0,0,0,0.4)" [position]="{ of: '#agregarProductoContainer' }"
+    [(visible)]="loadingVisible" [showIndicator]="true" [showPane]="true" [shading]="true" [closeOnOutsideClick]="true">
+  </dx-load-panel>
+  <div id="agregarProductoContainer" class="container-fluid">
+    <div class="row" *ngIf="productoRecompraSeleccionado" style="margin-top: 10px;">
+      <div class="col-md-5">
+        <img [src]="obtenerUrlImagenProducto()" class="img-thumbnail" alt="Imagen Producto">
+      </div>
+      <div class="col-md-7">
+        <dl style="margin-bottom: 5px;">
+          <dt>Inventario</dt>
+          <dd>{{productoRecompraSeleccionado.invActual}}</dd>
+          <dt>Precio</dt>
+          <dd>
+            <dx-select-box [dataSource]="preciosLista" displayExpr="text" [(value)]="precioSeleccionado">
+            </dx-select-box>
+          </dd>
+          <dt>Cantidad</dt>
+          <dd>
+            <dx-number-box [(value)]="cantidadProductoSeleccionada" [min]="1" [max]="100" [showSpinButtons]="true"
+              [width]="70">
+            </dx-number-box>
+          </dd>
+          <dt>Fecha a realizar pedido</dt>
+          <dd>
+            <dx-date-box [(value)]="fechaSeleccionadaParaRealizarPedido" type="date" [displayFormat]="'dd/MM/yyyy'">
+            </dx-date-box>
+          </dd>
+          <dt>Periodicidad</dt>
+          <dd>
+            <dx-number-box [(value)]="periodicidadSeleccionada" [min]="10" [max]="90" [showSpinButtons]="true"
+              [width]="70">
+            </dx-number-box>
+          </dd>
+        </dl>
+      </div>
+    </div>
+    <div class="row" *ngIf="productoRecompraSeleccionado">
+      <div class="col-xs-6 col-xs-offset-3">
+        <button class="btn btn-primary btn-block" [disabled]="!fechaSeleccionadaParaRealizarPedido"
+          (click)="guardarAgregarProducto()">Agregar</button>
+      </div>
+    </div>
+  </div>
+</div>

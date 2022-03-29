@@ -1,0 +1,69 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-icon" data-background-color="green">
+                        <i class="material-icons">storage</i>
+                    </div>
+                    <div class="card-content">
+                        <h4 class="card-title">
+                            <strong>Reporte Estado de Solicitudes</strong>
+                        </h4>
+                        <br/>
+                        <p>
+                            <strong>Obtener solicitudes por el rango de fechas siguientes:</strong>
+                        </p>
+                        <div class="row">
+                            <div class="col-md-2 col-xs-4">
+                                <span class="labelsFormulario">Fecha Desde:</span>
+                            </div>
+                            <div class="col-md-2 col-xs-4">
+                                <span class="labelsFormulario">Fecha Hasta:</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2 col-xs-4">
+                                <dx-date-box displayFormat="dd/MM/yyyy" [(ngModel)]="fechasSolicitud.fechaDesde"></dx-date-box>
+                            </div>
+                            <div class="col-md-2 col-xs-4">
+                                <dx-date-box displayFormat="dd/MM/yyyy" [(ngModel)]="fechasSolicitud.fechaHasta"></dx-date-box>
+                            </div>
+                            <div class="col-md-2 col-xs-3">
+                                <dx-button type="default" icon="fa fa-search" (onClick)="obtenerSolicitudes()"></dx-button>
+                            </div>
+                        </div>
+                        <dx-data-grid #grid id="gridCompensacion" [dataSource]="solicitudesEstados" [showColumnLines]="true" [showRowLines]="true"
+                            [showBorders]="true" [columnAutoWidth]="true" [rowAlternationEnabled]="true">
+                            <dxo-filter-row [visible]="true"> </dxo-filter-row>
+                            <dxo-header-filter [visible]="true"></dxo-header-filter>
+                            <dxo-paging [pageSize]="10">
+                            </dxo-paging>
+                            <dxo-export [enabled]="true" fileName="Estado_Solicitudes_Reembolsos" [allowExportSelectedData]="true"></dxo-export>
+                            <dxi-column [hidingPriority]="0" caption="Cod. Colab." width="100px" dataField="colaboradorID"> </dxi-column>
+                            <dxi-column dataField="colaborador" caption="Nombre Colaborador"></dxi-column>
+                            <dxi-column [hidingPriority]="3" caption="Tipo de Reembolso" dataField="tipoReembolsoNombre"> </dxi-column>
+                            <dxi-column caption="Valor a Pagar" dataField="valorAPagar" dataType="number" cellTemplate="moneyCell"> </dxi-column>
+                            <dxi-column caption="Observaciones" dataField="observaciones"> </dxi-column>
+                            <dxi-column [hidingPriority]="1" caption="Sucursal" dataField="sucursal"> </dxi-column>
+                            <dxi-column caption="Estado" dataField="estado"> </dxi-column>
+                            <dxi-column caption="Fecha Estado" dataField="fecha" cellTemplate="dateCell" dataType="date"> </dxi-column>
+                            <dxi-column [hidingPriority]="2" caption="Compromiso" cellTemplate="ver"> </dxi-column>
+
+                            <div *dxTemplate="let cellData of 'dateCell'">
+                                {{cellData.value | date: 'dd/MM/yyyy'}}
+                            </div>
+                            <div *dxTemplate="let cellData of 'moneyCell'">
+                                {{cellData.value | number:'.2-5'}}
+                            </div>
+                            <div style="text-align: center!important" *dxTemplate="let data of 'ver'">
+                                <i class="fa fa-eye" (click)="Descarga(data.data)"></i>
+                            </div>
+                            <dxo-scrolling mode="virtual"></dxo-scrolling>
+                        </dx-data-grid>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

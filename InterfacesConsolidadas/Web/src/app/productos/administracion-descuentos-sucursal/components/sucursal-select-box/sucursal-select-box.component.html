@@ -1,0 +1,9 @@
+<dx-select-box
+  [dataSource]="sucursales"
+  [searchEnabled]="true"
+  valueExpr="codigo"
+  displayExpr="nombreCorto"
+  title="Seleccione una sucursal"
+  placeholder="Seleccione una sucursal"
+  (onValueChanged)="alSeleccionarSucursal($event)"
+></dx-select-box>

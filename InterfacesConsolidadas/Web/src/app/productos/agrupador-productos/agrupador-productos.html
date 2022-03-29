@@ -1,0 +1,61 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="row">
+      <div class="col-md-12">
+        <div [hidden]="buscadorModo == 'modal'">
+          <div class="form-group form-group__inline lookup-productos-container">
+            <label>Productos:</label>
+            <div>
+              <dx-lookup class="field-customization" noDataText="No se encontraron productos." searchPlaceholder="Ingrese el código o descripción del producto"
+                [(value)]="comboProductos.value" (onValueChanged)="onValueChanged($event)" searchExpr="searchData" displayExpr="descripcion"
+                [(dataSource)]="dataSource" placeholder="Seleccione un producto" itemTemplate="item">
+                <div *dxTemplate="let item of 'item'">
+                  <div class="custom-field">
+                    {{item.id}} - {{item.descripcion}}
+                  </div>
+                </div>
+              </dx-lookup>
+            </div>
+
+          </div>
+          <div class="form-group form-group__inline">
+            <button type="button" (click)="emitAgregarProducto(comboProductos.value)" class="btn btn-fill btn-Azulsiman form-group__inline-btn">Agregar</button>
+          </div>
+        </div>
+        <div class="form-group" [hidden]="buscadorModo == 'combobox'">
+          <label id="label_productos"> Productos:</label>
+          <button id="btn_buscarProductos" type="button" (click)="modalBuscarProductos.visible = true" class="btn btn-fill btn-Azulsiman ">
+            <i class="material-icons">search</i> Buscar</button>
+        </div>
+      </div>
+
+
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <div class="dx-border-grid">
+          <dx-data-grid [rowAlternationEnabled]="true" [dataSource]="productos">
+            <dxo-filter-row [visible]="true"> </dxo-filter-row>
+            <dxi-column caption="Código" dataField="id" [width]="200"></dxi-column>
+            <dxi-column caption="Descripción" dataField="descripcion"></dxi-column>
+            <dxi-column caption="Acción" cellTemplate="accionTemplate" [width]="100"></dxi-column>
+
+            <div *dxTemplate="let d of 'accionTemplate'">
+              <button rel="tooltip" (click)="emitEliminarProducto(d.data)" type="button" class="btn btn-grid btn-danger ">
+                <i class="material-icons">close</i>
+              </button>
+            </div>
+          </dx-data-grid>
+        </div>
+      </div>
+    </div>
+
+
+
+  </div>
+</div>
+
+<app-agrupador-productos-modal #agrupadorProductosModal (alSeleccionarUnProducto)="emmitAlSeleccionarUnProducto($event)" (onAgregar)="agregarProductosDesdeModal($event)"
+  (onCancelar)="modalBuscarProductos.visible = false" [(visible)]="modalBuscarProductos.visible">
+</app-agrupador-productos-modal>

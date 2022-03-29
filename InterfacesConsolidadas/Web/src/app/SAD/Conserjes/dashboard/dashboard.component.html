@@ -1,0 +1,180 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-4 col-md-5 col-sm-6">
+        <div class="card card-stats">
+          <div class="card-header" id="usuariosRegistradosMesActualHeader" data-background-color="red">
+            <i class="material-icons">shopping_cart</i>
+          </div>
+          <div class="card-content">
+            <p class="category">Pedidos</p>
+            <div class="card-content-group">
+
+              <div class="card-content-group-inline-element" *ngFor="let estado of pedidosResumen; index as i"
+                [attr.data-index]="i"
+                [ngClass]="{'card-content-group-inline-element__last': i !== pedidosResumen.length -1}">
+                <p class="category ">{{estado.estado}}</p>
+                <h3 class="title card-content-group-element-value"> {{ estado.cantidad | number }}</h3>
+              </div>
+
+            </div>
+          </div>
+          <div class="card-footer">
+            <div class="stats">
+              <i class="material-icons">date_range</i> Mes Actual
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-2 col-md-6 col-sm-6">
+        <div class="card card-stats">
+          <div class="card-content">
+            <p class="category">Conserjes</p>
+            <div class="card-content-group">
+
+              <div class="card-content-group-inline-element">
+                <p class="category ">Total</p>
+                <h3 class="title card-content-group-element-value"> {{ resumenDeConserjes.cantidad | number }}</h3>
+              </div>
+
+            </div>
+          </div>
+          <div class="card-footer">
+            <div class="stats">
+              <i class="material-icons">app_registration</i> Registrados
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-6 col-sm-6">
+        <div class="card card-stats">
+          <div class="card-content">
+            <p class="category">Ventas</p>
+            <div class="card-content-group">
+
+              <div class="card-content-group-inline-element  card-content-group-inline-element__last">
+                <p class="category ">Total</p>
+                <h3 class="title card-content-group-element-value">L {{ totalVentas | number }} </h3>
+              </div>
+              <div class="card-content-group-inline-element card-content-group-inline-element__last">
+                <p class="category ">Mes Anterior</p>
+                <h3 class="title card-content-group-element-value">L {{ ventasMesAnterior | number }}</h3>
+              </div>
+              <div class="card-content-group-inline-element">
+                <p class="category ">Mes Actual</p>
+                <h3 class="title card-content-group-element-value">L {{ ventasMesActual | number }}</h3>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer">
+            <div class="stats">
+              <i class="material-icons"
+                [ngClass]="{'text-danger': !(ventasMesActual > ventasMesAnterior) }">show_chart</i>
+              <span class="text-danger" *ngIf="!(ventasMesActual > ventasMesAnterior)">
+                No se han superado las ventas del mes anterior.
+              </span>
+              <span *ngIf="ventasMesActual > ventasMesAnterior">
+                Las ventas del mes anterior fueron superadas.
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-icon" data-background-color="blue">
+            <i class="material-icons">insert_chart</i>
+          </div>
+          <div class="card-content">
+            <h4 class="card-title">
+              <strong>Pedidos Asignados y Entregados</strong>
+            </h4>
+            <div class="row">
+              <div class="col-md-12">
+                <dx-chart id="chart" palette="Bright" [dataSource]="pedidosEntregadosResumen">
+                  <dxi-series valueField="cantidadAsignada" name="Pedidos Asignados"></dxi-series>
+                  <dxi-series valueField="cantidadEntregada" name="Pedidos Entregados">
+                  </dxi-series>
+                  <dxo-argument-axis [valueMarginsEnabled]="false" discreteAxisDivisionMode="crossLabels">
+                    <dxo-label [customizeText]="customizeLabelPedidosEntregados"></dxo-label>
+                  </dxo-argument-axis>
+                  <dxo-common-series-settings argumentField="fecha" type="line" hoverMode="allArgumentPoints"
+                    selectionMode="allArgumentPoints">
+                    <dxo-label [visible]="true" [format]="{
+                        type: 'fixedPoint',
+                        precision: '0'
+                      }">
+                    </dxo-label>
+                  </dxo-common-series-settings>
+                  <dxo-legend verticalAlignment="bottom" horizontalAlignment="center">
+                  </dxo-legend>
+                  <dxo-export [enabled]="true"></dxo-export>
+                </dx-chart>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer" *ngIf="minutosTranscurridosPedidos != undefined">
+            <div class="stats">
+              <button class="btn btn-grid" rel="tooltip" title="Sincronizar" type="button" [disabled]="loadingPedidos"
+                (click)="obtenerDatosPedidos()">
+                <i class="material-icons" style="top: 0px;">sync</i>
+              </button>
+              <i class="material-icons">access_time</i> Actualizado hace
+              {{minutosTranscurridosPedidos}} minutos
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row wrapper-graphs">
+      <div class="col-md-6 col-sm-12 graph">
+        <div class="card graph-inner">
+          <div class="card-header card-header-icon" data-background-color="orange">
+            <i class="material-icons">web</i>
+          </div>
+          <div class="card-content">
+            <h4 class="card-title">
+              <strong>Ventas</strong>
+            </h4>
+            <dx-chart palette="Dark Violet" [dataSource]='pedidosVentasResumenGrafico'>
+              <dxi-series valueField="total" name="Ventas"></dxi-series>
+              <dxo-argument-axis>
+                <dxo-label [customizeText]="customizeLabelPedidosVentas"></dxo-label>
+              </dxo-argument-axis>
+              <dxo-common-series-settings argumentField="mes" type="spline" hoverMode="allArgumentPoints"
+                selectionMode="allArgumentPoints">
+                <dxo-label [visible]="true" [format]="{
+                            type: 'fixedPoint',
+                            precision: '2'
+                        }">
+                </dxo-label>
+              </dxo-common-series-settings>
+              <dxo-legend verticalAlignment="bottom" horizontalAlignment="center" itemTextPosition="bottom">
+              </dxo-legend>
+              <dxo-export [enabled]="true"></dxo-export>
+            </dx-chart>
+          </div>
+          <div class="card-footer" *ngIf="minutosTranscurridosVentas != undefined">
+            <button class="btn btn-grid" rel="tooltip" title="Sincronizar" type="button" [disabled]="loadingVentas"
+              (click)="obtenerResumenDeVentas()">
+              <i class="material-icons" style="top: 0px;">sync</i>
+            </button>
+            <div class="stats"><i class="material-icons">access_time</i> Actualizado hace {{minutosTranscurridosVentas}}
+              minutos </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-sm-12 graph">
+        <app-conserjes-activos></app-conserjes-activos>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <app-mapa-pedidos></app-mapa-pedidos>
+      </div>
+    </div>
+  </div>
+</div>

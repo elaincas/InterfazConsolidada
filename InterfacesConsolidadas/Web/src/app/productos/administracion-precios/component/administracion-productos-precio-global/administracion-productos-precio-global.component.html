@@ -1,0 +1,362 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-icon" data-background-color="red">
+            <i class="material-icons">contacts</i>
+          </div>
+          <div class="card-content">
+            <h4 class="card-title">
+              Administración de Precios Globales Productos
+            </h4>
+            <form [formGroup]="formGroupProductos" form="formGroupProductos">
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label>Descripción</label>
+                    <dx-text-box formControlName="description"> </dx-text-box>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label>Productos a modificar </label>
+                    <dx-select-box
+                      [dataSource]="listOptionSelect"
+                      valueExpr="id"
+                      displayExpr="text"
+                      formControlName="typeChangePrice"
+                    >
+                    </dx-select-box>
+                  </div>
+                </div>
+
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <label>Margen mínimo </label>
+                    <dx-number-box
+                      formControlName="smallerMargin"
+                    ></dx-number-box>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label>Actualizar Ahora</label>
+                    <dx-check-box
+                      formControlName="updateNow"
+                      (onValueChanged)="updateNowhandleValueChange($event)"
+                    ></dx-check-box>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label>Fecha a actualizar</label>
+                    <dx-date-box
+                      formControlName="dateChange"
+                      displayFormat="dd/MM/yyyy"
+                      type="date"
+                    ></dx-date-box>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <dx-file-uploader
+                    #fileExcel
+                    selectButtonText="Selecciona"
+                    labelText="o arraste aqui"
+                    [multiple]="false"
+                    [showFileList]="true"
+                    uploadMode="useForm"
+                    (onValueChanged)="uploadExcel($event)"
+                  >
+
+                  </dx-file-uploader>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4">
+                  <dx-button
+                    type="danger"
+                    icon="remove"
+                    (onClick)="resetForm()"
+                    text="Limpiar"
+                  >
+                  </dx-button>
+
+                  <dx-button
+                    type="default"
+                    icon="save"
+                    (onClick)="saveForm()"
+                    [disabled]="formGroupProductos.invalid"
+                    [text]="textSaveBotton"
+                  >
+                  </dx-button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-content">
+            <div class="row">
+              <div class="col-md-3">
+                <label>Desde</label>
+                <dx-date-box
+                  with="100%"
+                  [(ngModel)]="loadOptions.FechaInicio"
+                  displayFormat="dd/MM/yyyy"
+                  type="date"
+                ></dx-date-box>
+              </div>
+              <div class="col-md-3">
+                <label>Hasta</label>
+                <dx-date-box
+                  [(ngModel)]="loadOptions.FechaFin"
+                  displayFormat="dd/MM/yyyy"
+                  type="date"
+                ></dx-date-box>
+              </div>
+              <div class="text-left">
+                <br />
+                <dx-button text="Mostrar" (onClick)="showList()"></dx-button>
+              </div>
+            </div>
+            <br />
+
+            <div class="col-md-12">
+              <dx-data-grid [dataSource]="list" [rowAlternationEnabled]="true">
+                <dxi-column
+                  caption="Código"
+                  dataField="id"
+                  [allowEditing]="false"
+                  [width]="80"
+                ></dxi-column>
+
+                <dxi-column
+                  caption="Lista"
+                  dataField="description"
+                  [allowEditing]="false"
+                  [width]="320"
+                ></dxi-column>
+                <dxi-column
+                  caption="Fecha Camb."
+                  dataField="dateChange"
+                  dataType="date"
+                  format="dd/MM/yyyy"
+                  [allowEditing]="false"
+                  [width]="100"
+                ></dxi-column>
+                <dxi-column
+                  caption="Tipo"
+                  dataField="typeChangePrice"
+                  [allowEditing]="false"
+                  [width]="150"
+                  cellTemplate="typeTemplate"
+                >
+                  <div *dxTemplate="let data of 'typeTemplate'">
+                    <dx-select-box
+                      [dataSource]="listReplaceSelect"
+                      valueExpr="id"
+                      displayExpr="text"
+                      [readOnly]="true"
+                      [value]="listReplaceSelect[data.value].id"
+                    >
+                    </dx-select-box>
+                  </div>
+                </dxi-column>
+                <dxi-column
+                  caption="Fecha Crea"
+                  dataField="createDate"
+                  dataType="date"
+                  format="dd/MM/yyyy"
+                  [allowEditing]="false"
+                  [width]="100"
+                ></dxi-column>
+
+                <dxi-column
+                  caption="Productos"
+                  dataField="totalProducts"
+                  [allowEditing]="false"
+                  [width]="150"
+                >
+                </dxi-column>
+
+                <dxi-column
+                  caption="Accion"
+                  dataField="id"
+                  [allowEditing]="false"
+                  [width]="360"
+                  cellTemplate="accionTemplate"
+                >
+                  <div *dxTemplate="let data of 'accionTemplate'">
+                    <dx-button
+                      text="Ver detalle"
+                      type="success"
+                      (onClick)="showListProducts(data.data)"
+                    ></dx-button>
+                    <dx-button
+                      text="Reemplazar"
+                      type="default"
+                      (onClick)="editList(data.value, true)"
+                    ></dx-button>
+                    <dx-button
+                      text="Añadir"
+                      type="default"
+                      (onClick)="editList(data.value, false)"
+                    ></dx-button>
+                    <dx-button
+                      type="danger"
+                      icon="remove"
+                      (onClick)="deleteList(data.data)"
+                    >
+                    </dx-button>
+                  </div>
+                </dxi-column>
+              </dx-data-grid>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <ng-template [ngIf]="gridproductsVisible == true">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-content">
+              <div class="col-md-12">
+                <div align="right">
+                  <dx-button
+                    type="danger"
+                    icon="remove"
+                    (onClick)="ocultarListProd()"
+                  >
+                  </dx-button>
+                </div>
+              </div>
+              <div class="col-md-12">
+                <div align="left">
+                  Productos en la lista:  <strong>
+                    {{
+                      informationProductsToChangePriceSelect.description
+                    }}</strong
+                  >
+                </div>
+              </div>
+              <br />
+
+              <div class="col-md-12">
+                <dx-data-grid
+                  [dataSource]="listProducts"
+                  (onRowPrepared)="onRowPrepared($event)"
+                  [rowAlternationEnabled]="true"
+                >
+                  <dxo-paging [pageSize]="100"></dxo-paging>
+                  <dxo-pager
+                    [showPageSizeSelector]="true"
+                    [allowedPageSizes]="[100, 250, 500]"
+                    [showInfo]="true"
+                  >
+                  </dxo-pager>
+                  <dxo-filter-row [visible]="true"></dxo-filter-row>
+                  <dxo-sorting mode="multiple"></dxo-sorting>
+
+                  <dxi-column
+                    caption="Código"
+                    dataField="productoId"
+                    [allowEditing]="false"
+                    [width]="100"
+                  ></dxi-column>
+
+                  <dxi-column
+                    caption="Producto"
+                    dataField="name"
+                    [allowEditing]="false"
+                    [width]="430"
+                  ></dxi-column>
+
+                  <dxi-column
+                    caption="Precio 3ra Edad"
+                    format="###,##0.00"
+                    dataField="senioPriceWithDiscount"
+                    format="###,##0.00"
+                    [width]="150"
+                    [allowEditing]="false"
+                  ></dxi-column>
+
+                  <dxi-column
+                    caption="  Precio Normal"
+                    format="###,##0.00"
+                    dataField="normalNewPrice"
+                    [allowEditing]="false"
+                    [width]="180"
+                  ></dxi-column>
+                </dx-data-grid>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </div>
+</div>
+<dx-popup
+ 
+[showTitle]="true"
+title="Seguientes productos no se pudieron guardar"
+[width]="900"
+        [height]="650"
+[dragEnabled]="false"
+[closeOnOutsideClick]="true"
+[(visible)]="popupVisible">
+<div *dxTemplate="let data of 'content'">
+  <dx-data-grid
+  [dataSource]="listProductsNoChange"
+   
+  [rowAlternationEnabled]="true"
+>
+  <dxo-paging [pageSize]="100"></dxo-paging>
+  <dxo-pager
+    [showPageSizeSelector]="true"
+    [allowedPageSizes]="[100, 250, 500]"
+    [showInfo]="true"
+  >
+  </dxo-pager>
+  <dxo-filter-row [visible]="true"></dxo-filter-row>
+  <dxo-sorting mode="multiple"></dxo-sorting>
+  <dxi-column
+                    caption="Código"
+                    dataField="productoId"
+                    [allowEditing]="false"
+                    [width]="100"
+                  ></dxi-column>
+
+                  <dxi-column
+                    caption="Producto"
+                    dataField="name"
+                    [allowEditing]="false"
+                    [width]="430"
+                  ></dxi-column>
+                  <dxi-column
+                  caption="Mensaje"
+                  dataField="message"
+                  [allowEditing]="false"
+                  [width]="430"
+                ></dxi-column>
+
+  </dx-data-grid>
+</div>
+</dx-popup>

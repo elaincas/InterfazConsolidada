@@ -1,0 +1,58 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="form-group select-box-container form-group__inline">
+          <label>Tags:</label>
+          <dx-select-box #Select [(items)]="comboTags.data" [(value)]="comboTags.value" displayExpr="descripcion" valueExpr="id" [searchEnabled]="true"
+            placeholder="Seleccione un elemento" [acceptCustomValue]="true" (onValueChanged)="onValueChanged($event)" (onCustomItemCreating)="addCustomItem($event)"></dx-select-box>
+        </div>
+        <div class="form-group form-group__inline">
+          <button type="button" [ngClass]="clasesAgregarBtn" (click)="agregar(comboTags.value)" class="btn btn-fill form-group__inline-btn btn-Azulsiman">
+            <span [hidden]="comboTags?.selectedItem.esTagNueva">
+              Agregar
+            </span>
+            <span [hidden]="!comboTags?.selectedItem.esTagNueva">
+              Crear y Agregar
+            </span>
+          </button>
+        </div>
+        <div class="form-group form-group__inline" [hidden]="comboTags?.selectedItem?.esTagNueva || comboTags.value == null">
+          <button type="button" (click)="modalTagVisible = true" class="btn btn-fill form-group__inline-btn btn-Azulsiman">...</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <div class="dx-border-grid">
+          <dx-data-grid [rowAlternationEnabled]="true" [dataSource]="tags" [showColumnLines]="false" rowTemplate="rowTagTemplate">
+            <dxo-filter-row [visible]="true"> </dxo-filter-row>
+            <dxi-column caption="Tag" dataField="descripcion"></dxi-column>
+            <dxi-column caption="Acción" [width]="100"></dxi-column>
+            <tbody *dxTemplate="let tag of 'rowTagTemplate'">
+              <tr class="dx-row dx-data-row dx-column-lines" [hidden]="tag.data.esEliminada">
+                <td> {{tag.data.descripcion}} </td>
+                <td>
+                  <button rel="tooltip" (click)="eliminar(tag.data)" type="button" class="btn btn-grid btn-danger ">
+                    <i class="material-icons">close</i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+
+          </dx-data-grid>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<dx-popup class="popup" [width]="300" [height]="230" [showTitle]="true" title="Tag" [dragEnabled]="false" [closeOnOutsideClick]="true"
+  [(visible)]="modalTagVisible">
+  <div *dxTemplate="let data of 'content'">
+    <app-tag-crud-frm [(tag)]="comboTags.selectedItem" (onCancelar)="modalTagVisible=false" (onGuardar)="onGuardarTag($event)"></app-tag-crud-frm>
+  </div>
+</dx-popup>

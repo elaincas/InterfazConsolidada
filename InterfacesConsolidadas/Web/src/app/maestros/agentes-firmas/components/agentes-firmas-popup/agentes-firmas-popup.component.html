@@ -1,0 +1,106 @@
+<dx-popup
+  [width]="900"
+  [height]="500"
+  [showTitle]="true"
+  title="{{ accionPopup }} Firma"
+  [dragEnabled]="true"
+  [closeOnOutsideClick]="false"
+  [showCloseButton]="true"
+  [visible]="esPopupAgentesFirmasVisible"
+  [resizeEnabled]="true"
+  contentTemplate="popup-content"
+  (onHiding)="onHidingPopup($event)"
+>
+  <div *dxTemplate="let data of 'popup-content'">
+    <dx-scroll-view width="100%" height="100%">
+      <div class="row">
+        <div class="col-md-6">
+          <span class="labelsFormularios">Agente:</span>
+          <dx-drop-down-box
+            [(value)]="gridBoxValue"
+            [dataSource]="agentes"
+            [displayExpr]="GetDisplayExpr"
+            valueExpr="agente_ID"
+            [showClearButton]="true"
+            placeholder="Seleccione un agente"
+            [disabled]="esModoEditar"
+          >
+            <div *dxTemplate="let data of 'content'">
+              <dx-data-grid
+                [dataSource]="agentes"
+                [hoverStateEnabled]="true"
+                height="400"
+                [filterRow]="{ visible: true }"
+                [hoverStateEnabled]="true"
+                [selection]="{ mode: 'single' }"
+                [(selectedRowKeys)]="gridBoxValueSelect"
+              >
+                <dxi-column
+                  dataField="agente_ID"
+                  caption="Código"
+                  [width]="100"
+                ></dxi-column>
+                <dxi-column
+                  dataField="agente_Nombre"
+                  caption="Nombre"
+                ></dxi-column>
+
+                <dxo-header-filter [visible]="true"></dxo-header-filter>
+              </dx-data-grid>
+            </div>
+          </dx-drop-down-box>
+          <dx-form
+            class="mt-4"
+            #formAgenteFirma
+            [formData]="agenteFirma"
+            labelLocation="top"
+            [colCount]="1"
+            [showValidationSummary]="true"
+            validationGroup="vgGuardarAgenteFirma"
+          >
+            <dxi-item
+              dataField="archivoImagen"
+              [template]="'fileTemplate'"
+              [label]="{ text: 'Imagen Firma' }"
+            ></dxi-item>
+            <div *dxTemplate="let data of 'fileTemplate'">
+              <div id="fileuploader-container">
+                <dx-file-uploader
+                  #fuImagenFirma
+                  selectButtonText="Seleccione una imagen"
+                  accept=".png, .jpg, .jpeg"
+                  uploadMode="userForm"
+                  type="default"
+                  labelText="o arrastre aquí"
+                  (onValueChanged)="obtenerImagenSeleccionada($event)"
+                ></dx-file-uploader>
+              </div>
+            </div>
+            <dxi-item
+              *ngIf="accionPopup === 'Modificar'"
+              editorType="dxCheckBox"
+              dataField="activo"
+            ></dxi-item>
+          </dx-form>
+        </div>
+        <div class="col-md-6">
+          <img
+            class="imagen-firma"
+            *ngIf="agenteFirma.rutaImagenFirma"
+            [src]="agenteFirma.rutaImagenFirma"
+          />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <button
+            class="btn btn-fill btn-Azulsiman"
+            (click)="onClickGuardarAgenteFirma()"
+          >
+            Guardar
+          </button>
+        </div>
+      </div>
+    </dx-scroll-view>
+  </div>
+</dx-popup>

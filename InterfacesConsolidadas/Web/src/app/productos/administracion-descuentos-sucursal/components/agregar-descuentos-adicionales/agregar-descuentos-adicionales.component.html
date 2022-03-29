@@ -1,0 +1,198 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div
+            class="card-header card-header-icon"
+            data-background-color="green"
+          >
+            <i class="material-icons">add_circle</i>
+          </div>
+          <div class="card-content">
+            <h4 class="card-title">Agregar Descuentos Adicionales</h4>
+          </div>
+
+          <!-- Contenido princial -->
+          <div class="card-content">
+            <div class="row">
+              <div class="col-md-6">
+                <span class="labelsFormularios">Sucursal:</span>
+                <app-sucursal-select-box
+                  (obtenerCodigoSucursal)="alSeleccionarSucursal($event)"
+                ></app-sucursal-select-box>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <button
+                  class="btn btn-fill btn-Azulsiman"
+                  (click)="mostrarPopupBuscarProductos()"
+                >
+                  Buscar Productos
+                </button>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <span class="labelsFormularios">Descuento:</span>
+                <dx-number-box
+                  placeholder="Descuento para todos los productos"
+                  format="#0.##%"
+                  [(value)]="descuentoAdicionalProductos"
+                  [min]="0.01"
+                  [max]="1"
+                ></dx-number-box>
+              </div>
+              <div class="col-md-6">
+                <span class="labelsFormularios">Observación:</span>
+                <dx-text-box
+                  placeholder="Observación para todos los productos"
+                  [(value)]="observacionProductos"
+                ></dx-text-box>
+              </div>
+              <div class="col-md-6">
+                <span class="labelsFormularios">Desde:</span>
+                <dx-date-box
+                  [(value)]="fechaDesdeProductos"
+                  displayFormat="dd/MM/yyyy"
+                  [width]="600"
+                ></dx-date-box>
+              </div>
+              <div class="col-md-6">
+                <span class="labelsFormularios">Hasta:</span>
+                <dx-date-box
+                  [(value)]="fechaHastaProductos"
+                  displayFormat="dd/MM/yyyy"
+                  [width]="600"
+                ></dx-date-box>
+              </div>
+              
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <button
+                  class="btn btn-fill btn-Azulsiman"
+                  (click)="aplicarValoresProductos()"
+                >
+                  Aplicar a Todos
+                </button>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <dx-data-grid
+                  #dgDescuentosAdicionales
+                  [dataSource]="productosDescuentosSucursal"
+                  keyExpr="productoId"
+                  [showBorders]="true"
+                  [showRowLines]="true"
+                  [showColumnLines]="true"
+                  [rowAlternationEnabled]="true"
+                  [allowColumnResizing]="true"
+                >
+                  <dxo-editing mode="cell" [allowUpdating]="true">
+                    >
+                    <dxo-texts confirmDeleteMessage=""></dxo-texts>
+                  </dxo-editing>
+                  <dxi-column
+                    dataField="productoId"
+                    caption="Código"
+                    [allowEditing]="false"
+                    [width]="90"
+                  ></dxi-column>
+                  <dxi-column
+                    dataField="productoDescripcion"
+                    caption="Descripción"
+                    [allowEditing]="false"
+                    [width]="350"
+                  ></dxi-column>
+                  <dxi-column
+                    dataType="number"
+                    dataField="descuentoAdicional"
+                    caption="Descuento"
+                    format="#0.##00%"
+                    [allowEditing]="true"
+                    [editorOptions]="{
+                      format: '#0.##%',
+                      step: 0.01,
+                      min: 0.01,
+                      max: 1.0
+                    }"
+                    [width]="90"
+                  >
+                  </dxi-column>
+                  <dxi-column
+                    dataType="date"
+                    dataField="desde"
+                    caption="Desde"
+                    [allowEditing]="true"
+                    [width]="120"
+                    format="dd/MM/yyyy"
+                  ></dxi-column>
+                  <dxi-column
+                    dataType="date"
+                    dataField="hasta"
+                    caption="Hasta"
+                    [allowEditing]="true"
+                    [width]="120"
+                    format="dd/MM/yyyy"
+                  ></dxi-column>
+                  <dxi-column
+                    dataField="observaciones"
+                    caption="Observaciones"
+                    [allowEditing]="true"
+                    [width]="300"
+                  ></dxi-column>
+                  <dxi-column
+                    caption="Remover"
+                    cellTemplate="accionTemplate"
+                    [width]="90"
+                    [allowEditing]="false"
+                    alignment="center"
+                  ></dxi-column>
+                  <dxo-paging [pageSize]="10"> </dxo-paging>
+                  <dxo-pager
+                    [showPageSizeSelector]="true"
+                    [allowedPageSizes]="[10, 25, 50, 100]"
+                    [showInfo]="true"
+                  ></dxo-pager>
+                  <div *dxTemplate="let accion of 'accionTemplate'">
+                    <button
+                      rel="tooltip"
+                      (click)="removerDescuento(accion.rowIndex)"
+                      type="button"
+                      class="btn btn-grid btn-danger"
+                    >
+                      <i class="material-icons">close</i>
+                    </button>
+                  </div>
+                </dx-data-grid>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <button
+                  class="btn btn-fill btn-Azulsiman"
+                  (click)="agregarProductosDescuentosSucursal()"
+                >
+                  Guardar
+                </button>
+              </div>
+            </div>
+          </div>
+          <!-- /Contenido princial -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-buscar-productos-popup
+  [visible]="esPopupBuscarProductosVisible"
+  [codigoSucursal]="codigoSucursal"
+  (agregarProductoSeleccionadoDataGrid)="agregarProductosSeleccionados($event)"
+  (onCerrarModal)="onCerrarModal()"
+></app-buscar-productos-popup>

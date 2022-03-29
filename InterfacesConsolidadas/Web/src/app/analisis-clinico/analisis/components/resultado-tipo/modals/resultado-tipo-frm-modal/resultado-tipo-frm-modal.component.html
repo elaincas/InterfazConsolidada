@@ -1,0 +1,56 @@
+<dx-popup
+  class="popup"
+  [width]="540"
+  [height]="315"
+  [showTitle]="true"
+  [title]="tituloModal"
+  [dragEnabled]="true"
+  [closeOnOutsideClick]="false"
+  [showCloseButton]="true"
+  [visible]="Mostrar"
+  [resizeEnabled]="true"
+  (onHiding)="OnCerrarModal($event)"
+>
+  <div *dxTemplate="let data of 'content'">
+    <dx-scroll-view
+      #scrollViewContent
+      id="scrollViewContent"
+      scrollByContent="true"
+      showScrollbar="always"
+    >
+      <dx-form
+        id="form"
+        [formData]="resultadoTipo"
+        labelLocation="top"
+        (onContentReady)="ocultarLoader()"
+        (onInitialized)="mostrarLoader()"
+      >
+        <dxi-item itemType="group" [colCount]="12">
+          <dxi-item itemType="group" id="GrupoDatos" [colSpan]="12">
+            <dxi-item dataField="descripcion"></dxi-item>
+          </dxi-item>
+        </dxi-item>
+      </dx-form>
+      <div class="btn-contenedor float-right">
+        <div class="btn-item">
+          <dx-button
+            *ngIf="esModoEditar === false"
+            text="Guardar"
+            [useSubmitBehavior]="false"
+            type="default"
+            (onClick)="GuardarResultadoTipo()"
+          >
+          </dx-button>
+          <dx-button
+            *ngIf="esModoEditar"
+            text="Editar"
+            [useSubmitBehavior]="false"
+            type="default"
+            (onClick)="EditarResultadoTipo()"
+          >
+          </dx-button>
+        </div>
+      </div>
+    </dx-scroll-view>
+  </div>
+</dx-popup>

@@ -1,0 +1,85 @@
+<!-- <app-main-loader></app-main-loader> -->
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-icon" data-background-color="green">
+            <i class="material-icons">panorama</i>
+          </div>
+          <div class="card-content">
+            <h4 class="card-title">Registrar Nuevo Conserje</h4>
+          </div>
+          <div class="card-content">
+            <form action="your-action">
+              <dx-form id="form"
+                       [formData]="ConserjeARegistrar"
+                       [readOnly]="false"
+                       [showColonAfterLabel]="true"
+                       [showValidationSummary]="false"
+                       labelLocation="top"
+                       validationGroup="customerData">
+                <dxi-item itemType="group" colCount=2 caption="Información personal">
+                  <dxi-item dataField="nombre">
+                    <dxi-validation-rule type="required" message="El nombre es requerido"></dxi-validation-rule>
+                    <!-- <dxi-validation-rule type="pattern" [pattern]="namePattern" message="El nombre no debe contener dígitos"></dxi-validation-rule> -->
+                    <dxi-validation-rule type="stringLength" [max]="40" message="El nombre debe tener 40 o menos caracteres"></dxi-validation-rule>
+                  </dxi-item>
+                  <dxi-item dataField="celular" [editorOptions]="{
+                          mask: '0000-0000',
+                          maskRules: phoneRules,
+                          useMaskedValue: true,
+                          maskInvalidMessage: 'El formato del celular no es el correcto'
+                      }">
+                    <dxi-validation-rule type="required" message="El celular es requerido"></dxi-validation-rule>
+                  </dxi-item>
+                  <dxi-item dataField="codigoVhur" [editorOptions]="inputCodigoVhurOptions">
+                    <dxi-validation-rule type="required" message="El código VHUR es requerido"></dxi-validation-rule>
+                  </dxi-item>
+                  <dxi-item dataField="nombreUsuarioSeguridadCorporativa" [editorOptions]="{ readOnly: true }">
+                    <dxi-validation-rule type="required" message="El nombre del usuario es requerido"></dxi-validation-rule>
+                  </dxi-item>
+                </dxi-item>
+              </dx-form>
+              <div class="row">
+                <div class="col-sm-6">
+                  <div class="fileUpload-container">
+                    <fieldset class="form-section-title">
+                      Selecciona la fotografía
+                    </fieldset>
+                    <dx-file-uploader #fuArchivoWeb id="fuplFotografia"
+                                      selectButtonText="Seleccionar fotografía"
+                                      labelText=""
+                                      accept=".png, .JPG, .jpeg, .gif"
+                                      uploadMode="userForm"
+                                      type="default"
+                                      labelText=" o arrastrelo aquí"
+                                      (onValueChanged)="ObtenerFotografiaDxFileUploader($event)">
+                    </dx-file-uploader>
+                  </div>
+                </div>
+                <div class="col-sm-6" *ngIf="fotografiasGaleria.length > 0">
+                  <br>
+                  <dx-gallery #gallery
+                              id="gallery"
+                              [dataSource]="fotografiasGaleria"
+                              [height]="250"
+                              [width]="400"
+                              [loop]="false"
+                              [showNavButtons]="false"
+                              [showIndicator]="false">
+                  </dx-gallery>
+                </div>
+              </div>
+              <div class="button-group">
+                <button class="btn btn-fill btn-Azulsiman" type="button" (click)="GuardarConserje()">Guardar</button>
+                <button class="btn btn-fill btn-danger" type="button" (click)="Limpiar()">Limpiar</button>
+                <button class="btn btn-fill btn-Azulsiman" type="button" (click)="VolverAlListado()">Volver a la lista</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

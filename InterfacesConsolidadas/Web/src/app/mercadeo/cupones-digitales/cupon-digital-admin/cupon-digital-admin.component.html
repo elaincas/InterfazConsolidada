@@ -1,0 +1,207 @@
+<form [formGroup]="formGroupCupones">
+
+  <div class="main-content">
+    <div class="container-fluid">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-icon" data-background-color="green">
+            <i class="material-icons">mode_edit</i>
+          </div>
+
+          <div class="card-content">
+            <h4 class="card-title">Cupones Digitales</h4>
+
+            <div class="col-md-6">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="">Fecha Desde:
+                      <dx-date-box style="width: 100%;" #dateDesde formControlName="dateDesde" type="date" [showClearButton]="true"
+                        displayFormat="dd/MM/yyyy"></dx-date-box>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="">Fecha Hasta:
+                      <dx-date-box style="width: 100%;" formControlName="dateHasta" type="date" [showClearButton]="true"
+                        displayFormat="dd/MM/yyyy"></dx-date-box>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="" style="width: 100%;">Tipo:
+                      <dx-select-box style="width: 100%;" formControlName="selectCuponDigitalTipo" [dataSource]="cuponesDigitalesTipos"
+                        valueExpr="id" displayExpr="descripcion" [readOnly]="false" [disabled]="false"
+                        (onValueChanged)="onValueTipoChanged($event)">
+                      </dx-select-box>
+                    </label>
+                  </div>
+                </div>
+                <div class="col-md-6" *ngIf="cuponDigitalTipoSeleccionado == 1">
+                  <div class="form-group">
+                    <label for="">% Descuento
+                      <dx-number-box formControlName="txtDescuento" [showSpinButtons]="true" [showClearButton]="true"
+                        [disabled]="cuponDigitalTipoSeleccionado != 1" [readOnly]="false" min="0" max="100">
+                      </dx-number-box>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="col-md-6" *ngIf="cuponDigitalTipoSeleccionado == 2">
+                  <div class="form-group">
+                    <label for="">Valor Descuento
+                      <dx-number-box formControlName="txtValorDescuento" [showSpinButtons]="true" [showClearButton]="true"
+                        [disabled]="cuponDigitalTipoSeleccionado != 2" [readOnly]="false" min="0" max="500">
+                      </dx-number-box>
+                    </label>
+                  </div>
+                </div>
+
+              </div>
+
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="for-group">
+                    <label id="txtCodigo" (mouseenter)="toggleDefault()" (mouseleave)="toggleDefault()"
+                      style="width: 100%;">Código
+                      <dx-text-box formControlName="txtCodigo" maxLength="14" [readOnly]="false"></dx-text-box>
+                      <dx-tooltip [(visible)]="defaultVisible" target="#txtCodigo" [closeOnOutsideClick]="false">
+                        <div *dxTemplate="let data = data of 'content'">
+                          <p>Código que el usuario/cliente</p>
+                          <p>debe de ingresar para aplicar</p>
+                          <p>la promoción a un producto</p>
+                        </div>
+                      </dx-tooltip>
+                    </label>
+                  </div>
+                </div>
+                <div class="col-md-2">
+                  <div class="form-group">
+                    <label for="">Activo
+                      <dx-check-box formControlName="checkActivo">
+                      </dx-check-box>
+                    </label>
+                  </div>
+                </div>
+                <div class="col-md-4" *ngIf="cuponDigitalTipoSeleccionado == 2">
+                  <div class="form-group">
+                    <label for=""> ¿Por Identidad?
+                      <dx-check-box formControlName="checkPorIdentidad">
+                      </dx-check-box>
+                    </label>
+                </div>
+              </div>
+               
+
+              </div>
+            </div>
+       
+              
+
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="" style="width: 100%;">Descripción:
+                  <dx-text-area [readOnly]="false" [height]="130" formControlName="txtObservaciones">
+                  </dx-text-area>
+                </label>
+              </div>
+            </div>
+            <app-buscador [addPreviousProducts]="addPreviousProducts" [limpiarControles]="limpiarControles"
+              (onAddProducto)="onAddProducto($event)" (onDeleteProducto)="onDeleteProducto($event)">
+            </app-buscador>
+
+            <div class="row" style="display: flex; justify-content: left">
+              <div *ngIf="!esEdicionDeCupon" class="form-group" style="margin-left: 5px;">
+                <dx-button text="Agregar" type="success" (onClick)="agregarCupon()">
+                </dx-button>
+              </div>
+
+              <div *ngIf="esEdicionDeCupon === true" class="form-group" style="margin-left: 5px;">
+                <dx-button text="Editar Cupón" type="success" (onClick)="actualizarCuponDigital()">
+                </dx-button>
+              </div>
+
+              <div class="form-group" style="margin-left: 5px;">
+                <dx-button text="Limpiar" type="danger" (onClick)="limpiar()">
+                </dx-button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-content">
+            <div class="row">
+              <div class="col-md-12">
+                <dx-data-grid style="width: 100%;" #gridColonias [dataSource]="cuponesDigitales" [showBorders]="true"
+                  [columnAutoWidth]="true" [height]="600" [selection]="{ mode: 'single' }" [wordWrapEnabled]="true"
+                  [masterDetail]="{ enabled: true, template: 'detail' }">
+                  <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+                  <dxo-selection mode="single"></dxo-selection>
+                  <dxo-filter-row [visible]="true"></dxo-filter-row>
+                  <dxo-header-filter [visible]="true"></dxo-header-filter>
+                  <dxi-column caption="ID" dataField="id" [allowEditing]="false" alignment="center" [width]="80">
+                  </dxi-column>
+                  <dxi-column caption="Descripcion" dataField="descripcion" [allowEditing]="false" alignment="center">
+                  </dxi-column>
+                  <dxi-column caption="Código" dataField="codigo" [allowEditing]="false" alignment="center"
+                    [width]="100">
+                  </dxi-column>
+                  <dxi-column [width]="100" caption="Fecha Inicio" dataField="fechaInicio" [allowEditing]="false"
+                    cellTemplate="dateCell" alignment="center">
+                  </dxi-column>
+                  <dxi-column [width]="100" caption="Fecha Fin" dataField="fechaFin" [allowEditing]="false"
+                    cellTemplate="dateCell" alignment="center">
+                  </dxi-column>
+                  <dxi-column [width]="110" caption="% Descuento" dataField="porcentajeDescuento" [allowEditing]="false"
+                    alignment="center" format="00%">
+                  </dxi-column>
+
+                  <dxi-column [width]="110" caption="Valor Descuento" dataField="valorDescuento" [allowEditing]="false"
+                    alignment="center" >
+                  </dxi-column>
+                  <dxi-column [width]="110" caption="Por Identidad" dataField="porIdentidad" [allowEditing]="true"
+                    alignment="center">
+                  </dxi-column>
+                  
+                  <dxi-column [width]="100" caption="Activo" dataField="activo" [allowEditing]="false"
+                    alignment="center">
+                  </dxi-column>
+                  <div *dxTemplate="let cellData of 'dateCell'">
+                    {{cellData.value | date: 'dd/MM/yy'}}
+                  </div>
+                  <dxi-column caption="Acción" cellTemplate="accionTemplate" [width]="100" alignment="center">
+                  </dxi-column>
+
+                  <div *dxTemplate="let d of 'accionTemplate'">
+                    <button rel="tooltip" (click)="editarCupon(d.data)" type="button" class="btn btn-grid  ">
+                      <i class="material-icons">edit</i>
+                    </button>
+                  </div>
+
+                  <div *dxTemplate="let producto of 'detail'">
+                    <dx-data-grid [dataSource]="producto.data.cuponDigitalProductos" [showBorders]="true"
+                      [columnAutoWidth]="true" [height]="300">
+                      <dxo-filter-row [visible]="true"></dxo-filter-row>
+                      <dxo-header-filter [visible]="true"></dxo-header-filter>
+                      <dxi-column dataField="productoId" caption="ID" [width]="100"></dxi-column>
+                      <dxi-column dataField="producto.descripcion" caption="Producto"></dxi-column>
+                      <dxi-column dataField="activo" dataType="boolean" caption="Activo" [width]="100"></dxi-column>
+                      
+                    </dx-data-grid>
+                  </div>
+                </dx-data-grid>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

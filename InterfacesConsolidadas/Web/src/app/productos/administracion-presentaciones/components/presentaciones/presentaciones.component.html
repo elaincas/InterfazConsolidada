@@ -1,0 +1,259 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-icon" data-background-color="red">
+            <i class="material-icons">queue</i>
+          </div>
+          <div class="card-content">
+            <h4 class="card-title">Administración de Presentaciones de Productos</h4>
+            <div class="form-group">
+              <button
+                type="button"
+                class="btn btn-Azulsiman btn-round btn-fab btn-fab-mini"
+                (click)="abrirAgregarPresentaciones()"
+              >
+                <i class="material-icons">add</i>
+                <div class="ripple-container"></div>
+              </button>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <dx-data-grid
+                  [dataSource]="listaProductosPresentaciones"
+                  style="width: 100% !important"
+                  [rowAlternationEnabled]="true"
+                  [showBorders]="true"
+                  [masterDetail]="{ enabled: true, template:'presentacionesTemplate'}"
+                >
+                  <dxo-filter-row [visible]="true"></dxo-filter-row>
+                  <dxo-paging [pageSize]="15"></dxo-paging>
+                  <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10, 20, 30]" [showInfo]="true" [visible]="true"></dxo-pager>
+                  <dxi-column caption="Producto" dataField="productoId" [allowEditing]="true" [width]="100"></dxi-column>
+                  <dxi-column caption="Descripcion" dataField="producto.descripcion" [allowEditing]="false"></dxi-column>
+                  <dxi-column caption="Acciones" cellTemplate="accionesTemplate" [width]="100"></dxi-column>
+                  <div *dxTemplate=" let accionesTemplate of 'accionesTemplate'" style="text-align:center">
+                    <button rel="tooltip" title="Editar" (click)="AbrirActualizarPresentaciones(accionesTemplate.data)" type="button" class="btn btn-grid btn-Azulsiman">
+                      <i class="material-icons">mode_edit</i>
+                    </button>
+                  </div>
+                  <div *dxTemplate="let producto of 'presentacionesTemplate'" >
+                    <h6>Presentaciones del producto</h6>
+                    <dx-data-grid #gridAlternativos
+                      [rowAlternationEnabled]="true"
+                      [dataSource]="producto.data.presentaciones"
+                      [allowColumnReordering]="true"
+                      [allowColumnResizing]="true"
+                      keyExpr="id"
+                      [showBorders]="true"
+                      style="width: 100% !important">
+                      <dxo-filter-row [visible]="true"></dxo-filter-row>
+                      <dxo-selection mode="single"></dxo-selection>
+                      <dxo-editing mode="cell" [allowUpdating]="true"></dxo-editing>
+                      <dxo-paging [pageSize]="10"></dxo-paging>
+                      <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10, 20, 30]" [showInfo]="true" [visible]="true" [showNavigationButtons]="true"></dxo-pager>
+                      <dxo-scrolling mode="standard" showScrollbar="always"></dxo-scrolling>
+                      <dxi-column caption="Producto ID" dataField="presentacionProductoId" [allowEditing]="true" [width]="100"></dxi-column>
+                      <dxi-column caption="Presentacion" dataField="presentacionProducto.descripcion" [allowEditing]="false"></dxi-column>
+                      <!-- <dxi-column caption="Atributo ID" dataField="productoAtributoId" [allowEditing]="true" [width]="100"></dxi-column> -->
+                      <dxi-column caption="Atributo" dataField="productoAtributo.descripcion" [allowEditing]="false" [width]="150"></dxi-column>
+                      <dxi-column caption="Fecha creado" dataField="fechaAgrega" dataType="date" cellTemplate="fechaProductoTemplate" [allowEditing]="false" [width]="150"></dxi-column>
+                      <dxi-column caption="Acciones" cellTemplate="eliminarTemplate" [width]="100"></dxi-column>
+                      <div *dxTemplate=" let lugarProductoEliminarTemplate of 'eliminarTemplate'" style="text-align:center">
+                        <button type="button" (click)="EliminarPresentacion(lugarProductoEliminarTemplate.data)" class="btn btn-grid btn-danger btn-grid-eliminar text-center">
+                          <i class="material-icons">close</i>
+                        </button>
+                      </div>
+                      <div *dxTemplate="let fechaProductoTemplate of 'fechaProductoTemplate'">
+                        {{
+                          fechaProductoTemplate.data.fechaAgrega | date: 'dd/MM/yyyy'
+                        }}
+                      </div>
+                    </dx-data-grid>
+                  </div>
+                </dx-data-grid>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<dx-popup class="popup"
+  [showTitle]="true"
+  [title]="editando == false ? 'Agregar presentaciones de producto' : 'Actualizar presentaciones de producto'"
+  [dragEnabled]="false"
+  [closeOnOutsideClick]="false"
+  [(visible)]="popupPresentacionesVisible"
+  [width]=800
+  [height]=600
+  class="m-0 p-0"
+  [height] = 520>
+  <div *dxTemplate="let data of 'content'" class="container">
+    <dx-scroll-view
+      #scrollViewContentAgregar
+      id="scrollViewContentAgregar"
+      scrollByContent="true"
+      showScrollbar="always"
+    >
+      <form [formGroup]="formGroupPresentaciones">
+        <div class="row">
+          <div class="col-md-12" *ngIf="editando == false">
+            <span>Producto:</span>
+            <dx-drop-down-box
+              [(value)]="_productoOriginalSeleccionado"
+              valueExpr="identificador"
+              displayExpr="nombre"
+              placeholder="Seleccione un producto"
+              [showClearButton]="true"
+              [dataSource]="productoOriginalSeleccionadoDataSource"
+              [disabled]="productoPresentacionesDto.presentaciones.length > 0"
+              formControlName="productoOriginal"
+            >
+              <div *dxTemplate="let data of 'content'">
+                <dx-data-grid
+                  #gridProductosOriginales
+                  [dataSource]="productosOriginalesDataStore"
+                  [remoteOperations]="true"
+                  [columns]="['identificador', 'nombre']"
+                  [selection]="{ mode: 'single' }"
+                  [hoverStateEnabled]="true"
+                  [paging]="{ enabled: true, pageSize: 30 }"
+                  [filterRow]="{ visible: true }"
+                  [scrolling]="{ mode: 'infinite' }"
+                  [height]="300"
+                  noDataText="No se han encontrado resultados."
+                  (onRowClick)="filaClickeadaProductosOriginales($event)"
+                >
+                <dxi-column caption="Producto ID" dataField="identificador" width="100"></dxi-column>
+                <dxi-column caption="Producto" dataField="nombre" ></dxi-column>
+                </dx-data-grid>
+              </div>
+            </dx-drop-down-box>
+          </div>
+          <div class="col-md-12 text-center" *ngIf="editando">
+            <h5>
+              Modificando presentaciones del producto
+              <strong>{{ productoPresentacionesDto.productoId }}</strong>
+            </h5>
+          </div>
+          <div class="col-md-12 mt-2" style="margin-top:10px;">
+            <span>Producto Presentacion:</span>
+            <dx-drop-down-box
+              [(value)]="_productoPresentacionSeleccionado"
+              valueExpr="identificador"
+              displayExpr="nombre"
+              placeholder="Seleccione una Presentacion"
+              [showClearButton]="true"
+              [dataSource]="productoPresentacionSeleccionadoDataSource"
+              formControlName="productoPresentacion"
+            >
+              <div *dxTemplate="let data of 'content'">
+                <dx-data-grid
+                  #gridProductosPresentacion
+                  [dataSource]="productosPresentacionesDataStore"
+                  [remoteOperations]="true"
+                  [columns]="['identificador', 'nombre']"
+                  [selection]="{ mode: 'single' }"
+                  [hoverStateEnabled]="true"
+                  [paging]="{ enabled: true, pageSize: 30 }"
+                  [filterRow]="{ visible: true }"
+                  [scrolling]="{ mode: 'infinite' }"
+                  [height]="300"
+                  noDataText="No se han encontrado resultados."
+                  (onRowClick)="filaClickeadaProductosPresentaciones($event)"
+                >
+                <dxi-column caption="Producto ID" dataField="identificador" width="100"></dxi-column>
+                <dxi-column caption="Producto" dataField="nombre" ></dxi-column>
+                </dx-data-grid>
+              </div>
+            </dx-drop-down-box>
+          </div>
+          <div class="col-md-12 mt-2" style="margin-top:10px;">
+            <span>Producto Atributo:</span>
+            <dx-lookup formControlName="productoAtributo"
+            [(value)]="_productoAtributoSeleccionado"
+              [dataSource]="productosAtributos"
+              displayExpr="descripcion"
+              valueExpr="id"
+              [showClearButton]="true"
+              [searchEnabled]="true"
+              placeholder="Seleccione un atributo"
+              clearButtonText="Quitar filtro"
+              cancelButtonText="Cancelar"
+              noDataText="No se encontraron registros">
+            </dx-lookup>
+          </div>
+          <div class="col-md-6 mt-2" style="margin-top:10px;">
+            <button class="btn btn-fill btn-Azulsiman btn-block" type="submit"
+              (click)="AgregarDetalleProductoPresentacion()"
+            >
+              Agregar
+            </button>
+          </div>
+          <div class="col-md-6 mt-2" style="margin-top:10px;">
+            <button class="btn btn-fill btn-danger btn-block" type="submit"
+              (click)="GuardarPresentacionesProducto()"
+              [disabled]="productoPresentacionesDto.presentaciones.length < 1"
+            >
+              Guardar presentaciones
+            </button>
+          </div>
+        </div>
+    </form>
+    <div class="row mt-5" style="margin-top:10px;">
+      <div class="col-md-12">
+        <dx-data-grid
+          #gridDetallePresentacionesProductoAgregar
+          [dataSource]="productoPresentacionesDto.presentaciones"
+          style="width: 100% !important"
+          keyExpr="id"
+          [showBorders]="true"
+          noDataText="No se han agregado registros"
+        >
+          <dxo-paging [pageSize]="10"></dxo-paging>
+          <dxo-pager
+            [showPageSizeSelector]="true"
+            [allowedPageSizes]="[10, 20, 30]"
+            [showInfo]="true"
+            [visible]="true"
+            [showNavigationButtons]="true"
+          >
+          </dxo-pager>
+          <dxi-column
+            caption="Presentacion"
+            dataField="presentacionProducto.nombre"
+            [allowEditing]="false"
+          >
+          </dxi-column>
+          <dxi-column
+            caption="Atributo"
+            dataField="productoAtributo.descripcion"
+            [allowEditing]="false"
+            [width]="200"
+          >
+          </dxi-column>
+          <dxi-column
+            caption="Eliminar"
+            cellTemplate="eliminarTemplate"
+            [fixed]="true"
+            fixedPosition="left"
+            [width]="80"
+          ></dxi-column>
+          <div *dxTemplate="let lugarProductoEliminarTemplate of 'eliminarTemplate'" style="text-align:center;">
+            <button type="button" (click)="QuitarDetalleProductoPresentacionAgregar(lugarProductoEliminarTemplate.data)"
+              class="btn btn-grid btn-danger btn-grid-eliminar"
+            >
+              <i class="material-icons">close</i>
+            </button>
+          </div>
+        </dx-data-grid>
+      </div>
+    </div>
+  </dx-scroll-view>
+</div>
+</dx-popup>

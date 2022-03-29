@@ -1,0 +1,25 @@
+<li class="navFs-item">
+
+  <a *ngIf="item.path" [routerLink]="item.path" routerLinkActive="navFs-item-link__active" [ngClass]="{'navFs-item-link__expanded': item.isExpanded}"
+    class="navFs-item-link" (click)="itemClick(item)">
+    <i *ngIf="item.icon ==='fa'" [class]="'navFs-item-link-icon fa ' + item.iconName"></i>
+    <i *ngIf="item.icon !=='fa'" class="navFs-item-link-icon material-icons">{{item.iconName}}</i>
+    <span class="navFs-item-link-text sidebarToggle sidebar-normal">
+      {{item.title}}
+    </span>
+    <b class="caret" *ngIf="item.isSubMenu"></b>
+  </a>
+
+  <span *ngIf="!item.path" class="navFs-item-link" (click)="itemClick(item)" [ngClass]="{'navFs-item-link__expanded': item.isExpanded}">
+    <i class="navFs-item-link-icon navFs-item-link-icon__span material-icons">{{item.iconName}}</i>
+    <span class="navFs-item-link-text navFs-item-link-text__span">
+      {{item.title}}
+    </span>
+    <b class="caret" *ngIf="item.isSubMenu"></b>
+  </span>
+
+  <ul class="navFs-subMenu" [ngClass]="{'navFs-subMenu__expanded': item.isExpanded}">
+    <app-nav-fs-item [item]="subItem" [ngClass]="{'hide': !subItem.visible}"  *ngFor="let subItem of item.subMenu"></app-nav-fs-item>
+  </ul>
+
+</li>

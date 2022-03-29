@@ -1,0 +1,103 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="card">
+      <div class="card-header card-header-text" data-background-color="green">
+        <h4 class="card-title">Ingreso traslado Sucursal</h4>
+      </div>
+      <div class="card-content">
+        <form [formGroup]="_formGroupIngreso">
+          <div class="row">
+            <div class="col-md-6">
+              <label class="control-label" for="sucursalId">Sucursal:</label>
+              <dx-lookup
+                [dataSource]="dataSourceSucursales"
+                formControlName="sucursalId"
+                [closeOnOutsideClick]="true"
+                (onValueChanged)="onValueCha($event)"
+                displayExpr="Nombre"
+                valueExpr="SucursalId"
+              ></dx-lookup>
+            </div>
+            <div class="col-md-6">
+              <label class="control-label" for="movimientoProductoID"
+                >No. Traslado:</label
+              >
+
+              <dx-lookup
+                [dataSource]="dataSourceMoviemientos"
+                formControlName="movimientoProductoID"
+                [closeOnOutsideClick]="true"
+                (onValueChanged)="onValueChaTraslado($event)"
+                displayExpr="MovimientoProductoId"
+                valueExpr="MovimientoProductoId"
+              ></dx-lookup>
+            </div>
+          </div>
+          <br />
+          <div class="row">
+            <div class="col-md-12">
+              <dx-data-grid
+                #gridingresoInventario
+                [dataSource]="dataSourceProductos"
+                [showColumnLines]="true"
+                [showRowLines]="true"
+                [showBorders]="true"
+                [columnAutoWidth]="true"
+                [rowAlternationEnabled]="true"
+                (onRowUpdated)="onRowUpdated($event)"
+                (onEditorPreparing)="overrideOnValueChanged($event)"
+              >
+                <dxo-editing mode="cell" [allowUpdating]="true"> </dxo-editing>
+                <dxo-filter-row [visible]="true"> </dxo-filter-row>
+                <dxo-header-filter [visible]="true"></dxo-header-filter>
+                <dxi-column
+                  dataField="ProductoId"
+                  caption="Cód. Prod"
+                  [allowEditing]="false"
+                ></dxi-column>
+                <dxi-column
+                  dataField="Producto"
+                  caption="Producto"
+                  [allowEditing]="false"
+                ></dxi-column>
+                <dxi-column dataField="CantidadTraslado"  [allowEditing]="false" caption="Cant. en traslado">
+                </dxi-column>
+                <dxi-column dataField="Cantidad" caption="Cantidad">
+                </dxi-column>
+              </dx-data-grid>
+            </div>
+          </div>
+          <div class="row align-items-end">
+            <div class="col-md-10"></div>
+            <div class="col-md-2">
+              <label class="control-label" for="sucursalId">Total:</label>
+              <dx-number-box
+                formControlName="cantidadTotal"
+                format="#,###,##0.0#"
+              ></dx-number-box>
+            </div>
+            <br />
+            <br />
+            <br />
+            <br />
+            <div class="col-md-10"></div>
+            <div class="col-md-2">
+              <dx-button
+                type="danger"
+                text="Limpiar"
+                (onClick)="Limpiar()"
+              ></dx-button>
+              <dx-button
+                type="default"
+                text="Guardar"
+                (onClick)="ingresar(gridingresoInventario)"
+              ></dx-button>
+            </div>
+
+            <br />
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,77 @@
+<!-- <app-main-loader></app-main-loader> -->
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-icon" data-background-color="green">
+                        <i class="material-icons">move_to_inbox</i>
+                    </div>
+                    <div class="card-content">
+                        <h4 class="card-title">
+                            <strong>Productos</strong>
+                        </h4>
+                        <div class="row">
+                            <div class="col-lg-offset-1 col-lg-10 col-md-10 col-sm-12 col-xs-12">
+                                <div class="row">
+                                    <div class="col-lg-4 col-md-8 col-sm-10 col-xs-10">
+                                        <span>
+                                            <strong>Nombre Producto:</strong>
+                                        </span>
+                                        <dx-autocomplete placeholder="Nombre Producto" [dataSource]="productos" [(ngModel)]="producto.NombreProducto">
+                                        </dx-autocomplete>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <div class="col-lg-2 col-md-2 col-sm-5 col-xs-5">
+                                        <span>
+                                            <strong>Cantidad:</strong>
+                                        </span>
+                                        <dx-number-box name="txtCantidad" [value]="1"  [min]="1" [showSpinButtons]="true" [(ngModel)]="producto.Cantidad"></dx-number-box>
+                                    </div>
+                                    <div class="col-lg-2 col-md-2 col-sm-5 col-xs-5">
+                                        <span>
+                                            <strong>Precio:</strong>
+                                        </span>
+                                        <dx-number-box name="txtPrecio" [value]="1" format="L #,##0.##" [min]="1" [showSpinButtons]="true" [(ngModel)]="producto.Precio"></dx-number-box>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <div class="col-lg-4 col-md-8 col-sm-10 col-xs-10">
+                                        <span>
+                                            <strong>Zona:</strong>
+                                        </span>
+                                        <dx-lookup  placeholder="Ingrese Zona" [dataSource]="zonas" [(ngModel)]="producto.ZonaID" displayExpr="zona" valueExpr="zonaID" closeOnOutsideClick="true"
+                                        name="dropDownZona">
+                                        </dx-lookup>
+                                    </div>
+                                </div>
+                                <br>
+                                 <div class="row">
+                                    <div class="col-lg-4 col-md-8 col-sm-10 col-xs-10">
+                                        <span>
+                                            <strong>Observaciones:</strong>
+                                        </span>
+                                        <dx-text-box name="txtObservaciones" placeholder="Observaciones..." [(ngModel)]="producto.Observacion"></dx-text-box>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <div class="col-lg-4 col-md-8 col-sm-10 col-xs-10">
+                                        <div class="row" style="float: right;">
+                                            <dx-check-box [(ngModel)]="estadoInventario" text="Buen Estado(Inicial)"></dx-check-box>
+                                            <dx-button type="success" text="Ingresar" (click)="GuardarInformacion()"></dx-button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

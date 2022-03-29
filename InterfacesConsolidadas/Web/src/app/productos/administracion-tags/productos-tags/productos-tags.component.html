@@ -1,0 +1,117 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+
+        <div class="card">
+          <div class="card-header card-header-icon" data-background-color="red">
+            <i class="material-icons">class</i>
+          </div>
+          <div class="card-content">
+            <h4 class="card-title">Agregar Tags a Productos</h4>
+
+            <div class="row">
+              <div class="col-md-7">
+                <app-agrupador-productos #agrupadorProductos (alSeleccionarUnProducto)="alSeleccionarUnProducto($event)"
+                  [(productos)]="productos" [buscadorModo]="'modal'"></app-agrupador-productos>
+              </div>
+              <div class="col-md-5">
+                <app-agrupador-tags #agrupadorTags [(tags)]="tags"></app-agrupador-tags>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <button class="btn btn-fill btn-Azulsiman" (click)="guardar()">
+                  Guardar
+                </button>
+                <button class="btn btn-fill btn-danger" (click)="onCancelarClick()">
+                  Cancelar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<dx-popup class="popup" [width]="540" [height]="150" [showTitle]="false" title="Tag" [dragEnabled]="false" [closeOnOutsideClick]="false"
+  [(visible)]="modalDialogCargarProductosSimilares.visible">
+  <div *dxTemplate="let data of 'content'">
+    <span class="question">
+      El producto seleccionado tiene tags y/o productos similares
+      <br> ¿Que información adicional desea cargar?
+    </span>
+
+    <div style="text-align:center;">
+      <button class="btn btn-fill btn-Azulsiman" [ngClass]="{'hidden': modalDialogCargarProductosSimilares.btnProductosyTagsHidden }"
+        (click)="abrirYcargarModalProductosSimilares(productoIdBusqueda)">
+        Productos y Tags
+      </button>
+      <button class="btn btn-fill btn-Azulsiman" [ngClass]="{'hidden':modalDialogCargarProductosSimilares.btnTagsHidden }" (click)="cargarTagsDeProducto(productoIdBusqueda)">
+        Solamente las Tags
+      </button>
+      <button class="btn btn-fill btn-Azulsiman" [ngClass]="{'hidden':modalDialogCargarProductosSimilares.btnNingunaHidden }" (click)="modalDialogCargarProductosSimilares.close()">
+        Ninguna
+      </button>
+    </div>
+  </div>
+</dx-popup>
+
+
+<dx-popup class="popup" [width]="800" [height]="510" [showTitle]="false" title="Tag" [dragEnabled]="false" [closeOnOutsideClick]="false"
+  [(visible)]="modalCargarProductosSimilaresEsVisible">
+  <div *dxTemplate="let data of 'content'">
+    <span class="titulo1">
+      Productos Similares a
+    </span>
+    <span class="titulo2">
+      {{producto.descripcion}}
+    </span>
+    <div class="row" style="margin-top:10px">
+      <div class="col-md-12">
+        <div class="dx-border-grid" style="min-height:342px">
+          <dx-data-grid [rowAlternationEnabled]="true" [dataSource]="producto.productosSimilares" [showColumnLines]="false" rowTemplate="rowTemplateProducto">
+            <dxo-filter-row [visible]="true"> </dxo-filter-row>
+            <dxo-paging [pageSize]="5"></dxo-paging>
+
+            <dxi-column caption="Producto" dataField="descripcion"></dxi-column>
+            <dxi-column caption="Tags"></dxi-column>
+            <dxi-column caption="Agregar" [width]="70"></dxi-column>
+
+            <tbody *dxTemplate="let producto of 'rowTemplateProducto'">
+              <tr class="dx-row producto-row" [ngClass]="{'producto-row__igual': producto.data.contieneLasMismasTagsDelProductoPrincipal}">
+                <td>
+                  {{producto.data.descripcion}}
+                </td>
+                <td>
+                  <div>
+                    <span *ngFor="let tag of producto.data.tags" [ngClass]="{'producto-tag__igual': producto.data.contieneLasMismasTagsDelProductoPrincipal}"
+                      class="producto-tag"> {{ tag.descripcion}} </span>
+                  </div>
+                </td>
+                <td>
+                  <div class="dx-field-value">
+                    <dx-check-box style="margin:0;" [(value)]="producto.data.esSeleccionado"></dx-check-box>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+
+          </dx-data-grid>
+        </div>
+
+        <button class="btn btn-fill btn-Azulsiman" (click)="cargarProductoYTagsSimilares(producto);">
+          Agregar
+        </button>
+
+        <button class="btn btn-fill btn-danger" (click)="modalCargarProductosSimilaresEsVisible = false">
+          Cancelar
+        </button>
+      </div>
+    </div>
+  </div>
+</dx-popup>

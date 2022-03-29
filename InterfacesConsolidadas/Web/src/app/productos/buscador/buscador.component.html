@@ -1,0 +1,49 @@
+<div class="col-md-12">
+  <div class="row">
+    <div class="form-group" style="width: 100%;">
+      <label for="" style="width: 100%;">Productos:</label>
+      <dx-drop-down-box #dropdownProducto stylingMode="outlined" [(value)]="productosSeleccionados"
+        displayExpr="producto" valueExpr="productoId" [deferRendering]="false" placeholder="Productos"
+        [showClearButton]="true" (onInitialized)="onInitialized($event)" [dataSource]="dataSource">
+        <dxo-drop-down-options height="400px"></dxo-drop-down-options>
+
+        <div *dxTemplate="let data of 'content'">
+          <dx-data-grid id="gridProductos" #gridProductos [dataSource]="dataSource" [remoteOperations]="true"
+            [selection]="{ mode: 'multiple' }" [hoverStateEnabled]="true" [paging]="{ enabled: true, pageSize: 10 }"
+            [filterRow]="{ visible: false }" [scrolling]="{ mode: 'infinite' }"
+            [(selectedRowKeys)]="productosSeleccionadosChange" height="100%"
+            (onEditingStart)="onEditorPreparing($event)" keyExpr="productoId"
+            (onToolbarPreparing)="onToolbarPreparing($event)">
+            <dxo-search-panel [visible]="true" [width]="300"></dxo-search-panel>
+            <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+            <dxo-selection mode="multiple"></dxo-selection>
+            <dxi-column [width]="120" dataField="productoId" caption="Código" sortOrder="desc"></dxi-column>
+            <dxi-column dataField="producto" caption="Producto"></dxi-column>
+            <dxo-editing mode="cell" [allowUpdating]="true">
+            </dxo-editing>
+          </dx-data-grid>
+        </div>
+      </dx-drop-down-box>
+    </div>
+  </div>
+
+  <div class="row">
+    <div>
+      <dx-data-grid style="width: 100%;" [dataSource]="productosAgregados" [remoteOperations]="true" [hoverStateEnabled]="true"
+        [filterRow]="{ visible: true }" [scrolling]="{ mode: 'infinite' }"
+        height="100%" keyExpr="productoId" [showBorders]="true" [height]="250">
+        <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+        <dxi-column [width]="120" dataField="productoId" caption="Código" sortOrder="desc"></dxi-column>
+        <dxi-column dataField="producto" caption="Producto"></dxi-column>
+        <dxi-column caption="Acción" cellTemplate="accionTemplate" [width]="100"></dxi-column>
+
+        <div *dxTemplate="let d of 'accionTemplate'">
+          <button rel="tooltip" (click)="emitEliminarProducto(d.data)" type="button" class="btn btn-grid btn-danger ">
+            <i class="material-icons">close</i>
+          </button>
+        </div>
+      </dx-data-grid>
+    </div>
+  </div>
+
+</div>

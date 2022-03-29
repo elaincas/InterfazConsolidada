@@ -1,0 +1,65 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header card-header-text" data-background-color="green">
+                <h4 class="card-title">Listado Productos Inventario</h4>
+            </div>
+            <div class="card-content">
+                <div class="row">
+                    <div class="col-md-10">
+                        <h5>
+                            <strong>Ingrese los parámetros de búsqueda.</strong>
+                        </h5>
+                        <div class="col-md-4">
+                            <span>Tipo Transacción:</span>
+                            <dx-select-box [dataSource]="transaccion" displayExpr="Descripcion" valueExpr="FinalidadID" placeholder="Transacción" [(ngModel)]="busquedaInventario.TipoTransaccion">
+                            </dx-select-box>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="col-md-5">
+                                <span>Fecha Inicial:</span>
+                                <dx-date-box [value]="now" [displayFormat]="'dd/MM/yyyy'" [(ngModel)]="busquedaInventario.FechaInicial" type="date">
+                                </dx-date-box>
+                            </div>
+                            <div class="col-md-5">
+                                <span>Fecha Final:</span>
+                                <dx-date-box [value]="now" [displayFormat]="'dd/MM/yyyy'" [(ngModel)]="busquedaInventario.FechaFinal" type="date">
+                                </dx-date-box>
+                            </div>
+                            <div class="col-md-2">
+                                <br>
+                                <dx-button type="default" icon="fa fa-search" (onClick)="ObtenerDataInventario()"></dx-button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <br>
+                <dx-data-grid [dataSource]="dataInventario" [showColumnLines]="true" [showRowLines]="true" [showBorders]="true" [columnAutoWidth]="true"
+                    [rowAlternationEnabled]="true">
+                    <dxo-filter-row [visible]="true"> </dxo-filter-row>
+                    <dxo-header-filter [visible]="true"></dxo-header-filter>
+                    <dxo-export [enabled]="true" fileName="Inventario-Productos-Ubicación" [allowExportSelectedData]="true"></dxo-export>
+                    <dxi-column  dataField="ProductoId" caption="Cod. Prod"></dxi-column>
+                    <dxi-column dataField="DescripcionProducto" caption="Nombre Producto">
+                    </dxi-column>
+                    <dxi-column  dataField="SucursalId" caption="Cod. Sucursal">
+                    </dxi-column>
+                    <dxi-column caption="Sucursal" dataField="DescripcionSucursal"> </dxi-column>
+                    <dxi-column caption="Fecha Ingreso" dataField="FechaCrea" dataType="date" cellTemplate="dateCell"> </dxi-column>
+                    <dxi-column caption="Precio" dataField="Precio"></dxi-column>
+                    <dxi-column caption="Costo" dataField="Costo"> </dxi-column>
+                    <dxi-column caption="Fecha Vence" dataField="Vence" cellTemplate="dateCell"> </dxi-column>
+                    <dxi-column caption="Transacción" dataField="DocumentoId"> </dxi-column>
+                    <dxi-column caption="Tipo Transacción" dataField="Transaccion"> </dxi-column>
+                    <dxi-column caption="Inventario Actual" dataField="InventarioActual"> </dxi-column>
+                    <dxi-column caption="Inventario Inicial" dataField="InventarioInicial"> </dxi-column>
+                    <div *dxTemplate="let cellData of 'dateCell'">
+                        {{cellData.value | date: 'dd/MM/yyyy'}}
+                    </div>
+                    <dxo-scrolling mode="virtual"></dxo-scrolling>
+                </dx-data-grid>
+            </div>
+        </div>
+    </div>
+</div>

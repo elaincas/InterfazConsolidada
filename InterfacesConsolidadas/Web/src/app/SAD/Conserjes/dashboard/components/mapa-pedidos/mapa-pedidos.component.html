@@ -1,0 +1,41 @@
+<div class="card">
+  <div class="card-header card-header-icon" data-background-color="green">
+    <i class="material-icons">map</i>
+  </div>
+  <div class="card-content">
+    <h4 class="card-title">
+      <strong>Mapa de Pedidos Entregados</strong>
+    </h4>
+    <div class="row">
+      <div class="col-xs-5 col-md-3 col-lg-2">
+        <label for="">Fecha:</label>
+        <dx-date-box [(value)]="fecha" type="date" displayFormat="dd/MM/yyyy"
+          (onValueChanged)="onDateValueChanged($event)"> </dx-date-box>
+      </div>
+      <div class="col-xs-7 col-md-4 col-lg-4">
+        <label for="">Conserje:</label>
+        <dx-lookup [dataSource]="conserjes" [(value)]="conserjeId" displayExpr="nombre" valueExpr="id"
+          (onValueChanged)="valueConserjeChanged($event)" [showClearButton]="true" [searchEnabled]="true"
+          placeholder="Seleccionar...">
+        </dx-lookup>
+      </div>
+    </div>
+    <div class="row mt-10">
+      <div class="col-md-12">
+        <dx-load-panel #loadPanel shadingColor="rgba(0,0,0,0.4)" [position]="{ of: '#gmap' }"
+          [(visible)]="loadingVisible" [showIndicator]="true" [showPane]="true" [shading]="true"
+          [closeOnOutsideClick]="false">
+        </dx-load-panel>
+        <div id="gmap" #gmap style="width:100%;height:600px"></div>
+      </div>
+    </div>
+  </div>
+  <div class="card-footer" *ngIf="minutosTranscurridos != undefined">
+    <div class="stats">
+      <button class="btn btn-grid" rel="tooltip" title="Sincronizar" type="button" [disabled]="loadingVisible" (click)="cargarPedidosRecursivo()" >
+        <i class="material-icons" style="top: 0px;">sync</i>
+      </button>
+      <i class="material-icons">access_time</i> Actualizado hace {{minutosTranscurridos}} minutos
+    </div>
+  </div>
+</div>

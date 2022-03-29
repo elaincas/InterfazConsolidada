@@ -1,0 +1,319 @@
+<div class="main-content">
+  <div class="container-flui">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-icon" data-background-color="red">
+            <i class="material-icons">analytics</i>
+          </div>
+
+          <div class="card-content">
+            <h4 class="card-title">
+              Reporte Comparativo - Productos Alternativos
+            </h4>
+            <div class="row m-top-2">
+              <div class="col-md-5">
+                <span>Producto buscado:</span>
+                <dx-drop-down-box
+                  [(value)]="gridBoxProductoOriginalValue"
+                  valueExpr="identificador"
+                  displayExpr="nombre"
+                  placeholder="Seleccione un producto"
+                  [showClearButton]="true"
+                  [dataSource]="productos"
+                >
+                  <div *dxTemplate="let data of 'content'">
+                    <dx-data-grid
+                      #gridProductosOriginales
+                      [dataSource]="productos"
+                      [columns]="['identificador', 'nombre']"
+                      [selection]="{ mode: 'single' }"
+                      [paging]="{ enabled: true, pageSize: 10 }"
+                      [pager]="{
+                        showPageSizeSelector: true,
+                        allowedPageSizes: [5, 10, 20],
+                        showInfo: true
+                      }"
+                      [filterRow]="{ visible: true, applyFilter: 'auto' }"
+                      [scrolling]="{ mode: 'infinite' }"
+                      [height]="300"
+                      [(selectedRowKeys)]="gridBoxProductoOriginalValueSelect"
+                    >
+                    </dx-data-grid>
+                  </div>
+                </dx-drop-down-box>
+              </div>
+
+              <div class="col-md-5">
+                <span>Producto Alternativo:</span>
+                <dx-drop-down-box
+                  [(value)]="gridBoxProductoAlternativoValue"
+                  valueExpr="identificador"
+                  displayExpr="nombre"
+                  placeholder="Seleccione un producto"
+                  [showClearButton]="true"
+                  [dataSource]="productos"
+                >
+                  <div *dxTemplate="let data of 'content'">
+                    <dx-data-grid
+                      #gridProductosRemplazo
+                      [dataSource]="productos"
+                      [columns]="['identificador', 'nombre']"
+                      [selection]="{ mode: 'single' }"
+                      [paging]="{ enabled: true, pageSize: 30 }"
+                      [pager]="{
+                        showPageSizeSelector: true,
+                        allowedPageSizes: [5, 10, 20],
+                        showInfo: true
+                      }"
+                      [filterRow]="{ visible: true, applyFilter: 'auto' }"
+                      [scrolling]="{ mode: 'infinite' }"
+                      [height]="300"
+                      [(selectedRowKeys)]="
+                        gridBoxProductoAlternativoValueSelect
+                      "
+                    >
+                    </dx-data-grid>
+                  </div>
+                </dx-drop-down-box>
+              </div>
+              <div class="col-md-2">
+                <dx-button
+                  (click)="Comparar()"
+                  ngClass="btn btn-fill btn-Azulsiman alinear"
+                  text="Comparar Datos"
+                ></dx-button>
+              </div>
+            </div>
+            <hr />
+            <div *ngIf="mostrar" class="m-top-2">
+              <div class="row m-bottom-2">
+                <div class="col-md-6">
+                  <div class="row">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-10">
+                      <dx-form
+                        id="form"
+                        [formData]="productoBase"
+                        labelLocation="top"
+                      >
+                        <dxi-item
+                          itemType="group"
+                          caption="Producto Base Sucursal: {{productoBase.datosSucursalPedido.nombre}}"
+                          [colCount]="3"
+                        >
+                          <dxi-item
+                            [label]="{ text: 'Código Producto' }"
+                            dataField="id"
+                            [editorOptions]="{ readOnly: true}"
+                            [colSpan]="1"
+                          ></dxi-item>
+                          <dxi-item
+                            dataField="nombre"
+                            [editorOptions]="{ readOnly: true }"
+                            [colSpan]="2"
+                          ></dxi-item>
+                          <dxi-item
+                            [label]="{ text: 'Unidad Medida' }"
+                            dataField="medida.descripcion"
+                            [editorOptions]="{ readOnly: true }"
+                            [colSpan]="1"
+                          ></dxi-item>
+                          <dxi-item
+                            [label]="{ text: 'Laboratorio' }"
+                            dataField="proveedor.nombre"
+                            [editorOptions]="{ readOnly: true }"
+                            [colSpan]="2"
+                          ></dxi-item>
+                          <dxi-item
+                            [label]="{ text: 'Cantidad Presentación' }"
+                            dataField="cantidadPresentacion"
+                            [editorOptions]="{ readOnly: true }"
+                          ></dxi-item>
+                          <dxi-item
+                            #item
+                            [label]="{ text: 'Presentación' }"
+                            dataField="unidadesPresentacion.descripcion"
+                            [editorOptions]="{ readOnly: true }"
+                          ></dxi-item>
+                          <dxi-item
+                            [label]="{ text: 'PrecioFinal' }"
+                            dataField="precioFinal"
+                            [editorOptions]="{ readOnly: true }"
+                          ></dxi-item>
+                        </dxi-item>
+                      </dx-form>
+                    </div>
+                    <div class="col-md-1"></div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <dx-data-grid
+                        [rowAlternationEnabled]="true"
+                        [dataSource]="productoBase.productoIngredientes"
+                        noDataText="No hay registros de ingredientes activos en el producto"
+                        showBorders="true"
+                      >
+                        <dxo-filter-row [visible]="true"> </dxo-filter-row>
+                        <dxi-column
+                          caption="Código"
+                          dataField="ingredienteActivo.id"
+                          [width]="60"
+                        ></dxi-column>
+                        <dxi-column
+                          caption="Ingrediente"
+                          dataField="ingredienteActivo.descripcion"
+                        ></dxi-column>
+                        <dxi-column
+                          caption="Cantidad"
+                          dataField="cantidad"
+                          [width]="75"
+                        ></dxi-column>
+                        <dxi-column
+                          caption="Medida"
+                          dataField="medidaPeso.medida"
+                          [width]="75"
+                        ></dxi-column>
+                      </dx-data-grid>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <div class="row">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-10">
+                      <dx-form
+                        id="form"
+                        [formData]="productoAlternativo"
+                        labelLocation="top"
+                      >
+                      <dxi-item
+                      itemType="group"
+                      caption="Producto Alternativo Sucursal: {{productoAlternativo.datosSucursalPedido.nombre}}"
+                      [colCount]="3"
+                    >
+                      <dxi-item
+                        #IdAlterno
+                        [label]="{ text: 'Código Producto' }"
+                        dataField="id"
+                        [editorOptions]="{ readOnly: true }"
+                        [colSpan]="1"
+                      ></dxi-item>
+                      <dxi-item
+                        dataField="nombre"
+                        [editorOptions]="{ readOnly: true }"
+                        [colSpan]="2"
+                      ></dxi-item>
+                      <dxi-item
+                        [label]="{ text: 'Unidad Medida' }"
+                        dataField="medida.descripcion"
+                        [editorOptions]="{ readOnly: true }"
+                        [colSpan]="1"
+                      ></dxi-item>
+                      <dxi-item
+                        [label]="{ text: 'Laboratorio' }"
+                        dataField="proveedor.nombre"
+                        [editorOptions]="{ readOnly: true }"
+                        [colSpan]="2"
+                      ></dxi-item>
+                      <dxi-item
+                        [label]="{ text: 'Cantidad Presentación' }"
+                        dataField="cantidadPresentacion"
+                        [editorOptions]="{ readOnly: true }"
+                        [cssClass]="productoAlternativo.cantidadPresentacion != productoBase.cantidadPresentacion ? 'error':''"
+                      ></dxi-item>
+                      <dxi-item
+                        #item
+                        [label]="{ text: 'Presentación' }"
+                        dataField="unidadesPresentacion.descripcion"
+                        [cssClass]="productoAlternativo.unidadPresentacionId != productoBase.unidadPresentacionId ? 'error':''"
+                        [editorOptions]="{ readOnly: true }"
+                      ></dxi-item>
+                      <dxi-item
+                        [label]="{ text: 'PrecioFinal' }"
+                        dataField="precioFinal"
+                        [editorOptions]="{ readOnly: true }"
+                        [cssClass]="productoAlternativo.precioFinal > productoBase.precioFinal ? 'error':''"
+                      ></dxi-item>
+                    </dxi-item>
+                      </dx-form>
+                    </div>
+                    <div class="col-md-1"></div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <dx-data-grid
+                        [rowAlternationEnabled]="true"
+                        [dataSource]="productoAlternativo.productoIngredientes"
+                        noDataText="No hay registros de ingredientes activos en el producto"
+                        showBorders="true"
+                        (onRowPrepared)="Verificar($event)"
+                      >
+                        <dxo-filter-row [visible]="true"> </dxo-filter-row>
+                        <dxi-column
+                          caption="Código"
+                          dataField="ingredienteActivo.id"
+                          [width]="60"
+                          cssClass="error"
+                        ></dxi-column>
+                        <dxi-column
+                          caption="Ingrediente"
+                          dataField="ingredienteActivo.descripcion"
+                        ></dxi-column>
+                        <dxi-column
+                          caption="Cantidad"
+                          dataField="cantidad"
+                          [width]="75"
+                        ></dxi-column>
+                        <dxi-column
+                          caption="Medida"
+                          dataField="medidaPeso.medida"
+                          [width]="75"
+                        ></dxi-column>
+                      </dx-data-grid>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div *ngIf="productoBase.productoIngredientes.length != productoAlternativo.productoIngredientes.length" class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-8">
+                  <div class="alert alert-danger" role="alert">
+                    El total de ingredientes activos de cada producto no coincide.
+                  </div>
+                </div>
+                <div class="col-md-2"></div>
+              </div>
+              <div *ngIf="productoAlternativoConfigurado == false" class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-8">
+                  <div class="alert alert-danger" role="alert">
+                    El laboratorio <strong>{{productoBase.proveedor.nombre}}</strong> no tiene configurado al laboratorio <strong>{{productoAlternativo.proveedor.nombre}}</strong> para ofrecer productos alternativos.
+                  </div>
+                </div>
+                <div class="col-md-2"></div>
+              </div>
+
+              <div *ngIf="productoAlternativo.unidadPresentacionId == 0 || productoAlternativo.unidadPresentacionId == undefined || productoBase.unidadPresentacionId == 0 || productoBase.unidadPresentacionId == undefined" class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-8">
+                  <div class="alert alert-danger" role="alert">
+                    <p *ngIf="productoAlternativo.unidadPresentacionId == 0 || productoAlternativo.unidadPresentacionId == undefined">
+                      El Producto alternativo {{productoAlternativo.nombre}} no tiene configurado la unidad de presentación
+                    </p>
+                    <p *ngIf="productoBase.unidadPresentacionId == 0 || productoBase.unidadPresentacionId == undefined">
+                      El producto base {{productoBase.nombre}} no tiene configurado la unidad de presentación
+                    </p>
+                  </div>
+                </div>
+                <div class="col-md-2"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

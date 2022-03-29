@@ -1,0 +1,112 @@
+
+
+<div class="main-content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header card-header-icon" data-background-color="green">
+              <i class="material-icons">storage</i>
+            </div>
+            <div class="card-content">
+              <h4 class="card-title"><strong>Listado Reembolsos Pendientes</strong></h4>
+                  <dx-data-grid [dataSource]="reembolsos"  [showColumnLines]="true" [showRowLines]="true" [showBorders]="true" [columnAutoWidth]="true" [rowAlternationEnabled]="true">
+                    <dxo-filter-row [visible]="true"> </dxo-filter-row>
+                    <dxo-header-filter [visible]="true"></dxo-header-filter>
+                    <dxo-export [enabled]="true" fileName="Reembolsos_Por_Aceptar" [allowExportSelectedData]="true"></dxo-export>
+                                  <dxi-column [hidingPriority]="0"  caption="Código Colaborador" dataField="colaboradorId"> </dxi-column>
+                                  <dxi-column dataField="colaborador" caption="Nombre Colaborador"></dxi-column>
+                                  <dxi-column [hidingPriority]="1" dataField="ciudadOrigenId" caption="Ciudad Origen">
+                                      <dxo-lookup [dataSource]="ciudades" closeOnOutsideClick="true" showPopupTitle="false" displayExpr="ciudad" valueExpr="ciudadID">
+                                      </dxo-lookup>
+                                  </dxi-column>
+                                  <dxi-column [hidingPriority]="2" dataField="ciudadDestinoId" caption="Ciudad Destino">
+                                      <dxo-lookup [dataSource]="ciudades" closeOnOutsideClick="true" showPopupTitle="false" displayExpr="ciudad" valueExpr="ciudadID">
+                                      </dxo-lookup>
+                                  </dxi-column>
+                                  <dxi-column [hidingPriority]="3" caption="Sucursal" dataField="sucursal"> </dxi-column>
+                                  <dxi-column [hidingPriority]="4" caption="Fecha Reembolso" dataField="fechaReembolso" dataType="date" cellTemplate="dateCell"> </dxi-column>
+                                  <dxi-column caption="Valor a Pagar" dataField="valorAPagar"> </dxi-column>
+                                  <dxi-column caption="Acciones" cellTemplate="accionTemplate" [width]="70"> </dxi-column>
+                                  <div *dxTemplate="let cellData of 'dateCell'">
+                                    {{cellData.value | date: 'dd/MM/yyyy'}}
+                                  </div>
+                                  <div *dxTemplate="let data of 'accionTemplate'">
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <i class="fa fa-check-circle" (click)="ObtenerInformacionAprobarReembolso(data.data)"> </i>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <i class="fa fa-minus-circle" (click)="ObtenerInformacionADenegar(data.data)"> </i>
+                                          </div>  
+                                    </div>
+                                  </div> 
+                                  <dxo-scrolling mode="virtual"></dxo-scrolling>      
+                  </dx-data-grid>
+              <dx-popup class="popup" id="popupReembolso" [width]="450" [height]="360" [showTitle]="true" ng-controller="Ctrl" title="Reembolso"
+              [dragEnabled]="false" [closeOnOutsideClick]="true" [(visible)]="_mostrarPopup" [resizeEnabled]="true">
+              <div  *dxTemplate="let data of 'content'">
+                   <div  *ngIf="visibleAlDenegar" >
+                    <h4>Rechazar Reembolso</h4>
+                   </div>
+                 
+                  <div *ngIf="!visibleAlDenegar" >
+                       <br/>
+                       <h3>¿Desea aprobar este reembolso?</h3>
+                       <br/>
+                  </div>
+                  
+                  <div class="row ">
+                      <div class="col-md-7">
+                          <span class="labelsFormularios">Colaborador</span>
+                          <dx-text-box [(value)]="colaborador.nombre" disabled="true"></dx-text-box>
+                      </div>
+                      <div class="col-md-5">
+                          <span class="labelsFormularios">Valor a Pagar:</span>
+                          <dx-number-box  [(value)]="_valorAPagar" disabled="true"></dx-number-box>
+                      </div>
+                  </div>
+                  <br/>
+                  <div *ngIf="visibleAlDenegar" class="row">
+                      <div class="col-md-12">
+                            <span class="labelsFormularios" >Observaciones</span>
+                            <dx-text-area
+                                [height]="90"
+                                [maxLength]="150"
+                                [(ngModel)]="reembolso.observaciones">
+                            </dx-text-area> 
+                      </div>
+                  </div>
+                  <div  *ngIf="!visibleAlDenegar" class="row">
+                        <div class="col-md-5" style="margin-top:3%;padding-right: 5%">
+                                <dx-button icon="check" text="Sí" type="success" style="float:right" (onClick)="Aprobar()">
+                                </dx-button>
+                        </div>  
+                        <div class="col-md-5" style="margin-top:3%; ">
+                                <dx-button icon="remove" text="No" type="default" style="float:right" (onClick)="Cancelar()">
+                                </dx-button>
+                        </div>
+                    
+            
+                  </div>  
+                  <div *ngIf="visibleAlDenegar" class="row" >
+                        <div class="col-md-5" style="margin-top:3%">
+                                <dx-button icon="save" text="Guardar" type="success"  style="float:right"(onClick)="Denegar()">
+                                </dx-button>
+                        </div>
+                        <div class="col-md-5" style="margin-top:3%">
+                            <dx-button icon="remove" text="Cancelar" type="default" style="float:right" (onClick)="Cancelar()">
+                            </dx-button>
+                        </div>
+
+                </div>
+              </div>
+          </dx-popup>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  

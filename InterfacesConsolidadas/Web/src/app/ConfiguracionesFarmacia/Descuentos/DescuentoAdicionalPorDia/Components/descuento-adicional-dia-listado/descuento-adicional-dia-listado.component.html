@@ -1,0 +1,42 @@
+<div [ngClass]="{'main-content': mostrarTodos}">
+    <div [ngClass]="{'container-fluid': mostrarTodos}">
+        <div [ngClass]="{'card': mostrarTodos}" >
+        <div class="row">
+            <div class="col-md-12">
+                <dx-data-grid [showBorders]="true" [rowAlternationEnabled]="true" [dataSource]="listadoDescuentos">
+                    <dxi-column caption="Código" dataField="id" [width]="80"> </dxi-column>
+                    <dxi-column caption="Descripción" dataField="descripcion"> </dxi-column>
+                    <dxi-column caption="Descuento %" dataField="descuento" [width]="100"> </dxi-column>
+                    <dxi-column caption="Tercera Edad" dataField="esParaTerceraEdad" [width]="100"> </dxi-column>
+                    <dxi-column caption="Fecha Agrega" dataField="fechaAgrega" datatype="date" cellTemplate="dateCell"
+                        [width]="150"></dxi-column>
+                    <div *dxTemplate="let cellData of 'dateCell'">
+                        {{cellData.value | date: 'dd/MM/yyyy'}}
+                    </div>
+                    <dxi-column caption="Modificado por" dataField="usuarioNombre" [width]="150"></dxi-column>
+                    <dxi-column caption="Acciones" [width]="120" cellTemplate="accionTemplate"
+                        [(visible)]="mostrarTodos"></dxi-column>
+                    <div *dxTemplate="let d of 'accionTemplate'">
+                        <button rel="tooltip" title="Eliminar" (click)="EliminarConfiguracionDeDescuento(d.data)"
+                            type="button" class="btn btn-grid btn-danger ">
+                            <i class="material-icons">close</i>
+                        </button>
+                        <button rel="tooltip" title="Editar" (click)="onEditar(d.data)" type="button"
+                            class="btn btn-grid btn-Azulsiman ">
+                            <i class="material-icons">mode_edit</i>
+                        </button>
+                    </div>
+                </dx-data-grid>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<dx-popup [width]="500" [height]="300" [showTitle]="true" title="Configurar Descuento" [dragEnabled]="false"
+    [closeOnOutsideClick]="false" [(visible)]="popupVisible" (onClosed)="onPopUpClosed()">
+    <div *dxTemplate="let data of 'content'">
+        <app-descuento-adicional-dia [configuracionEditar]="configuracionEditar"
+            (onActualizarDescuento)="onActualizarDescuento()"></app-descuento-adicional-dia>
+    </div>
+</dx-popup>

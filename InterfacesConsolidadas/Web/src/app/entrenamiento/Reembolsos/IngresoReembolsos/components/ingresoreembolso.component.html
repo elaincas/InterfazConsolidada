@@ -1,0 +1,178 @@
+<!-- <app-main-loader></app-main-loader> -->
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-icon" data-background-color="green">
+                        <i class="material-icons">add_shopping_cart</i>
+                    </div>
+                    <div class="card-content">
+                        <h4 class="card-title">
+                            <strong>Reembolsos</strong>
+                        </h4>
+                        <!-- <form class="form-horizontal" #frm> -->
+                        <div class="container col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="row">
+                                <br/>
+                                <div class="col-md-7">
+                                    <div class="row">
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                            <span class="labelsFormularios">Gasto cargado a Sucursal: </span>
+                                            <dx-lookup [dataSource]="sucursales" [closeOnOutsideClick]="true" displayExpr="nombreSucursal" valueExpr="sucursalID" [(ngModel)]="reembolso.sucursalId"
+                                                title="Seleccione una Sucursal" (onValueChanged)="obtenerSupervisorSegunSucursal($event)"
+                                                placeholder="Seleccione una sucursal">
+                                            </dx-lookup>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                            <span class="labelsFormularios">Supervisor Asignado:</span>
+                                            <dx-lookup [dataSource]="supervisor" [grouped]="false" [closeOnOutsideClick]="true" [showPopupTitle]="false" placeholder="Seleccione un Supervisor"
+                                                displayExpr="nombre" valueExpr="usuarioSupervisorId" [(ngModel)]="reembolso.usuarioSupervisorId">
+                                            </dx-lookup>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br/>
+
+                            <div class="row">
+                                <div class="col-lg-2 col-md-2 col-sm-6 col-xs-6">
+                                    <span class="labelsFormularios">Número Colaborador:</span>
+                                    <div class="row">
+                                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                                            <dx-number-box style="text-align-last: right" [(ngModel)]="colaborador.colaboradorID" (onValueChanged)="DesbloquearBusqueda($event.value)"></dx-number-box>
+                                        </div>
+                                        <dx-button type="default" icon="fa fa-search" (onClick)="ObtenerColaborador()" [disabled]="bloquearBusqueda"></dx-button>
+                                    </div>
+                                </div>
+                                <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+
+                                    <div class="row">
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                            <span class="labelsFormularios">Nombre Colaborador:</span>
+                                        </div>
+                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                            <dx-text-box [(ngModel)]="colaborador.nombre" placeholder="Nombre Colaborador" disabled="true"></dx-text-box>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <br/>
+                                <div class="col-lg-7 col-md-7 col-sm-6 col-xs-6">
+                                    <span class="labelsFormularios">Puesto Colaborador:</span>
+                                    <dx-text-box placeholder="Puesto Colaborador" disabled="true" [(ngModel)]="colaborador.descripcionPuesto"></dx-text-box>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <br/>
+                                <div class="col-lg-7 col-md-7 col-sm-6 col-xs-6">
+                                    <div class="row">
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+
+                                            <span class="labelsFormularios">Ciudad de Origen:</span>
+                                            <dx-lookup [dataSource]="ciudades" [grouped]="false" [closeOnOutsideClick]="true" [showPopupTitle]="false" placeholder="Seleccione Ciudad de Origen"
+                                                displayExpr="ciudad" valueExpr="ciudadID" [(ngModel)]="reembolso.ciudadOrigenId">
+                                            </dx-lookup>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                            <span class="labelsFormularios">Ciudad de Destino:</span>
+                                            <dx-lookup [dataSource]="ciudades" [grouped]="false" [closeOnOutsideClick]="true" [showPopupTitle]="false" placeholder="Seleccione Ciudad de Destino"
+                                                displayExpr="ciudad" valueExpr="ciudadID" [(ngModel)]="reembolso.ciudadDestinoId">
+                                            </dx-lookup>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="row">
+                                <br/>
+                                <div class="col-lg-7 col-md-12 col-sm-12 col-xs-6">
+                                    <div class="row">
+                                        <div class="col-lg-6 col-md-6 col-sm-8 col-xs-8">
+                                            <span class="labelsFormularios">Fecha de Ingreso:</span>
+                                            <dx-date-box style="width: 100%" [value]="now" [displayFormat]="'dd/MM/yyyy'" [(ngModel)]="colaborador.fechaIngreso" (onValueChanged)="CalcularFecha()"
+                                                type="date">
+                                            </dx-date-box>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-8 col-xs-8">
+                                            <span class="labelsFormularios">Fecha de Reembolso:</span>
+                                            <dx-date-box style="width: 100%" [displayFormat]="'dd/MM/yyyy'" [disabled]="true" [(ngModel)]="fecha" type="date">
+                                            </dx-date-box>
+                                        </div>
+                                    </div>
+                                    <br/>
+                                    <div class="row">
+                                        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6">
+                                            <span class="labelsFormularios">Gasto Diario:</span>
+                                            <dx-number-box style="text-align-last: right" [(ngModel)]="reembolso.gastoDiario" (onValueChanged)="CalcularPago()"></dx-number-box>
+                                        </div>
+                                        <div class="col-lg-2 col-md-3 col-sm-3 col-xs-6">
+                                            <span class="labelsFormul   arios">Días Viajados:</span>
+                                            <dx-number-box style="text-align-last: right" [(ngModel)]="reembolso.diasViajados" (onValueChanged)="CalcularPago()"></dx-number-box>
+                                        </div>
+                                        <div class="col-lg-2 col-md-3 col-sm-6 col-xs-7">
+                                            <span class="labelsFormularios">Total a Pagar:</span>
+                                            <dx-number-box style="text-align-last: right" [disabled]="true" [(ngModel)]="valorAPagar"></dx-number-box>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                            <br/>
+                            <br/>
+
+                            <div class="row">
+                                <div class="col-lg-7 col-md-7 col-sm-6 col-xs-6">
+                                    <span class="labelsFormularios">Observaciones</span>
+                                    <dx-text-area [height]="90" [maxLength]="150" [(ngModel)]="reembolso.observaciones">
+                                    </dx-text-area>
+                                </div>
+                            </div>
+                            <br/>
+                            <br/>
+                            <div class="row margin-section">
+                                <div class="col-lg-7 col-md-7 col-sm-6 col-xs-6">
+                                    <div class="row">
+
+                                        <div class="col-lg-6 col-md-6 col-sm-5 col-xs-5">
+
+                                            <fieldset class="form-section-title">
+                                                Adjuntar Recibo
+                                            </fieldset>
+                                            <dx-file-uploader [(value)]="reembolso.rutaDocumentoRecibo" selectButtonText="Subir Archivo Recibo" labelText="" multiple="false"
+                                                accept=".pdf" uploadMode="userForm" type="default">
+                                            </dx-file-uploader>
+                                        </div>
+
+                                        <div class="col-lg-6 col-md-6 col-sm-5 col-xs-5">
+                                            <fieldset class="form-section-title">
+                                                Adjuntar Compromiso
+                                            </fieldset>
+                                            <dx-file-uploader [(value)]="reembolso.rutaDocumentoCompromiso" selectButtonText="Subir Archivo Compromiso" labelText=""
+                                                multiple="false" accept=".pdf" uploadMode="userForm" type="default">
+                                            </dx-file-uploader>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <br/>
+
+                            <div class="row margin-section" >
+                                <div class="col-lg-10 col-md-5 col-sm-5 col-xs-5 mx-auto" style="float:right">
+                                    <dx-button icon="check" type="success" text="Ingresar Reembolso" (onClick)="IngresoReembolsoClick()">
+                                    </dx-button>
+                                </div>
+                            </div>
+                            <!-- </form> -->
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

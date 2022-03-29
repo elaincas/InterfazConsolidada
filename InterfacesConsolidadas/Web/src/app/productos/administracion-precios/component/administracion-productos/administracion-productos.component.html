@@ -1,0 +1,108 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-icon" data-background-color="red">
+            <i class="material-icons">contacts</i>
+          </div>
+          <div class="card-content">
+            <h4 class="card-title">
+              Administración de Productos
+            </h4>
+
+            <form [formGroup]="formGroupProductos" form="formGroupProductos">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Proveedor</label>
+                  <dx-lookup #lookupProveedor formControlName="lookupProveedor" [showClearButton]="true"
+                    [dataSource]="proveedores" valueExpr="id" displayExpr="nombre"
+                    [searchExpr]="['id', 'nombre']" [disabled]="false" searchEnabled="true"></dx-lookup>
+                </div>
+              </div>
+
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label>Línea</label>
+                  <dx-lookup #lookupLinea formControlName="lookupLinea" [showClearButton]="true" [dataSource]="lineas"
+                    valueExpr="id" displayExpr="descripcion" [searchExpr]="['id', 'descripcion']" [disabled]="false"
+                    searchEnabled="true"></dx-lookup>
+                </div>
+              </div>
+
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label>Descripción de Producto</label>
+                  <dx-text-box formControlName="txtDescripcionProduco" (onValueChanged)="cargarProductos()">
+                  </dx-text-box>
+                </div>
+              </div>
+
+              <div class="col-md-2">
+                <div class="form-group form-group__inline">
+                  <dx-button text="Cargar Productos" type="success" (onClick)="cargarProductos()"
+                    style="margin-top: 25px;">
+                  </dx-button>
+                </div>
+              </div>
+
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-content">
+
+
+            <div class="col-md-12">
+              <div align="right">
+                <strong>
+                  <dx-check-box #chkSeleccionarTodos text="¿Actualizar todos?"
+                    (onValueChanged)="onValueChangedSeleccionarTodos($event)">
+                  </dx-check-box>
+                </strong>
+              </div>
+            </div>
+            <br>
+
+            <div class="col-md-12">
+              <dx-data-grid style="width: 100% !important;" height="700" #gridProductos id="gridProductos"
+                [dataSource]="productos" [allowColumnReordering]="true" [allowColumnResizing]="true" keyExpr="id"
+                (onRowUpdated)="onRowUpdated($event)">
+                <dxo-filter-row visible="true"></dxo-filter-row>
+                <dxo-header-filter visible="true"></dxo-header-filter>
+                <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+                <dxo-selection mode="single"></dxo-selection>
+                <dxo-editing mode="cell" [allowUpdating]="true"></dxo-editing>
+                <dxo-paging [pageSize]="50"></dxo-paging>
+                <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[50, 100, 150]" [showInfo]="true"
+                  [visible]="true" [showNavigationButtons]="true">
+                </dxo-pager>
+                <dxo-scrolling mode="standard" showScrollbar="always"></dxo-scrolling>
+                <dxo-column-chooser [enabled]="true" mode="select"></dxo-column-chooser>
+                <dxi-column caption="Código" dataField="id" [allowEditing]="false" [width]="100">
+                </dxi-column>
+                <dxi-column caption="Descripción" dataField="descripcion" [allowEditing]="false" [width]="350">
+                </dxi-column>
+                <dxi-column dataField="proveedor.nombre" caption="Proveedor" [allowEditing]="false" [width]="200">
+                </dxi-column>
+                <dxi-column dataField="linea.descripcion" caption="Línea" [allowEditing]="false" [width]="200">
+                </dxi-column>
+                <dxi-column dataField="margen.descripcion" caption="Margen" [allowEditing]="false" [width]="200">
+                </dxi-column>
+                <dxi-column dataField="margen.valor" caption="Margen Valor" format="###,##0.00" [allowEditing]="false" [width]="150">
+                </dxi-column>
+                <dxi-column dataField="actualizarPrecioDeMargen" caption="¿Actualizar Precio de Margen?" [width]="150">
+                </dxi-column>
+              </dx-data-grid>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

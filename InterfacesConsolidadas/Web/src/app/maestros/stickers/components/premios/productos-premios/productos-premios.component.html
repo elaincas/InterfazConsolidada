@@ -1,0 +1,296 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div
+            class="card-header card-header-icon"
+            data-background-color="blue"
+          >
+            <em class="material-icons">card_giftcard</em>
+          </div>
+
+          <dx-load-panel
+            #loadPanel
+            [shadingColor]="'rgba(255, 0, 0, 0.2)'"
+            [position]="{ of: '#contentTabs' }"
+            [(visible)]="cargandoVisible"
+            [showIndicator]="true"
+            [showPane]="true"
+            [shading]="true"
+            [closeOnOutsideClick]="false"
+            [message]="mensajeLoader"
+          >
+          </dx-load-panel>
+
+          <div class="card-content" id="tabCon">
+            <h4 class="card-title">Configuración de Premios de Productos</h4>
+
+            <dx-form
+              #frmConfiguracionSticker
+              id="form"
+              [formData]="formDataProductosPremios"
+              labelLocation="top"
+              (onContentReady)="ocultarLoader()"
+              (onInitialized)="mostrarLoader()"
+              validationGroup="validarSticker"
+              [showValidationSummary]="false"
+            >
+              <dxi-item itemType="group" [colCount]="12">
+                <dxi-item
+                  dataField="productoId"
+                  id="lookupProductos"
+                  [label]="{ text: 'Producto' }"
+                  [colSpan]="6"
+                >
+                  <product-lookup
+                    class="producto-lookup"
+                    [product]="producto"
+                    [esProductoValido]="productoValido"
+                    [esReadonly]="elProductoEsReadonly"
+                    [esPrimeraCargaRequerida]="false"
+                    [productosEdit]="productosEdit"
+                    [mostrarBotonLimpiar]="true"
+                    (onProductoLimpiado)="onProductoLimpiado($event)"
+                    (onProductoSeleccionado)="onProductoSeleccionado($event)"
+                  >
+                  </product-lookup>
+
+                  <div
+                    *ngIf="mostrarMensajeProductoValido && !productoValido"
+                    class="dx-invalid-message"
+                    style="z-index: 1504; position: absolute"
+                  >
+                    <div
+                      class="dx-overlay-content dx-resizable"
+                      style="
+                        width: auto;
+                        height: auto;
+                        z-index: 1504;
+                        margin: 0px;
+                        left: 0px;
+                        top: 0px;
+                        transform: translate(-1px, 1px);
+                        max-width: 486px;
+                      "
+                    >
+                      {{ mensaje.productoRequerido }}
+                    </div>
+                  </div>
+                  <dxi-validation-rule
+                    type="required"
+                    [message]="mensaje.productoRequerido"
+                  ></dxi-validation-rule>
+                </dxi-item>
+                <dxi-item
+                  [label]="{ text: 'Monto del Producto' }"
+                  editorType="dxNumberBox"
+                  dataField="monto"
+                  [colSpan]="3"
+                  [editorOptions]="{
+                    min: 0.01,
+                    format: 'L #,##0.##'
+                  }"
+                >
+                  <dxi-validation-rule
+                    type="required"
+                    [message]="mensaje.MSCS002"
+                  ></dxi-validation-rule>
+                </dxi-item>
+                <dxi-item
+                  dataField="activo"
+                  editorType="dxCheckBox"
+                  [label]="{ text: 'Activo' }"
+                  [colSpan]="1"
+                  [editorOptions]="{
+                    readOnly: readOnlyAgregar
+                  }"
+                ></dxi-item>
+              </dxi-item>
+            </dx-form>
+            <dx-tooltip
+              showEvent="mouseenter"
+              hideEvent="mouseleave"
+              target="label[for*='productoId']"
+            >
+              <div *dxTemplate="let data = data; of: 'content'">
+                Producto que podrá seleccionar el cliente al momento de Canjear
+                un Sticker (si se configura en el Sticker).
+              </div>
+            </dx-tooltip>
+            <dx-tooltip
+              showEvent="mouseenter"
+              hideEvent="mouseleave"
+              target="label[for*='monto']"
+            >
+              <div *dxTemplate="let data = data; of: 'content'">
+                Precio que tendrá el producto si se Canjea por Stickers.
+              </div>
+            </dx-tooltip>
+            <dx-tooltip
+              showEvent="mouseenter"
+              hideEvent="mouseleave"
+              target="label[for*='activo']"
+            >
+              <div *dxTemplate="let data = data; of: 'content'">
+                ¿Es registro Activo?
+              </div>
+            </dx-tooltip>
+            <div class="row mt-10">
+              <div class="form-inline ml-15">
+                <dx-button
+                  [disabled]="readOnlyAgregar"
+                  *ngIf="modo == formsModo.Modo.Agregar"
+                  text="Agregar"
+                  [useSubmitBehavior]="true"
+                  validationGroup="validarSticker"
+                  (onClick)="agregar($event)"
+                  type="success"
+                >
+                </dx-button>
+                <dx-button
+                  *ngIf="modo == formsModo.Modo.Actualizar"
+                  [disabled]="botonEditarDeshabilitado"
+                  text="Editar"
+                  [useSubmitBehavior]="true"
+                  validationGroup="validarSticker"
+                  (onClick)="editar($event)"
+                  type="success"
+                >
+                </dx-button>
+                <dx-button text="Limpiar" type="danger" (onClick)="limpiar()">
+                </dx-button>
+              </div>
+            </div>
+            <dx-data-grid
+              [showBorders]="true"
+              [rowAlternationEnabled]="true"
+              [dataSource]="productosPremios"
+            >
+              <dxo-load-panel
+                [enabled]="true"
+                text="Cargando Información"
+              ></dxo-load-panel>
+
+              <dxo-paging [pageSize]="10"> </dxo-paging>
+              <dxo-pager
+                [showPageSizeSelector]="true"
+                [allowedPageSizes]="[10, 25, 50, 100]"
+                [showInfo]="true"
+              ></dxo-pager>
+
+              <dxo-filter-row [visible]="true"> </dxo-filter-row>
+
+              <dxo-header-filter [visible]="true"></dxo-header-filter>
+              <dxo-search-panel
+                [visible]="true"
+                [width]="240"
+                placeholder="Buscar..."
+              ></dxo-search-panel>
+
+              <dxi-column
+                caption="Id"
+                [allowEditing]="false"
+                dataField="id"
+                [width]="60"
+              >
+              </dxi-column>
+              <dxi-column
+                caption="Producto Id"
+                [allowEditing]="false"
+                dataField="productoId"
+                [width]="100"
+              >
+              </dxi-column>
+              <dxi-column
+                caption="Producto"
+                [allowEditing]="false"
+                dataField="descripcionProducto"
+                [width]="350"
+              >
+              </dxi-column>
+              <dxi-column
+                caption="Monto"
+                [allowEditing]="false"
+                dataField="monto"
+                [width]="90"
+              >
+              </dxi-column>
+              <dxi-column
+                caption="Usuario Agrega"
+                [allowEditing]="false"
+                dataField="usuarioAgregaId"
+                [width]="150"
+              >
+              </dxi-column>
+              <dxi-column
+                caption="Fecha Agrega"
+                dataField="fechaAgrega"
+                dataType="date"
+                format="dd/MM/yyyy"
+                [allowEditing]="false"
+                [width]="150"
+              >
+              </dxi-column>
+              <dxi-column
+                caption="Usuario Modifica"
+                dataField="usuarioModificaId"
+                [allowEditing]="false"
+                [width]="150"
+              >
+              </dxi-column>
+              <dxi-column
+                caption="Fecha Modifica"
+                dataField="fechaModifica"
+                [allowEditing]="false"
+                dataType="date"
+                format="dd/MM/yyyy"
+                [width]="150"
+              >
+              </dxi-column>
+              <dxi-column caption="Activo" dataField="activo" [width]="100">
+              </dxi-column>
+              <dxi-column
+                caption="Acciones"
+                cellTemplate="accionTemplate"
+                [width]="100"
+              >
+              </dxi-column>
+              <div *dxTemplate="let accion of 'accionTemplate'">
+                <button
+                  rel="tooltip"
+                  (click)="obtenerDataEditar(accion.data)"
+                  type="button"
+                  class="btn btn-grid btn-Azulsiman"
+                >
+                  <i class="material-icons">mode_edit</i>
+                </button>
+                <button
+                  rel="tooltip"
+                  title="Desactivar"
+                  *ngIf="accion.data.activo"
+                  type="button"
+                  (click)="inactivar(accion.data.id)"
+                  class="btn btn-grid btn-danger"
+                >
+                  <i class="material-icons">arrow_downward</i>
+                </button>
+                <button
+                  rel="tooltip"
+                  title="Activar"
+                  *ngIf="!accion.data.activo"
+                  (click)="activar(accion.data.id)"
+                  type="button"
+                  class="btn btn-grid btn-success"
+                >
+                  <i class="material-icons">arrow_upward</i>
+                </button>
+              </div>
+            </dx-data-grid>
+          </div>
+          <div class="card-footer"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

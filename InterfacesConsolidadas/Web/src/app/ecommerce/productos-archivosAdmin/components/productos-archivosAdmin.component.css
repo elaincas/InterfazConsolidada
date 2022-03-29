@@ -1,0 +1,28 @@
+.btn-Anterior{
+    background-color: #a80000 !important;
+    box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(0, 88, 168, 0.29) !important;
+  }
+  .btn-AzulFarsiman
+  {
+      background-color: #0058a8 !important;
+      box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(0, 88, 168, 0.29) !important;
+  }
+  .btn-Verde   
+  {
+      background-color: #00a808 !important;
+      box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(0, 88, 168, 0.29) !important;
+  }
+
+  ::ng-deep .dx-gallery-item {
+      padding-right: 2% !important;
+  }
+
+    .main-content1 {
+        margin-top: 50px;
+        padding: 0px 0px;
+        min-height: calc(100vh - 123px);
+  }
+  .wizard-header1 {
+    text-align: center;
+    padding: 25px 0 0px;
+}

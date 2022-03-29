@@ -1,0 +1,77 @@
+<!-- <app-main-loader></app-main-loader> -->
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-icon" data-background-color="green">
+            <i class="material-icons">360</i>
+          </div>
+          <div class="card-content">
+            <h4 class="card-title">
+              <strong>Administrar Productos Bandeados</strong>
+            </h4>
+            <div class="row">
+              <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
+                <div class="row">
+                  <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <span class="labelsFormularios">Producto Original:
+                      <dx-lookup #dropDowndistribuidor [(ngModel)]="productoEnlace.productoIdCompra"
+                        displayExpr="prod_Desc" valueExpr="productoId" placeholder="Select a Producto"
+                        [showClearButton]="true" (onValueChanged) = "ObtenerProductoEnlazados()" [dataSource]="productos" closeOnOutsideClick="true"
+                        name="dropDowndistribuidor">
+                      </dx-lookup>
+                    </span>
+                  </div>
+                  <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <span class="labelsFormularios">Producto Enlace:
+                      <dx-lookup #dropDowndistribuidor [(ngModel)]="productoEnlace.productoIdEnlace"
+                        displayExpr="prod_Desc" valueExpr="productoId" placeholder="Select a Producto"
+                        [showClearButton]="true" [dataSource]="productos" closeOnOutsideClick="true"
+                        name="dropDowndistribuidor">
+                      </dx-lookup>
+                    </span>
+                  </div>
+                </div>
+                <br>
+                <div class="row" style="float: right;">
+                  <dx-button icon="fa fa-plus-circle" type="default" text="Bandear" (onClick)="BandearProducto()">
+                  </dx-button>
+                </div>
+                <br>
+                <br>
+                <div class="row">
+                  <dx-data-grid [dataSource]="productosEnlazados" [showColumnLines]="true" [showRowLines]="true"
+                    [showBorders]="true" [columnAutoWidth]="true" [rowAlternationEnabled]="true">
+                    <dxo-filter-row [visible]="true"> </dxo-filter-row>
+                    <dxo-header-filter [visible]="true"></dxo-header-filter>
+                    <dxo-export [enabled]="true" fileName="Categorias" [allowExportSelectedData]="true">
+                    </dxo-export>
+                    <dxi-column caption="Activo" dataField="activo"> </dxi-column>
+                    <dxi-column caption="Editar" cellTemplate="accionTemplate" [width]="130"></dxi-column>
+                    <div *dxTemplate="let accion of 'accionTemplate'">
+                        <div style="text-align: center">
+                          <dx-button type="button" type="success" (click)="ActualizarCategoria(accion.data)"
+                            icon="fa fa-edit">
+                          </dx-button>
+                        </div>
+                      </div>
+                    <dxo-scrolling mode="virtual"></dxo-scrolling>
+                  </dx-data-grid>
+                </div>
+                <br>
+                <div class="row">
+                  <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+ 

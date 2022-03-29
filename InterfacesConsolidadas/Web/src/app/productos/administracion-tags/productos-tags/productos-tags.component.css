@@ -1,0 +1,49 @@
+.dx-popup-content{
+  padding-top: 5px;
+}
+
+
+.question{
+    font-weight: bold;
+    text-align: center;
+    display: block;
+    font-size: 1.2em;
+    margin-bottom: 15px;
+}
+
+
+.titulo1,titulo2 {
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  font-weight: 300;
+  line-height: 1.5em;
+  display: block;
+}
+
+.titulo1{
+  font-size: 1.6em;
+}
+
+.titulo2{
+  font-size: 1.825em;
+}
+
+.producto-row__igual{
+  background: rgb(0, 88, 168);
+  color:white;
+}
+
+.producto-tag{
+  float: left;
+  padding: 2px 7px;
+  background: gray;
+  margin: 1px 2px;
+  border-radius: 15px;
+  font-size: .9em;
+  color:white;
+  background: rgb(0, 88, 168);
+}
+
+.producto-tag__igual{
+  background: white;
+  color: gray;
+}

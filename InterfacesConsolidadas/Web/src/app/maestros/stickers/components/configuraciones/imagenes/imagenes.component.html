@@ -1,0 +1,76 @@
+<div class="row">
+  <div class="col-sm-6">
+    <label class="dx-field-item-label dx-field-item-label-location-top"
+      ><span class="dx-field-item-label-content"
+        ><span class="dx-field-item-label-text">Imagen Web:</span
+        ><span class="dx-field-item-required-mark">&nbsp;*</span></span
+      ></label
+    >
+    <dx-file-uploader
+      #dxFile
+      selectButtonText="Subir Imagen para la Web"
+      accept="image/*"
+      [multiple]="false"
+      uploadUrl="{{ urlSubirImagen }}"
+      (onUploaded)="onUploaded($event, imagenTipo.Web)"
+      (onUploadError)="onUploadedError($event)"
+      (onUploadStarted)="onUploadStarted(imagenTipo.Web)"
+      uploadedMessage="Se ha subido exitosamente"
+      uploadMode="instantly"
+      labelText="Subir o Soltar la imagen aquí"
+    >
+    </dx-file-uploader>
+    <div
+      *ngIf="
+        submit && !imagenDesktop && !subiendoImagenMovil && !subiendoImagenWeb
+      "
+    >
+      <span class="text-danger">{{ mensaje.MSCS010 }}</span>
+    </div>
+    <div
+      *ngIf="
+        imagenDesktop && imagenDesktop.activo && imagenDesktop.rutaUrl !== ''
+      "
+    >
+      <img [src]="imagenDesktop.rutaUrl" class="imagen" alt="Imagen Desktop" />
+    </div>
+  </div>
+  <div class="col-sm-6">
+    <label class="dx-field-item-label dx-field-item-label-location-top"
+      ><span class="dx-field-item-label-content"
+        ><span class="dx-field-item-label-text">Imagen Móvil:</span
+        ><span class="dx-field-item-required-mark">&nbsp;*</span></span
+      ></label
+    >
+    <dx-file-uploader
+      #dxFile
+      selectButtonText="Subir Imagen para dispositivos móviles"
+      accept="image/*"
+      [multiple]="false"
+      uploadUrl="{{ urlSubirImagen }}"
+      (onUploaded)="onUploaded($event, imagenTipo.App)"
+      (onUploadError)="onUploadedError($event)"
+      (onUploadStarted)="onUploadStarted(imagenTipo.App)"
+      uploadedMessage="Se ha subido exitosamente"
+      uploadMode="instantly"
+      labelText="Subir o Soltar la imagen aquí"
+    >
+    </dx-file-uploader>
+    <div
+      *ngIf="
+        submit && !imagenMobile && !subiendoImagenWeb && !subiendoImagenMovil
+      "
+    >
+      <span class="text-danger">{{ mensaje.MSCS010 }}</span>
+    </div>
+    <div
+      *ngIf="imagenMobile && imagenMobile.activo && imagenMobile.rutaUrl !== ''"
+    >
+      <img
+        src="{{ imagenMobile.rutaUrl }}"
+        class="imagen"
+        alt="Imagen Desktop"
+      />
+    </div>
+  </div>
+</div>

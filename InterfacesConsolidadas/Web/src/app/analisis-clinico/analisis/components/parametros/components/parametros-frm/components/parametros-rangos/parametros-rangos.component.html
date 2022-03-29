@@ -1,0 +1,328 @@
+<div class="form-group">
+  <div class="row">
+    <div class="col-md-12">
+      <dx-form
+        [formData]="parametroRango"
+        labelLocation="top"
+        [showValidationSummary]="true"
+        [showColonAfterLabel]="true"
+      >
+        <dxi-item itemType="group" [colCount]="12">
+          <dxi-item itemType="group" [colSpan]="4" [colCount]="12">
+            <dxi-item itemType="group" [colSpan]="6">
+              <div class="form-group">
+                <label
+                  class="dx-field-item-label dx-field-item-label-location-top"
+                  ><span
+                    class="dx-field-item-label-content"
+                    style="width: 108px"
+                    ><span class="dx-field-item-label-text"
+                      >Edad Mínima:</span
+                    ></span
+                  ></label
+                >
+                <dx-number-box
+                  [(ngModel)]="parametroRango.edadMinima"
+                  format="#,##0"
+                  name="edadMinima"
+                  value="0"
+                  [showSpinButtons]="true"
+                  [showClearButton]="true"
+                  [disabled]="false"
+                  [readOnly]="false"
+                  [min]="0"
+                  [max]="100000"
+                >
+                  <dx-validator>
+                    <dxi-validation-rule
+                      type="required"
+                      message="Este campo es requerido"
+                    ></dxi-validation-rule>
+                  </dx-validator>
+                </dx-number-box>
+              </div>
+              <div class="form-group">
+                <label
+                  class="dx-field-item-label dx-field-item-label-location-top"
+                  ><span
+                    class="dx-field-item-label-content"
+                    style="width: 108px"
+                    ><span class="dx-field-item-label-text"
+                      >Valor Mínimo:</span
+                    ></span
+                  ></label
+                >
+                <dx-number-box
+                  [(ngModel)]="parametroRango.valorMinimo"
+                  format="#,##0.00"
+                  name="valorMinimo"
+                  value="0"
+                  [showSpinButtons]="true"
+                  [showClearButton]="true"
+                  [disabled]="false"
+                  [readOnly]="false"
+                  [min]="0"
+                  [max]="100000"
+                >
+                  <dx-validator>
+                    <dxi-validation-rule
+                      type="required"
+                      message="Este campo es requerido"
+                    ></dxi-validation-rule>
+                  </dx-validator>
+                </dx-number-box>
+              </div>
+            </dxi-item>
+            <dxi-item itemType="group" [colSpan]="6">
+              <div class="form-group">
+                <label
+                  class="dx-field-item-label dx-field-item-label-location-top"
+                  ><span
+                    class="dx-field-item-label-content"
+                    style="width: 108px"
+                    ><span class="dx-field-item-label-text"
+                      >Edad Máxima:</span
+                    ></span
+                  ></label
+                >
+                <dx-number-box
+                  [(ngModel)]="parametroRango.edadMaxima"
+                  name="edadMaxima"
+                  format="#,##0"
+                  value="0"
+                  [showSpinButtons]="true"
+                  [showClearButton]="true"
+                  [disabled]="false"
+                  [readOnly]="false"
+                  [min]="0"
+                  [max]="100000"
+                >
+                  <dx-validator>
+                    <dxi-validation-rule
+                      type="required"
+                      message="Este campo es requerido"
+                    ></dxi-validation-rule>
+                    <dxi-validation-rule
+                      type="compare"
+                      comparisonType=">="
+                      [comparisonTarget]="compararEdadMaxima"
+                      message="La edad máxima no puede ser menor que la edad mínima"
+                    ></dxi-validation-rule>
+                  </dx-validator>
+                </dx-number-box>
+              </div>
+              <div class="form-group">
+                <label
+                  class="dx-field-item-label dx-field-item-label-location-top"
+                  ><span
+                    class="dx-field-item-label-content"
+                    style="width: 108px"
+                    ><span class="dx-field-item-label-text"
+                      >Valor Máximo:</span
+                    ></span
+                  ></label
+                >
+                <dx-number-box
+                  [(ngModel)]="parametroRango.valorMaximo"
+                  format="#,##0.00"
+                  name="valorMaximo"
+                  value="0"
+                  [showSpinButtons]="true"
+                  [showClearButton]="true"
+                  [disabled]="false"
+                  [readOnly]="false"
+                  [min]="0"
+                  [max]="100000"
+                >
+                  <dx-validator>
+                    <dxi-validation-rule
+                      type="required"
+                      message="Este campo es requerido"
+                    ></dxi-validation-rule>
+                    <dxi-validation-rule
+                      type="compare"
+                      comparisonType=">="
+                      [comparisonTarget]="compararValorMaximo"
+                      message="El valor máximo no puede ser menor que el valor mínimo"
+                    ></dxi-validation-rule>
+                  </dx-validator>
+                </dx-number-box>
+              </div>
+            </dxi-item>
+            <dxi-item
+              dataField="descripcion"
+              editorType="dxTextArea"
+              [editorOptions]="{ height: 90 }"
+              [colSpan]="12"
+            >
+              <dxi-validation-rule
+                type="required"
+                message="Dato requerido"
+              ></dxi-validation-rule>
+            </dxi-item>
+          </dxi-item>
+
+          <dxi-item itemType="group" [colSpan]="4">
+            <div class="form-group">
+              <label
+                class="dx-field-item-label dx-field-item-label-location-top"
+                ><span class="dx-field-item-label-content" style="width: 108px"
+                  ><span class="dx-field-item-label-text">Grupo:</span></span
+                ></label
+              >
+              <dx-lookup
+                [(ngModel)]="parametroRango.grupoId"
+                name="grupoId"
+                title="Grupo"
+                noDataText="No se encontraron grupos."
+                searchPlaceholder="Ingrese el nombre del grupo"
+                [dataSource]="grupos"
+                displayExpr="nombre"
+                valueExpr="id"
+                placeholder="Seleccione un grupo"
+              >
+                <dx-validator>
+                  <dxi-validation-rule
+                    type="required"
+                    message="Este campo es requerido"
+                  ></dxi-validation-rule>
+                </dx-validator>
+              </dx-lookup>
+            </div>
+            <div class="form-group">
+              <label
+                class="dx-field-item-label dx-field-item-label-location-top"
+                ><span class="dx-field-item-label-content" style="width: 108px"
+                  ><span class="dx-field-item-label-text"
+                    >Nivel Resultado</span
+                  ></span
+                ></label
+              >
+              <dx-lookup
+                name="nivelResultadoId"
+                [(ngModel)]="parametroRango.nivelResultadoId"
+                title="Nivel Resultado"
+                noDataText="No se encontraron niveles de resultado."
+                searchPlaceholder="Ingrese la descripción del nivel de resultado"
+                [dataSource]="nivelesResultado"
+                displayExpr="descripcion"
+                valueExpr="id"
+                placeholder="Seleccione un nivel de resultado"
+              >
+                <dx-validator>
+                  <dxi-validation-rule
+                    type="required"
+                    message="Este campo es requerido"
+                  ></dxi-validation-rule>
+                </dx-validator>
+              </dx-lookup>
+            </div>
+          </dxi-item>
+        </dxi-item>
+      </dx-form>
+    </div>
+  </div>
+  <dx-button
+    (click)="Validar()"
+    class="btn-Azulsiman"
+    text="Agregar"
+  ></dx-button>
+  <hr />
+</div>
+
+<div class="row" style="margin-top: 50px;">
+  <div class="col-md-12">
+    <dx-data-grid
+      [rowAlternationEnabled]="true"
+      [dataSource]="parametrosRangos"
+      (onRowUpdated)="edit($event)"
+      showBorders = true
+    >
+      <dxo-editing [(allowUpdating)]="editarParametroRango" mode="cell">
+      </dxo-editing>
+
+      <dxo-filter-row [visible]="true"> </dxo-filter-row>
+      <dxi-column
+        [allowEditing]="false"
+        dataType="date"
+        caption="Fecha Agrega"
+        dataField="fechaAgrega"
+        cellTemplate="dateCell"
+      ></dxi-column>
+      <dxi-column
+        caption="Descripción"
+        dataField="descripcion"
+        [allowEditing]="true"
+      ></dxi-column>
+      <dxi-column
+        caption="Grupo"
+        dataField="parametroGrupo.nombre"
+        [allowEditing]="false"
+      ></dxi-column>
+      <dxi-column
+        caption="Nivel Resultado"
+        dataField="nivelResultado.descripcion"
+        [allowEditing]="false"
+      ></dxi-column>
+      <dxi-column
+        [allowEditing]="true"
+        dataType="number"
+        caption="Valor Mínimo"
+        dataField="valorMinimo"
+      ></dxi-column>
+      <dxi-column
+        [allowEditing]="true"
+        dataType="number"
+        caption="Valor Máximo"
+        dataField="valorMaximo"
+      ></dxi-column>
+      <dxi-column
+        [allowEditing]="true"
+        dataType="number"
+        caption="Edad Mínima"
+        dataField="edadMinima"
+      ></dxi-column>
+      <dxi-column
+        [allowEditing]="true"
+        dataType="number"
+        caption="Edad Máxima"
+        dataField="edadMaxima"
+      ></dxi-column>
+      <dxi-column
+        caption="Acción"
+        cellTemplate="accionTemplate"
+        [width]="100"
+      ></dxi-column>
+      <div *dxTemplate="let cellData of 'dateCell'">
+        {{ cellData.value | date: "dd/MM/yyyy" }}
+      </div>
+      <div *dxTemplate="let d of 'accionTemplate'">
+        <button
+          rel="tooltip"
+          (click)="EditarRango(d.data)"
+          type="button"
+          class="btn btn-grid {{
+            editarParametroRango == true
+              ? 'btn-info'
+              : 'btn-Azulsiman no-margin'
+          }}"
+        >
+          <i *ngIf="editarParametroRango == false" class="material-icons"
+            >mode_edit</i
+          >
+          <i *ngIf="editarParametroRango == true" class="material-icons"
+            >done</i
+          >
+        </button>
+        <button
+          rel="tooltip"
+          (click)="EliminarRango(d.data)"
+          type="button"
+          class="btn btn-grid btn-danger"
+        >
+          <i class="material-icons">close</i>
+        </button>
+      </div>
+    </dx-data-grid>
+  </div>
+</div>

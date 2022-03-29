@@ -1,0 +1,24 @@
+.overflow-text {
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.dx-datebox {
+    width: auto !important;
+}
+
+.form-group {
+    margin: 0 0 15px 0;
+}
+
+.mb-0 {
+    margin-bottom: 0px !important;
+}
+
+.pb-0 {
+    padding-bottom: 0px !important;
+}
+
+.mt-22 {
+    margin-top: 22px !important;
+}

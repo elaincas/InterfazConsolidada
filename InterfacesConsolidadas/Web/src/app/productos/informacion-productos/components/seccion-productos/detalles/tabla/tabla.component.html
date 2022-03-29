@@ -1,0 +1,145 @@
+<!--#region Data Grid  -->
+<div class="row mb-10">
+  <div class="col-lg-12">
+    <dx-data-grid
+      #dataGrid
+      [dataSource]="dataSource"
+      [columns]="columnas"
+      [allowColumnReordering]="true"
+      [allowColumnResizing]="true"
+      [showBorders]="true"
+      keyExpr="id"
+      style="width: 100%"
+      (onCellClick)="onCellClick($event)"
+      (onContentReady)="crearInstanciaDxDataGrid()"
+      (onToolbarPreparing)="onToolbarPreparing($event)"
+      (onRowInserted)="onRowInserted()"
+      (onRowUpdated)="onRowUpdated($event)"
+      (onRowRemoved)="onRowRemoved($event)"
+    >
+      <dxo-search-panel [visible]="false"></dxo-search-panel>
+      <dxo-filter-row [visible]="false"></dxo-filter-row>
+      <dxo-state-storing
+        [enabled]="true"
+        [customLoad]="customLoadStateStoring"
+        [customSave]="customSaveStateStoring"
+        type="custom"
+      >
+      </dxo-state-storing>
+
+      <dxo-filter-row [visible]="true"></dxo-filter-row>
+      <dxi-toolbar-item
+        [text]="'Test'"
+        [location]="'before'"
+      ></dxi-toolbar-item>
+      <dxo-editing mode="row" [allowUpdating]="true" [allowDeleting]="true">
+        <dxo-texts
+          deleteRow="Eliminar"
+          cancelRowChanges="Cancelar"
+          saveAllChanges="Guardar todos los cambios"
+          saveRowChanges="Guardar"
+          editRow="Editar"
+          confirmDeleteMessage="¿Estás seguro que deseas eliminar esta fila?"
+          confirmDeleteTitle="Eliminar Fila"
+          ok="Sí"
+        ></dxo-texts>
+      </dxo-editing>
+      <dxo-selection mode="single"></dxo-selection>
+      <dxo-scrolling mode="standard" showScrollbar="always"></dxo-scrolling>
+      <dxo-paging [enabled]="false"></dxo-paging>
+      <div *dxTemplate="let data of 'newRow'">
+        <button
+          rel="tooltip"
+          title="Agregar Fila"
+          type="button"
+          [disabled]="agregarFilaDisabled"
+          (click)="agregarFila()"
+          class="btn btn-grid btn-Azulsiman"
+        >
+          <em class="material-icons">playlist_add</em>
+        </button>
+      </div>
+      <div *dxTemplate="let data of 'newColumn'">
+        <button
+          rel="tooltip"
+          title="Agregar Columna"
+          type="button"
+          (click)="pupupAgregarColumna()"
+          class="btn btn-grid btn-Azulsiman"
+        >
+          <em class="material-icons">add_circle</em>
+        </button>
+      </div>
+    </dx-data-grid>
+  </div>
+</div>
+
+<!--#endregion -->
+
+<!--#region Popup Administrar Columna  -->
+
+<dx-popup
+  class="popup"
+  [width]="250"
+  [height]="200"
+  [showTitle]="true"
+  [title]="(esEdicion ? 'Editar' : 'Agregar') + ' Columna'"
+  [closeOnOutsideClick]="false"
+  [showCloseButton]="true"
+  [visible]="mostrarPopupAdministrarColumna"
+  [resizeEnabled]="true"
+  (onShown)="setFocus()"
+  (onHiding)="onCerrarModal()"
+>
+  <div *dxTemplate="let data of 'content'">
+    <form [formGroup]="formGroupColumna">
+      <label for="">Nombre de la Columna: </label>
+      <dx-text-box
+        formControlName="descripcionColumna"
+        (onEnterKey)="agregarOEditarColumna()"
+        #descripcionColumna
+      ></dx-text-box>
+      <div *ngIf="submit && validacion.descripcionColumna.error">
+        <span class="text-danger">{{
+          validacion.descripcionColumna.mensaje
+        }}</span>
+      </div>
+      <div class="form-inline text-right mt-10">
+        <dx-button
+          [disabled]="botonAgregarColumnaDeshabilitado"
+          *ngIf="!esEdicion"
+          text="Agregar"
+          autofocus
+          (click)="agregarColumna()"
+          type="success"
+        >
+        </dx-button>
+        <dx-button
+          *ngIf="esEdicion"
+          [disabled]="botonEditarColumnaDeshabilitado"
+          text="Editar"
+          autofocus
+          (click)="editarColumna()"
+          type="success"
+        >
+        </dx-button>
+        <dx-button
+          text="Limpiar"
+          type="danger"
+          (onClick)="limpiarColumna()"
+          *ngIf="!esEdicion"
+        >
+        </dx-button>
+        <dx-button
+          text="Eliminar"
+          type="danger"
+          (onClick)="eliminarColumna()"
+          *ngIf="esEdicion"
+        >
+        </dx-button>
+      </div>
+    </form>
+  </div>
+</dx-popup>
+
+<!--#endregion -->

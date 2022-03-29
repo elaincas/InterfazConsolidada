@@ -1,0 +1,32 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div
+            class="card-header card-header-icon"
+            data-background-color="green"
+          >
+            <i class="material-icons">article</i>
+          </div>
+          <div class="card-content">
+            <h4 class="card-title">Metas de Oncológicos</h4>
+          </div>
+          <div class="card-content">
+            <div class="row">
+              <div class="col-md-12">
+                <app-reporte-busqueda (obtenerBusquedaMetaOncologico)="obtenerReporteMetasOncologico($event)"></app-reporte-busqueda>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <app-reporte-sucursal *ngIf="mostrarReportePorSucursal" [metasOncologicosPorSucursal]="metasOncologicosPorSucursal"></app-reporte-sucursal>
+                <app-reporte-zona *ngIf="mostrarReportePorZona" [metasOncologicosPorZona]="metasOncologicosPorZona"></app-reporte-zona>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

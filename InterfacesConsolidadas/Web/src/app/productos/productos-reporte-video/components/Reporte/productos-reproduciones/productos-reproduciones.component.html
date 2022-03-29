@@ -1,0 +1,102 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-icon" data-background-color="green">
+            <i class="material-icons">list</i>
+          </div>
+          <div class="card-content">
+            <h4 class="card-title">Reporte de Reproducciones de Video</h4>
+            <br/>
+            <div class="row">
+                <div class="col-md-3 col-xs-5">
+                    <span class="labelsFormulario">Fecha Desde:</span>
+                </div>
+                <div class="col-md-3 col-xs-5">
+                    <span class="labelsFormulario">Fecha Hasta:</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3 col-xs-5">
+                    <dx-date-box [showClearButton]="true" displayFormat="dd/MM/yyyy" [(ngModel)]="fechaInicial" [(max)]="fechaFinal"  (onValueChanged)="validarBoton()"></dx-date-box>
+                </div>
+                <div class="col-md-3 col-xs-5">
+                    <dx-date-box [showClearButton]="true"  displayFormat="dd/MM/yyyy" [(ngModel)]="fechaFinal"   (onValueChanged)="validarBoton()" ></dx-date-box>
+                </div>
+          
+                <div class="col-md-2 col-xs-3">
+                    <dx-button type="default" icon="fa fa-search" (onClick)="ObtenerListadoProductosConAtributos()" [disabled]="bloquearBusqueda"></dx-button>
+                </div>
+                
+                    
+            </div>
+            <br>
+          </div>
+          <div class="card-content">
+            <div class="row">
+              <div class="col-md-12">
+                <dx-data-grid [showBorders]="true"
+                              [masterDetail]="{ enabled: true, template:'sucursalesTemplate'}"
+                              [rowAlternationEnabled]="true"
+                              [dataSource]="listadoProductosReproduciones"
+                              [allowColumnReordering]="true"
+                >
+                
+                  <dxo-filter-row [visible]="true"></dxo-filter-row>
+                  <dxo-header-filter [visible]="true"></dxo-header-filter>
+                  <dxo-paging [pageSize]="10"></dxo-paging>
+                  <dxo-pager
+                    [showPageSizeSelector]="true"
+                    [allowedPageSizes]="[10, 20, 30]"
+                    [showInfo]="true"
+                    [visible]="true"
+                    [showNavigationButtons]="true"
+                  >
+                  </dxo-pager>
+                  <dxo-scrolling
+                    mode="standard"
+                    showScrollbar="always"
+                  ></dxo-scrolling>
+                  <dxi-column caption="Código" dataField="producto.prod_id" [width]="100"></dxi-column>
+                  <dxi-column caption="Producto" dataField="producto.prod_Desc"></dxi-column>
+                  <dxi-column caption="Video" dataField="urL_Imagen"[width]="250"></dxi-column>
+                  <dxi-column caption="Reproducciones" dataField="cantidad" [width]="150"></dxi-column>
+                  <dxi-column caption="Porcentaje Visto" dataField="porcentaje_Promedio" [width]="150"></dxi-column>
+                  
+                  <dxo-paging [pageSize]="20" [pageIndex]="0"></dxo-paging>
+
+                  <div *dxTemplate="let detalles of 'sucursalesTemplate'" >
+                    <dx-data-grid [rowAlternationEnabled]="true" [dataSource]="detalles.data.detalle ">
+                      <dxi-column caption="Fecha" format="dd/MM/yyyy"  dataField="fecha" dataType="date" [width]="400">  </dxi-column>
+                      <dxi-column caption="Porcentaje Visto" dataField="porcentaje_Vista" [width]="200">  </dxi-column>
+                    </dx-data-grid>
+                    
+                  </div>
+                  <dxo-summary>
+                    <dxi-total-item
+                      column="Reproducciones"
+                      summaryType="sum"
+                      name="Total"
+                      [customizeText]="customizeTotal"
+                    >
+                    </dxi-total-item>
+                    <dxi-total-item
+                      column="Porcentaje Visto"
+                      summaryType="avg"
+                      [customizeText]="customizePorcentaje"
+                    >
+                    
+                </dxi-total-item>
+                </dxo-summary>
+                </dx-data-grid>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+

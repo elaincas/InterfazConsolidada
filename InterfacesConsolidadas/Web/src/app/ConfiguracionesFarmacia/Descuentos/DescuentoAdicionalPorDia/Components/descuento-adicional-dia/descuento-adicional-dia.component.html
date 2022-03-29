@@ -1,0 +1,32 @@
+<div class="row">
+    <div class="col-md-4 col-lg-12">
+        <div class="form-group">
+            <span class="">Es para Tercera Edad </span>
+            <dx-check-box [(ngModel)]="configuracion.esParaTerceraEdad" [(value)]="configuracion.esParaTerceraEdad">
+            </dx-check-box>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-4 col-md-2" [ngClass]="{'col-lg-4':modoEdicion}">
+        <span class="labelsFormularios">Desuento: </span>
+        <dx-number-box [(ngModel)]="configuracion.descuento" [showSpinButtons]="true" [min]="1" [max]="99" [step]="1" format="###0"
+            [showSpinButtons]="true" [(value)]="configuracion.descuento">
+        </dx-number-box>
+    </div>
+    <div class="col-xs-8 col-md-4" [ngClass]="{'col-lg-8':modoEdicion}">
+        <span class="labelsFormularios">Día de la semana: </span>
+        <dx-select-box [dataSource]="diasSemana" displayExpr="nombre" valueExpr="valor"
+            [(ngModel)]="configuracion.configuracion" [(value)]="configuracion.configuracion" placeholder="Día de la semana">
+        </dx-select-box>
+    </div>
+</div>
+<br>
+<div class="row">
+    <div class="col-md-6" [ngClass]="{'col-lg-12':modoEdicion}" style="text-align: right;">
+        <button *ngIf="!modoEdicion" class="btn btn-Azulsiman"
+            (click)="GuardarConfiguracionDeDescuento()">Guardar</button>
+        <button *ngIf="modoEdicion" class="btn btn-Azulsiman"
+            (click)="ActualizarConfiguracionDeDescuento()">Actualizar</button>
+    </div>
+</div>

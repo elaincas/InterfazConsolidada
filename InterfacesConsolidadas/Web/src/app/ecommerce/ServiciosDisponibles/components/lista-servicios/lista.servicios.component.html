@@ -1,0 +1,68 @@
+<div class="main-content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="card">
+            <div
+              class="card-header card-header-icon"
+              data-background-color="green">
+              <i class="material-icons">list</i>
+            </div>
+            <div class="card-content">
+              <h4 class="card-title">Listado de Servicios Disponibles</h4>
+            </div>
+            <div class="card-content">
+              <div class="row">              
+              <div class="col-md-12">
+                <dx-data-grid #grid [showBorders]="true"  keyExpr="Id"
+                  [showRowLines]="true" [dataSource]="ListaServicios" [wordWrapEnabled]="true" (onRowPrepared)="colorearFila($event)">
+                  <dxo-filter-row [visible]="true"> </dxo-filter-row>
+                  <dxo-header-filter [visible]="true"></dxo-header-filter>
+                  <dxi-column caption="#" dataField="id" [width]="50"></dxi-column>
+                  <dxi-column caption="Descripcion" dataField="descripcion" ></dxi-column>
+                  <dxi-column caption="Visible en la Web" cellTemplate="paginaWebVisibleTemplate" [width]="80"></dxi-column>
+                  <dxi-column caption="Acciones" cellTemplate="accionServicioTemplate" [width]="100"></dxi-column>
+                  <div *dxTemplate="let v of 'paginaWebVisibleTemplate'" class="text-center">
+                    <button rel="tooltip" title="Habilitar/Deshabilitar en página Web" type="button" (click)="actualizarEstadoVisibleEnPaginaWeb(v.data.id, v.data.activo, v.data)"
+                      class="btn btn-grid btn-pagina" [ngClass]="{'visible': v.data.activo, 'visible-off':!v.data.activo}">
+                      <i *ngIf="v.data.activo" class="material-icons" style="color:green">visibility</i>
+                      <i *ngIf="!v.data.activo" class="material-icons" style="color:red">visibility_off</i>
+                    </button>
+                  </div>
+                  <div *dxTemplate="let s of 'accionServicioTemplate'" class="text-center">
+                    <button rel="tooltip" title="Editar" (click)="EditarServicio(s.data)"type="button" class="btn btn-grid btn-Azulsiman ">
+                      <i class="material-icons">mode_edit</i>
+                    </button>                    
+                  </div>                  
+                  <dxo-paging [pageSize]="15" [pageIndex]="0"></dxo-paging>
+                </dx-data-grid>
+              </div>
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>  
+
+
+
+  <dx-popup class="popup" [width]="500" [height]="200" [showTitle]="true" title="Editar Servicio" [dragEnabled]="false"
+  [closeOnOutsideClick]="false" [(visible)]="mostrarPopUpServicio">
+
+  <div *dxTemplate="let data of 'content'">
+    <div class="col-md-12">
+      <div class="row">
+        <div class="col-md-12">
+          <span class="labelsFormularios">Descripción de Servicio:</span>
+          <dx-text-box [(ngModel)]="ServicioEditar.Descripcion" name="txtDescripcionServicio"></dx-text-box>          
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <button id="nSeccion" class="btn btn-fill btn-Azulsiman" style="width: 100%" type="submit" (click)="OnEditarServicio()">
+        <i class="material-icons">save</i> Guardar Cambios
+      </button>
+    </div>
+  </div>
+</dx-popup>

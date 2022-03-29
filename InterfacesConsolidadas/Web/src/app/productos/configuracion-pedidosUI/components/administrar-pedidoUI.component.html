@@ -1,0 +1,171 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-icon" data-background-color="green">
+                        <i class="material-icons">360</i>
+                    </div>
+                    <div class="card-content">
+                        <h4 class="card-title">
+                            <strong>Administrar Pedidos UI</strong>
+                        </h4>
+
+                        <div class="row">
+                            <div class="col-lg-offset-1 col-lg-11 col-md-11 col-sm-12 col-xs-12">
+                                <div class="row">
+                                    <div class="col-md-6" style="margin-top: 20px;">
+                                        <span class="labelsFormularios">Productos UI:</span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-4 col-md-7 col-sm-7 col-xs-12">
+                                        <label class="btn-block">
+                                            Elija una sucursal
+                                            <dx-lookup [(ngModel)]="configuracionPorSucursal.SucursalId"
+                                                [dataSource]="sucursales" closeOnOutsideClick="true"
+                                                showPopupTitle="false" displayExpr="nombrePublico" valueExpr="codigo"
+                                                (onValueChanged)="ObtenerConfiguracionPorSucursal()"
+                                                [disabled]="bloquearControl">
+                                            </dx-lookup>
+
+                                        </label>
+
+                                    </div>
+                                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+                                        <br>
+                                        <label class="btn-block">
+                                            T. Sucursales
+                                            <dx-check-box [(ngModel)]="esParaTodasLasSucursales"  (onValueChanged)="BloquearControlSucursal()">
+                                            </dx-check-box>
+                                        </label>
+                                    </div>
+                                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+
+                                        <label class="btn-block">
+                                            <br />
+
+                                            <dx-button icon="fa fa-search" type="default" text="Buscar Config."
+                                                (onClick)="Obtener()">
+                                            </dx-button>
+                                        </label>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
+                                        <label class="btn-block">
+                                            Elija un Producto
+                                            <dx-lookup [(ngModel)]="configuracionDetalleSucursal.ProductoId"
+                                                [dataSource]="productosUI" closeOnOutsideClick="true"
+                                                showPopupTitle="false" [displayExpr]="getDisplayExpr" valueExpr="codigo"
+                                                itemTemplate="listItem" [searchExpr]="['codigo', 'descripcion']">
+                                                <dxo-drop-down-options title="Select product">
+                                                </dxo-drop-down-options>
+                                                <div *dxTemplate="let item of 'listItem'">
+                                                    <div class="custom-item">
+                                                        {{item.codigo }} {{item.descripcion}}
+                                                    </div>
+                                                </div>
+                                            </dx-lookup>
+                                        </label>
+
+                                    </div>
+                                </div>
+                                <div class="row">
+                                <br>
+                                <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
+                                    <label class="btn-block">
+                                        Tiempo de Duración (Meses):
+                                        <dx-number-box [(ngModel)]="configuracionDetalleSucursal.TiempoDuracionProducto"
+                                            placeholder="Tiempo de duración...">
+                                        </dx-number-box>
+                                    </label>
+                                </div>
+                                <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
+                                    <label class="btn-block">
+                                        Limite de Unidades:
+                                        <dx-number-box [(ngModel)]="configuracionDetalleSucursal.LimiteMaximoUnidades"
+                                            placeholder="Limite máximo de unidades...">
+                                        </dx-number-box>
+                                    </label>
+                                </div>
+                                <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
+                                    <label class="btn-block">
+                                        Es Obligatorio:
+                                        <dx-check-box
+                                            [(ngModel)]="configuracionDetalleSucursal.EsPedidoProductoObligatorio">
+                                        </dx-check-box>
+                                    </label>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
+                                        <div class="row" style="float: right;">
+                                            <dx-button icon="fa fa-plus-circle" type="default" [text]="Texto()"
+                                                (onClick)="GuardarCambios()">
+                                            </dx-button>
+                                            <dx-button icon="fa fa-eraser" type="danger" text="Limpiar"
+                                                (onClick)="Limpiar()">
+                                            </dx-button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
+                                        <dx-data-grid id="gridContainer" #gridListado
+                                            [dataSource]="configuracionesDetalleSucursal" [showBorders]="true"
+                                            [remoteOperations]="true">
+
+                                            <dxo-paging [pageSize]="25"></dxo-paging>
+                                            <dxo-filter-row [visible]="true"></dxo-filter-row>
+
+                                            <dxo-pager [showPageSizeSelector]="true"
+                                                [allowedPageSizes]="[  25, 50, 100]"></dxo-pager>
+                                            <dxi-column dataField="productoDescripcion" width="150" caption="Producto"
+                                                [filterOperations]="[ '=']" dataType="string">
+
+                                            </dxi-column>
+                                            <dxi-column dataField="limiteMaximoUnidades" caption="Límite Max. Unidades"
+                                                [filterOperations]="[ '=']" dataType="string">
+
+                                            </dxi-column>
+ .                                            <dxi-column dataField="tiempoDuracionProducto" caption="Tiempo D.Duración"
+                                                [filterOperations]="[ '=']" dataType="string">
+
+                                            </dxi-column>
+
+                                            <dxi-column caption="Obligatorio" dataField="esPedidoProductoObligatorio">
+                                            </dxi-column>
+                                            <dxi-column caption="Editar" cellTemplate="accionTemplate" [width]="130">
+                                            </dxi-column>
+                                            <div *dxTemplate="let producto of 'productoCell'">
+                                                <dx-lookup [dataSource]="productosUI" closeOnOutsideClick="true"
+                                                    value="producto.productoId" showPopupTitle="false"
+                                                    displayExpr="descripcion" valueExpr="codigo">
+                                                </dx-lookup>
+                                            </div>
+                                            <div *dxTemplate="let accion of 'accionTemplate'">
+                                                <div style="text-align: center">
+                                                    <dx-button type="button" type="success"
+                                                        (click)="Actualizar(accion.data)" icon="fa fa-edit">
+                                                    </dx-button>
+                                                    <dx-button type="button" type="danger"
+                                                        (click)="Desactivar(accion.data)" icon="fa fa-close">
+                                                    </dx-button>
+                                                </div>
+                                            </div>
+                                        </dx-data-grid>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

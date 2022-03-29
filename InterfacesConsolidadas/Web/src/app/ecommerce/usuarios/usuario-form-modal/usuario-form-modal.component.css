@@ -1,0 +1,21 @@
+.documentos-contenedor {
+  margin: 10px 0;
+}
+
+.documentos-contenedor a {
+  padding: 5px;
+}
+
+.documentos-contenedor hr {
+  margin: 10px 0;
+}
+
+.btn-contenedor{
+  display: flex;
+  flex-direction: row;
+}
+
+.btn-item{
+  padding: 0 5px;
+}
+

@@ -1,0 +1,88 @@
+<nav class="navbar navbar-siman navbar-transparent navbar-absolute">
+    <div class="container-fluid">
+        <div class="navbar-minimize">
+            <button id="minimizeSidebar" class="btn btn-round btn-white btn-fill btn-just-icon">
+                <i class="material-icons visible-on-sidebar-regular">more_vert</i>
+                <i class="material-icons visible-on-sidebar-mini">view_list</i>
+            </button>
+        </div>
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" (click)="sidebarToggle()">
+                <span class="sr-only">Toggle navigation</span>
+            </button>
+            <a class="navbar-brand" href="{{getPath()}}"> {{getTitle()}} </a>
+        </div>
+
+        <div class="card-content" style="margin-right: 10px; margin-top: 15px;" (click)="MostrarPopPupEmpresa()">
+            <div class="row">
+                <div class="pull-right">
+                    <a style="color: white;">
+                        {{ NombreEmpresa }}
+                        <span>
+                            <img class="width-img" src="{{ RutaImagenPais }}">
+                            <i class="fa fa-caret-down"></i>
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <dx-popup class="popup" [width]="550" [height]="180" [showTitle]="true" title="Configuración"
+            [dragEnabled]="false" [closeOnOutsideClick]="true" [(visible)]="popupSeleccionarEmpresaVisible">
+            <div *dxTemplate="let data of 'content'">
+                <div class="content">
+                    <dx-select-box #lueEmpresa [dataSource]="empresas" displayExpr="descripcion" valueExpr="empresaId"
+                        title="Seleccione la Empresa" [(ngModel)]="empresaSeleccionadaId" [searchEnabled]="true"
+                        placeholder="Seleccione la Empresa">
+                    </dx-select-box>
+                </div>
+                <br>
+                <div class="btn-contenedor pull-right">
+                    <div class="btn-item">
+                        <dx-button text="Cancelar" type="danger" (onClick)="OcultarPopPupEmpresa()">
+                        </dx-button>
+                        <dx-button text="Guardar" type="default" (onClick)="GuardarEmpresaSeleccionada()">
+                        </dx-button>
+                    </div>
+                </div>
+            </div>
+        </dx-popup>
+
+        <div class="collapse navbar-collapse">
+            <div *ngIf="isMobileMenu()">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown" *ngIf="false">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <i class="material-icons">notifications</i>
+                            <span class="notification">5</span>
+                            <p class="hidden-lg hidden-md">
+                                Notifications
+                                <b class="caret"></b>
+                            </p>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="#">Mike John responded to your email</a>
+                            </li>
+                            <li>
+                                <a href="#">You have 5 new tasks</a>
+                            </li>
+                            <li>
+                                <a href="#">You're now friend with Andrew</a>
+                            </li>
+                            <li>
+                                <a href="#">Another Notification</a>
+                            </li>
+                            <li>
+                                <a href="#">Another One</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="separator hidden-lg hidden-md"></li>
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</nav>

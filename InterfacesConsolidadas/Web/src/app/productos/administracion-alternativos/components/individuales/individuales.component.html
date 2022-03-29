@@ -1,0 +1,225 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div
+            class="card-header card-header-icon"
+            data-background-color="green"
+          >
+            <i class="material-icons">queue</i>
+          </div>
+
+          <div class="card-content">
+            <h4 class="card-title">Administración de Productos Individuales</h4>
+
+            <div class="row">
+              <div class="col-md-5">
+                <span>Producto Original:</span>
+                <dx-drop-down-box
+                  [(value)]="productoOriginalSeleccionado"
+                  valueExpr="identificador"
+                  displayExpr="nombre"
+                  placeholder="Seleccione un Original"
+                  [showClearButton]="true"
+                  [dataSource]="productosTotal"
+                >
+                  <div *dxTemplate="let data of 'content'">
+                    <dx-data-grid
+                      #gridProductosOriginales
+                      [dataSource]="productosTotal"
+                      [columns]="['identificador', 'nombre']"
+                      [selection]="{ mode: 'single' }"
+                      [hoverStateEnabled]="true"
+                      [paging]="{ enabled: true, pageSize: 30 }"
+                      [filterRow]="{ visible: true }"
+                      [scrolling]="{ mode: 'infinite' }"
+                      [height]="300"
+                      [(selectedRowKeys)]="productoOriginalSeleccionadoChange"
+                    >
+                    </dx-data-grid>
+                  </div>
+                </dx-drop-down-box>
+              </div>
+
+              <div class="col-md-5">
+                <span>Producto Remplazo:</span>
+                <dx-drop-down-box
+                  [(value)]="productoRemplazoSeleccionado"
+                  valueExpr="identificador"
+                  displayExpr="nombre"
+                  placeholder="Seleccione un Remplazo"
+                  [showClearButton]="true"
+                  [dataSource]="productosTotal"
+                >
+                  <div *dxTemplate="let data of 'content'">
+                    <dx-data-grid
+                      #gridProductosRemplazo
+                      [dataSource]="productosTotal"
+                      [columns]="['identificador', 'nombre']"
+                      [selection]="{ mode: 'single' }"
+                      [hoverStateEnabled]="true"
+                      [paging]="{ enabled: true, pageSize: 30 }"
+                      [filterRow]="{ visible: true }"
+                      [scrolling]="{ mode: 'infinite' }"
+                      [height]="300"
+                      [(selectedRowKeys)]="productoRemplazoSeleccionadoChange"
+                    >
+                    </dx-data-grid>
+                  </div>
+                </dx-drop-down-box>
+              </div>
+
+              <form [formGroup]="formGroupIndividual">
+                <div class="col-md-2">
+                  <div class="form-group is-empty label-floating">
+                    <label for="CantidadUnidadReemplazo" class="control-label"
+                      >Cantidad:</label
+                    >
+                    <input
+                      type="number"
+                      class="form-control"
+                      formControlName="cantidadUnidadReemplazo"
+                    />
+                  </div>
+                </div>
+              </form>
+            </div>
+
+            <div class="row">
+              <div class="col-md-8">
+                <button
+                  class="btn btn-fill btn-Azulsiman"
+                  type="submit"
+                  (click)="AgregarIndividual()"
+                >
+                  Agregar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-content">
+            <dx-data-grid
+              [dataSource]="productosIndividuales"
+              style="width: 100% !important"
+              height="500"
+              [allowColumnReordering]="true"
+              [allowColumnResizing]="true"
+              keyExpr="id"
+              [showBorders]="true"
+              (onRowUpdated)="onRowUpdated($event)"
+            >
+              <dxo-filter-row [visible]="true"></dxo-filter-row>
+              <dxo-selection mode="single"></dxo-selection>
+              <dxo-editing mode="cell" [allowUpdating]="true"></dxo-editing>
+              <dxo-paging [pageSize]="10"></dxo-paging>
+              <dxo-pager
+                [showPageSizeSelector]="true"
+                [allowedPageSizes]="[10, 20, 30]"
+                [showInfo]="true"
+                [visible]="true"
+                [showNavigationButtons]="true"
+              >
+              </dxo-pager>
+              <dxo-scrolling
+                mode="standard"
+                showScrollbar="always"
+              ></dxo-scrolling>
+              <dxo-column-chooser
+                [enabled]="true"
+                mode="select"
+              ></dxo-column-chooser>
+              <dxi-column
+                caption="Original"
+                dataField="productoOriginal"
+                [allowEditing]="true"
+                [width]="100"
+              >
+              </dxi-column>
+              <dxi-column
+                caption="Descripción"
+                dataField="descripcionOriginal"
+                [allowEditing]="false"
+                [width]="250"
+              >
+              </dxi-column>
+              <dxi-column
+                caption="Reemplazo"
+                dataField="productoReemplazo"
+                [allowEditing]="true"
+                [width]="100"
+              >
+              </dxi-column>
+              <dxi-column
+                caption="Descripción"
+                dataField="descripcionRemplazo"
+                [allowEditing]="false"
+                [width]="250"
+              >
+              </dxi-column>
+              <dxi-column
+                caption="Cantidad"
+                dataField="cantidadUnidadReemplazo"
+                [allowEditing]="true"
+                [width]="80"
+              >
+              </dxi-column>
+              <dxi-column
+                caption="Cod. Colaborador"
+                dataField="usuarioAgrega"
+                [allowEditing]="false"
+                [width]="80"
+              >
+              </dxi-column>
+              <dxi-column
+                caption="Fecha"
+                dataField="fechaAgrega"
+                dataType="date"
+                cellTemplate="fechaProductoTemplate"
+                [allowEditing]="false"
+                [width]="50"
+              >
+              </dxi-column>
+              <dxi-column
+                caption="Eliminar"
+                cellTemplate="eliminarTemplate"
+                [fixed]="true"
+                fixedPosition="left"
+                [width]="50"
+              ></dxi-column>
+              <div
+                *dxTemplate="
+                  let lugarProductoEliminarTemplate of 'eliminarTemplate'
+                "
+              >
+                <button
+                  type="button"
+                  (click)="DeleteIndividual(lugarProductoEliminarTemplate.data)"
+                  class="btn btn-grid btn-danger btn-grid-eliminar"
+                >
+                  <i class="material-icons">close</i>
+                </button>
+              </div>
+              <div
+                *dxTemplate="
+                  let fechaProductoTemplate of 'fechaProductoTemplate'
+                "
+              >
+                {{
+                  fechaProductoTemplate.data.fechaAgrega | date: 'dd/MM/yyyy'
+                }}
+              </div>
+            </dx-data-grid>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

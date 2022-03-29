@@ -1,0 +1,109 @@
+<div class="main-content">
+  <div class="container-flui">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-icon" data-background-color="red">
+            <i class="material-icons">biotech</i>
+          </div>
+
+          <div class="card-content">
+            <h4 class="card-title">Listado de Análisis Clínicos</h4>
+
+            <div class="form-group">
+              <button
+                type="button"
+                class="btn btn-Azulsiman btn-round btn-fab btn-fab-mini"
+                (click)="NuevoAnalisis()"
+              >
+                <i class="material-icons">add</i>
+                <div class="ripple-container"></div>
+              </button>
+            </div>
+            <dx-data-grid
+              [showBorders]="true"
+              [masterDetail]="{ enabled: true, template: 'analisisTemplate' }"
+              [rowAlternationEnabled]="true"
+              [dataSource]="analisis"
+            >
+              <dxo-load-panel
+                [enabled]="true"
+                text="Cargando Información"
+              ></dxo-load-panel>
+
+              <dxo-paging [pageSize]="10"> </dxo-paging>
+              <dxo-pager
+                [showPageSizeSelector]="true"
+                [allowedPageSizes]="[10, 25, 50, 100]"
+                [showInfo]="true"
+              ></dxo-pager>
+
+              <dxo-filter-row [visible]="true"> </dxo-filter-row>
+
+              <dxo-header-filter [visible]="true"></dxo-header-filter>
+              <dxo-search-panel
+                [visible]="true"
+                [width]="240"
+                placeholder="Buscar..."
+              ></dxo-search-panel>
+
+              <dxi-column caption="Código Análisis" dataField="prodId">
+              </dxi-column>
+              <dxi-column caption="Nombre" dataField="nombre"> </dxi-column>
+              <dxi-column caption="Sinónimo" dataField="sinonimo"> </dxi-column>
+              <dxi-column
+                caption="Precio Público"
+                dataField="precioPublico"
+                alignment="center"
+                dataType="number"
+              ></dxi-column>
+              <dxi-column
+                caption="Tiempo Entrega (días:horas:minutos)"
+                dataField="tiempoDeEntrega"
+              >
+              </dxi-column>
+              <dxi-column
+                caption="Activo"
+                dataField="activo"
+              >
+              </dxi-column>
+              <dxi-column
+                caption="Acciones"
+                cellTemplate="accionTemplate"
+                [width]="100"
+              >
+              </dxi-column>
+              <div *dxTemplate="let accion of 'accionTemplate'">
+                <button
+                  rel="tooltip"
+                  (click)="EditarAnalisis(accion.data)"
+                  type="button"
+                  class="btn btn-grid btn-Azulsiman"
+                >
+                  <i class="material-icons">mode_edit</i>
+                </button>
+                <button
+                  rel="tooltip"
+                  (click)="EliminarAnalisis(accion.data, analisis)"
+                  type="button"
+                  class="btn btn-grid btn-danger"
+                >
+                  <i class="material-icons">delete</i>
+                </button>
+              </div>
+              <div *dxTemplate="let analisis of 'analisisTemplate'">
+                <dx-text-area
+                  [height]="90"
+                  [width]="900"
+                  [readOnly]="true"
+                  [(value)]="analisis.data.descripcion"
+                >
+                </dx-text-area>
+              </div>
+            </dx-data-grid>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

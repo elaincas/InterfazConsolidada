@@ -1,0 +1,328 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-icon" data-background-color="green">
+                        <i class="material-icons">assignment</i>
+                    </div>
+                    <div class="card-content">
+                        <h4 class="card-title">Crear Servicio</h4>
+                    </div>
+                    <div class="card-content">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <div class="row centrar-contenido-vertical">
+                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-8">
+                                                <span class="labelsFormularios">Nombre:</span>
+                                                <span class="labelsFormularios">
+                                                    <dx-text-box [(ngModel)]="servicio.nombre"></dx-text-box>
+                                                </span>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
+                                                <dx-check-box text="Mostrar sobre Banner" [(ngModel)]=servicio.mostrarDescripcionSobreBanner
+                                                    [value]=servicio.mostrarDescripcionSobreBanner>
+                                                </dx-check-box>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <span class="labelsFormularios">Subtitulo 1:</span>
+                                                <span class="labelsFormularios">
+                                                    <dx-text-box [(ngModel)]="servicio.subtitulo1"></dx-text-box>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <span class="labelsFormularios">Descripción:</span>
+                                                <span class="labelsFormularios">
+                                                    <dx-text-area [(ngModel)]="servicio.descripcion" height="90"></dx-text-area>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-xs-2 col-sm-1 col-md-1">
+                                                <button rel="tooltip" title="Agregar" type="button" style="margin-top:25px"
+                                                    (click)="onAgregarUnaSeccion()" class="btn btn-round mat-raised-button btn-success">
+                                                    <i class="material-icons">add</i> Agregar Sección
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <br>
+                                    </div>
+                                    <div class="col-md-7 container-imagenes">
+                                        <div class="row">
+                                            <div class="col-sm-12 col-md-12 col-lg-6">
+                                                <h4 class="labelsFormularios">Icono para la App:</h4>
+                                                <hr class="hr-color">
+                                                <div class="row">
+                                                    <div class="col-xs-7 col-sm-4 col-md-6 col-lg-6">
+                                                        <dx-file-uploader #fuIconoApp id="fuIconoApp" [(value)]="nuevoServicio.archivoIconoApp"
+                                                            selectButtonText="Seleccionar" labelText="" accept=".png, .JPG"
+                                                            uploadMode="userForm" type="default" (onValueChanged)="onSeleccionarIconoMovil_DxFile($event)"
+                                                            (onInitialized)="InicializarDXFileIconoApp($event)">
+                                                        </dx-file-uploader>
+                                                    </div>
+                                                    <div class="col-xs-5 col-sm-4 col-md-4 col-lg-6">
+                                                        <img class="dimensiones-icono-movil" [src]="urlIconoMovil">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-12 col-md-12 col-lg-6">
+                                                <h4 class="labelsFormularios">Icono en la Web:</h4>
+                                                <hr class="hr-color">
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-4 col-md-6 col-lg-6">
+                                                        <dx-file-uploader #fuIconoWeb id="fuIconoWeb" [(value)]="nuevoServicio.archivoIconoWeb"
+                                                            selectButtonText="Seleccionar" labelText="" accept=".png, .JPG"
+                                                            uploadMode="userForm" type="default" (onValueChanged)="onSeleccionarIconoWeb_DxFile($event)">
+                                                        </dx-file-uploader>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-6">
+                                                        <img class="dimensiones-icono-web" [src]="urlIconoWeb">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row" *ngIf="modoEdicion">
+                                            <div class="col-md-12">
+                                                <h4 class="labelsFormularios">Banner Web:</h4>
+                                                <hr class="hr-color">
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-1 col-md-2 col-lg-1">
+                                                        <span class="labelsFormularios">Banner:</span>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                                                        <dx-select-box [dataSource]="listaPaginas" displayExpr="nombre"
+                                                            valueExpr="paginaId" (onValueChanged)="onPaginaSeleccionada(servicio.paginaId)"
+                                                            [(value)]="servicio.paginaId">
+                                                        </dx-select-box>
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                <div>
+                                                    <img [src]="urlBanner">
+                                                </div>
+                                                <br>
+                                                <div class="dimensiones-banner-movil">
+                                                    <img [src]="urlBannerMovil">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="card" *ngIf="nuevasSecciones.length > 0">
+                                            <div class="card-header">
+                                                <h4 class="labelsFormularios">Secciones Agregadas</h4>
+                                            </div>
+                                            <div class="card-body">
+                                                <ul class="nav nav-pills nav-pills-warning" role="tablist">
+                                                    <li class="nav-item" *ngFor="let seccion of nuevasSecciones">
+                                                        <a class="nav-link" data-toggle="tab" href="#{{seccion.titulo}}"
+                                                            (click)="onSeccionSeleccionada(seccion)" role="tablist">{{seccion.titulo}}</a>
+                                                    </li>
+                                                </ul>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div class="tab-content tab-space">
+                                                            <div class="tab-pane" *ngFor="let seccion of nuevasSecciones"
+                                                                id="{{seccion.titulo}}" [ngClass]="{'active show': seccion == seccionSeleccionada}">
+                                                                <div class="col-md-5" style="border-right: 1px solid rgb(75, 73, 73)"
+                                                                    *ngFor="let columna of seccion.columnas">
+                                                                    <h1>{{seccion.titulo}}</h1>
+                                                                    <span *ngFor="let contenido of columna.contenidos">
+                                                                        {{contenido.contenido}}
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <br>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <button class="btn btn-fill btn-Azulsiman" type="submit" (click)="guardarServicio()">Guardar</button>
+                                <button class="btn btn-fill btn-pinterest" type="submit" (click)="onCancelarServicio($event)">Cancelar</button>
+
+                            </div>
+                        </div>
+                        <br>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<dx-popup class="popup" [width]="900" [height]="620" [showTitle]="true" title=" Nueva Sección" [dragEnabled]="false"
+    [closeOnOutsideClick]="false" [(visible)]="popupAgregarSeccion">
+    <div *dxTemplate="let data of 'content'">
+        <div class="row">
+            <div class="col-xs-7 col-md-7">
+                <div class="row">
+                    <div class="col-xs-12 col-md-12">
+                        <div class="row">
+                            <div class="col-xs-4 col-md-4 col-lg-3 text-right">
+                                <span class="labelsFormularios">Título de
+                                    Sección:</span>
+                            </div>
+                            <div class="col-xs-8 col-md-8 col-lg-9">
+                                <dx-text-box [(ngModel)]="seccion.titulo"></dx-text-box>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col-xs-4 col-md-4 col-lg-3 text-right">
+                                <span class="labelsFormularios">Tipo de
+                                    Contenido de Columna:</span>
+                            </div>
+                            <div class="col-xs-8 col-md-8 col-lg-9">
+                                <dx-select-box [dataSource]="tiposSecciones" displayExpr="descripcion" valueExpr="id"
+                                    (onValueChanged)="onTipoSeccionChanged(tipoContenido.id)" [(value)]="tipoContenido.id">
+                                </dx-select-box>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col-xs-4 col-md-4 col-lg-3 text-right" style="margin-top:7px;">
+                                <span class="labelsFormularios"># de Columnas:</span>
+                            </div>
+                            <div class="col-xs-1 col-md-1 col-lg-1 numero-columnas">
+                                <span>1</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+            </div>
+            <div class="col-xs-5 col-md-5">
+                <span class="labelsFormularios">Icono de Sección:</span>
+                <div class="row">
+                    <div class="col-md-6">
+                        <dx-file-uploader #fuContenidoImagen id="fupIconoSeccion" [(value)]="nuevoServicio.archivoSeccionIcono"
+                            selectButtonText="Seleccionar" labelText="" accept=".png, .JPG" uploadMode="userForm" type="default"
+                            (onValueChanged)="onSeleccionarIconoSeccion_DxFile($event)">
+                        </dx-file-uploader>
+                    </div>
+                    <div class="col-md-6 dimensiones-icono-seccion container-imagenes-color">
+                        <img class="" *ngIf="urlIconoSeccion" [src]="urlIconoSeccion">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="row">
+                <div class="card">
+                    <div class="col-md-12">
+                        <div class="card-body">
+                            <span>
+                                <h5>Datos de la Columna
+                                    <span class="text-informacion"> (Una sección sólo puede tener 2 columnas como
+                                        máximo)</span>
+                                </h5>
+                            </span>
+                            <hr class="hr-color">
+                            <div class="row">
+                                <div class="col-xs-4 col-md-4 col-lg-3 text-right">
+                                    <span class="labelsFormularios">Título de la Columna:</span>
+                                </div>
+                                <div class="col-xs-8 col-md-8 col-lg-9">
+                                    <dx-text-box [(ngModel)]="columna.titulo"></dx-text-box>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12" *ngIf="mostrarTextoSeccion">
+                                    <span class="labelsFormularios">Ingrese el texto para esta Columna:
+                                        <dx-text-area [(ngModel)]="contenido.contenido" height="90"></dx-text-area>
+                                    </span>
+                                </div>
+                                <div class="col-md-12" *ngIf="mostrarImagenSeccion">
+                                    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                                        <dx-file-uploader #fuContenidoImagen id="fupliconoApp" [(value)]="nuevoServicio.archivoContenido"
+                                            selectButtonText="Seleccionar" labelText="" accept=".png, .JPG" uploadMode="userForm"
+                                            type="default">
+                                        </dx-file-uploader>
+                                    </div>
+                                    <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8 container-imagenes-color dimensiones-img-contenido">
+                                        <img class="" *ngIf="urlContenido" [src]="urlContenido">
+                                        <i class="material-icons md-dark md-inactive md-48" *ngIf="!urlContenido">image</i>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="col-md-12" *ngIf="mostrarListaSeccion">
+                                    <div class="row">
+                                        <div class="col-md-7">
+                                            <dx-text-box></dx-text-box>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <button rel="tooltip" title="Agregar" type="button" style="margin-top:-5px"
+                                                class="btn btn-just-icon btn-round mat-raised-button btn-success ">
+                                                <i class="material-icons">add</i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="row container-elementos-lista">
+                                        <div class="col-md-7">
+                                            <dx-data-grid #gridListaContenido [showBorders]="true" [dataSource]="listaContenido"
+                                                [hoverStateEnabled]="true" [selectedRowKeys]="[]" [height]="30">
+                                                <dxo-selection mode="single"></dxo-selection>
+                                                <dxi-column caption="#" dataField="contenidoId" width="25"
+                                                    [allowEditing]="false"></dxi-column>
+                                                <dxi-column caption="Descripción" dataField="contenido" [allowEditing]="false"></dxi-column>
+                                                <dxi-column cellTemplate="accionTemplate" [width]="50"> </dxi-column>
+                                                <dxo-paging [pageSize]="10" [pageIndex]="1"></dxo-paging>
+                                                <div *dxTemplate="let d of 'accionTemplate'">
+                                                    <!-- <button rel="tooltip" title="Eliminar" type="button" class="btn btn-grid btn-danger "> -->
+                                                    <a> <i class="material-icons" style="color:rgb(173, 28, 28)">close</i></a>
+                                                    <!-- </button> -->
+                                                </div>
+                                            </dx-data-grid>
+                                        </div>
+                                        <!-- <div class="col-md-5">
+                                        <div class="container-listado-contenido">
+                                            <ul>
+                                                <li *ngFor="let contenido of listaContenido">{{contenido.contenido }}</li>
+                                            </ul>
+                                        </div>
+                                    </div> -->
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" *ngIf="(mostrarListaSeccion || mostrarImagenSeccion || mostrarTextoSeccion) && !ocultarBotonAgregarColumna">
+                                <div class="col-md-12  text-right">
+                                    <button class="btn btn-fill btn-Azulsiman" type="submit" (click)="onAgregarColumna()">
+                                        <i class="material-icons">add</i>Agregar</button>
+                                    <br>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="row" *ngIf="this.listaColumnas.length > 0">
+                <button class="btn btn-fill btn-Azulsiman" type="submit" (click)="onAgregarSeccionAlista()"> <i class="material-icons">add</i>Crear
+                    Sección</button>
+            </div>
+        </div>
+    </div>
+</dx-popup>

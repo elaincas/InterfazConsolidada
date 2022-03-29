@@ -1,0 +1,51 @@
+<!-- <app-main-loader></app-main-loader> -->
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-icon" data-background-color="green">
+                        <i class="material-icons">inbox</i>
+                    </div>
+                    <div class="card-content">
+                        <h4 class="card-title">
+                            <strong>Productos Mal Estados-Perdidos</strong>
+                        </h4>
+
+                        <div class="row">
+                            <div class="col-lg-offset-1 col-lg-10 col-md-10 col-sm-12 col-xs-12">
+                                <div class="row" >
+                                    <dx-button icon="fa fa-search" type="default" text="Obtener Información" (onClick)="ObtenerProductosMalEstadosPerdidos()"></dx-button>
+                                </div>
+                                <div class="row">
+                                    <dx-data-grid #grid id="gridMalEstados" [dataSource]="productos.listaProductos" [showColumnLines]="true" [showRowLines]="true"
+                                        [showBorders]="true" [columnAutoWidth]="true" [rowAlternationEnabled]="true" (onEditorPreparing)="onEditorPreparing($event)"
+                                        (onRowUpdated)="ActualizarDatoValeColaborador($event)">
+                                        <dxo-filter-row [visible]="true"> </dxo-filter-row>
+                                        <dxo-header-filter [visible]="true"></dxo-header-filter>
+                                        <dxo-paging [pageSize]="10" [pageIndex]="0"> </dxo-paging>
+                                        <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10, 20, 50]" [showNavigationButtons]="true">
+                                        </dxo-pager>
+                                        <dxo-editing mode="cell" [allowUpdating]="true">
+                                        </dxo-editing>
+                                        <dxo-export [enabled]="true" fileName="Productos_Disponibles" [allowExportSelectedData]="true"></dxo-export>
+                                        <dxi-column caption="Cód. Vale" width="150px" dataField="valeId"> </dxi-column>
+                                        <dxi-column caption="Prod. Cod." width="150px" dataField="productoID"> </dxi-column>
+                                        <dxi-column dataField="producto" caption="Producto"></dxi-column>
+                                        <dxi-column caption="Vhur" width="90px" dataField="colaboradorID"> </dxi-column>
+                                        <dxi-column caption="Colaborador" width="200px" dataField="nombreColaborador"> </dxi-column>
+                                        <dxi-column caption="Estado" width="200px" dataField="estado"> </dxi-column>
+                                        <dxi-column caption="Observaciones" dataField="observacion"> </dxi-column>
+                                        <div *dxTemplate="let cellData of 'dateCell'">
+                                            {{cellData.value | date: 'dd/MM/yyyy'}}
+                                        </div>
+                                    </dx-data-grid>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

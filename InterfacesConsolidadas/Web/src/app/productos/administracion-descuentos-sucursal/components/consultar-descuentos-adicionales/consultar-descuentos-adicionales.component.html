@@ -1,0 +1,154 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div
+            class="card-header card-header-icon"
+            data-background-color="green"
+          >
+            <i class="material-icons">list_alt</i>
+          </div>
+          <div class="card-content">
+            <h4 class="card-title">Consultar Descuentos Adicionales</h4>
+          </div>
+          <!-- Contenido Principal -->
+          <div class="card-content">
+            <div class="row">
+              <div class="col-md-4">
+                <span class="labelsFormularios">Sucursal:</span>
+                <app-sucursal-select-box
+                  (obtenerCodigoSucursal)="obtenerCodigoSucursal($event)"
+                ></app-sucursal-select-box>
+              </div>
+              <div class="col-md-4">
+                <span class="labelsFormularios">Desde:</span>
+                <dx-date-box
+                  type="date"
+                  [(value)]="fechaDesde"
+                  [width]="500"
+                  displayFormat="dd/MM/yyyy"
+                >
+                </dx-date-box>
+              </div>
+              <div class="col-md-4">
+                <span class="labelsFormularios">Hasta:</span>
+                <dx-date-box
+                  type="date"
+                  [(value)]="fechaHasta"
+                  [width]="500"
+                  displayFormat="dd/MM/yyyy"
+                >
+                </dx-date-box>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <button
+                  class="btn btn-fill btn-Azulsiman"
+                  type="button"
+                  (click)="obtenerProductosDescuentosSucursalPorFechas()"
+                >
+                  Buscar
+                </button>
+              </div>
+            </div>
+            <div class="row" style="margin-top: 1em">
+              <div class="col-md-12">
+                <dx-data-grid
+                  #dgProductosDescuentosAdicionales
+                  [dataSource]="productosDescuentosSucursal"
+                  keyExpr="productoId"
+                  [showBorders]="true"
+                  [showRowLines]="true"
+                  [showColumnLines]="true"
+                  [rowAlternationEnabled]="true"
+                  [allowColumnResizing]="true"
+                >
+                  <dxo-paging [pageSize]="10"> </dxo-paging>
+                  <dxo-pager
+                    [showPageSizeSelector]="true"
+                    [allowedPageSizes]="[10, 25, 50, 100]"
+                    [showInfo]="true"
+                  ></dxo-pager>
+                  <dxo-filter-row [visible]="true"> </dxo-filter-row>
+                  <dxi-column
+                    dataField="productoId"
+                    caption="Código"
+                    [width]="100"
+                  ></dxi-column>
+                  <dxi-column
+                    dataField="productoDescripcion"
+                    caption="Producto"
+                    [width]="450"
+                  ></dxi-column>
+                  <dxi-column
+                    dataType="number"
+                    dataField="descuentoAdicional"
+                    caption="Descuento"
+                    format="#0.##00%"
+                    [width]="100"
+                  >
+                  </dxi-column>
+                  <dxi-column
+                    dataType="date"
+                    dataField="desde"
+                    caption="Desde"
+                    [width]="100"
+                    format="dd/MM/yyyy"
+                  ></dxi-column>
+                  <dxi-column
+                    dataType="date"
+                    dataField="hasta"
+                    caption="Hasta"
+                    [width]="100"
+                    format="dd/MM/yyyy"
+                  ></dxi-column>
+                  <dxi-column
+                    dataType="date"
+                    dataField="fechaAgrega"
+                    caption="Fecha Agrega"
+                    [width]="100"
+                    format="dd/MM/yyyy"
+                  ></dxi-column>
+                  <dxi-column
+                    dataField="activo"
+                    caption="Activo"
+                    [width]="100"
+                  ></dxi-column>
+                  <dxi-column
+                    caption="Acciones"
+                    cellTemplate="accionTemplate"
+                    alignment="center"
+                    [width]="100"
+                  ></dxi-column>
+                  <div *dxTemplate="let accion of 'accionTemplate'">
+                    <button
+                      rel="tooltip"
+                      type="button"
+                      class="btn btn-grid btn-Azulsiman"
+                      (click)="
+                        consultarProductoDescuentoSucursalPorProductoId(
+                          accion.data
+                        )
+                      "
+                    >
+                      <i class="material-icons">edit</i>
+                    </button>
+                  </div>
+                </dx-data-grid>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-modificar-descuentos-popup
+  [esPopupModificarDescuentosVisible]="esPopupModificarDescuentosVisible"
+  [productoDescuentoSucursal]="productoDescuentoSucursalPorProductoId"
+  [codigoSucursal]="codigoSucursal"
+  (cerrarModal)="onCerrarModal()"
+></app-modificar-descuentos-popup>

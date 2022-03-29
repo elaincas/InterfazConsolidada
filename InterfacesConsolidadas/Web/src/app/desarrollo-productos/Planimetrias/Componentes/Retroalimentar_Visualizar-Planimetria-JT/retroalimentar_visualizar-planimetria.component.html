@@ -1,0 +1,158 @@
+
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="col-sm-8 col-sm-offset-2">
+      <!--      Wizard container        -->
+      <div class="wizard-container">
+        <div class="card wizard-card" data-color="blue" id="wizardProfile">
+          <form action="" method="">
+            <!--        You can switch " data-color="purple" "  with one of the next bright colors: "green", "orange", "red", "blue"       -->
+            <div class="wizard-header">
+              <h3 class="wizard-title">
+                Planimetrías
+              </h3>
+            </div>
+
+            <div class="wizard-navigation ">
+              <ul>
+                <li>
+                  <a href="#planimetriaDP" data-toggle="tab">Desarrollo de Productos</a>
+                </li>
+                <li>
+                  <a href="#planimetriaJT" data-toggle="tab">Jefe de Tienda</a>
+                </li>
+              </ul>
+            </div>
+
+            <div class="tab-content">
+              <div class="tab-pane" id="planimetriaDP">
+                <div class="row">
+                  <h4 class="info-text"> A continuación se detallan los datos de la planimetría. </h4>
+                  <div class="col-lg-offset-2 col-lg-9 col-md-12 col-sm-12 col-xs-12">
+                    <div class="row">
+                      <div class="col-md-4">
+                        <span>Tipo Planimetría:</span>
+                        <dx-lookup name="cmbPlanimetria" [dataSource]="tiposPlanimetrias" [grouped]="false" [closeOnOutsideClick]="true" [showPopupTitle]="false"
+                          placeholder="Seleccione Tipo de Planimetría" displayExpr="descripcion" valueExpr="id" (onValueChanged)="AsignarNombrePlanimetria()"
+                          [(ngModel)]="planimetria.TipoPlanimetriaID">
+                        </dx-lookup>
+                      </div>
+                      <div class="col-md-4">
+                        <span>Sucursal:</span>
+                        <dx-lookup name="cmbSucursales" [dataSource]="sucursales" [grouped]="false" [closeOnOutsideClick]="true" [showPopupTitle]="false"
+                          placeholder="Seleccione Sucursal." displayExpr="descripcion" valueExpr="sucursalID" (onValueChanged)="AsignarNombreSucursal()"
+                          [(ngModel)]="planimetria.SucursalID">
+                        </dx-lookup>
+                      </div>
+                      <div class="col-md-4">
+                        <br/>
+                        <dx-button name="btnSubir" (onClick)="Buscar()" type="success" text="Buscar" icon="fa fa-search"></dx-button>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-10">
+                        <br/>
+                        <span>
+                          <strong>Vista Previa</strong>
+                        </span>
+                        <dx-gallery #gallery id="gallery" [dataSource]="urlImage" width="100%" [height]="300" [slideshowDelay]="2000" [loop]="true"
+                          [showNavButtons]="true" [showIndicator]="true" [showIndicator]="true">
+                          <div *dxTemplate="let galleryItem of 'item'">
+                            <div>
+                              <img [src]="galleryItem" />
+                            </div>
+                          </div>
+                        </dx-gallery>
+                      </div>
+                    </div>
+                    <div class="row " style="float: right;">
+                      <br/>
+                      <dx-button name="btnBajar" (onClick)="DescargarArchivos()" type="success" text="Descargar" icon="fa fa-download"></dx-button>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+              <div class="tab-pane" id="planimetriaJT">
+                <div class="row">
+                  <div class="col-lg-offset-1 col-lg-10 col-md-12 col-sm-12 col-xs-12">
+                    <div class="row" style="text-align: center">
+                      <span>Retroalimentación a Planimetría de
+                        <strong>{{nombrePlanimetria}}</strong> para la sucursal de
+                        <strong>{{nombreSucursal}}</strong>
+                      </span>
+                    </div>
+                    <div class="row">
+                      <dx-gallery #gallery id="gallery" [dataSource]="urlImagesRetroalimentacion" width="100%" [height]="300" [slideshowDelay]="2000"
+                        [loop]="true" [showNavButtons]="true" [showIndicator]="true" [showIndicator]="true">
+                        <div *dxTemplate="let galleryItem of 'item'">
+                          <div>
+                            <img [src]="galleryItem" />
+                          </div>
+                        </div>
+                      </dx-gallery>
+                    </div>
+                    <div class="row ">
+                        <br/>
+                        <dx-text-box max  maxLength="150" placeholder="Observaciones.." [(ngModel)]="planimetria.Observacion" name="txtObs"></dx-text-box>
+                        <br/>
+                      </div>
+                    <div class="row ">
+                        <div class="col-lg-4 col-md-6  col-xs-5 col-sm-6"   style="float: right;">
+                            <dx-button name="btnEnviar" (onClick)="EnviarRetroalimentacion()" type="success" text="Enviar"  icon="fa fa-arrow-circle-right"></dx-button>
+                          </div>
+                             <div class="col-lg-8 col-md-6 col-xs-5 col-sm-6"  style="float: right;">
+                        <dx-button name="btnSubir" (onClick)="MostrarPopup(1)" text="Subir"  icon="fa fa-upload"></dx-button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+          </form>
+        </div>
+        <dx-popup class="popup" id="ingresoRetroPlanimetria" style="height: 50%;" width="30%" [showTitle]="true" ng-controller="Ctrl"
+          title="Subir Archivos" [dragEnabled]="false" [closeOnOutsideClick]="false" [(visible)]="_mostrarPopup" [showCloseButton]="false"
+          [resizeEnabled]="true">
+          <div *dxTemplate="let data of 'content'">
+            <div class="row">
+              <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin: auto">
+                <dx-file-uploader name="SubirArvhivoImagen" selectButtonText="Adjuntar Imagen" labelText="Este campo es obligatorio" (onValueChanged)="subirArchivoImagen($event)"
+                  accept=".jpg,.png" uploadMode="userForm" type="default">
+                </dx-file-uploader>
+              </div>
+            </div>
+            <div class="row">
+              <dx-data-grid [rowAlternationEnabled]="true" width="100%" [dataSource]="archivos"  (onEditorPreparing)="onEditorPreparing($event)">
+                <dxo-paging [pageSize]="3"></dxo-paging>
+                <dxo-editing mode="cell" [allowUpdating]="true">
+                </dxo-editing>
+                <dxi-column caption="Nombre Imagen" dataField="ArchivoImagen.FileName" [visible]="true"></dxi-column>
+                <dxi-column caption="Observaciones" dataField="Observaciones"></dxi-column>
+                <dxi-column caption="Acción" [width]="60" cellTemplate="accionTemplateImagen"></dxi-column>
+                <div *dxTemplate="let d of 'accionTemplateImagen'">
+                  <div class="row">
+                    <div class="col-md-3">
+                      <button rel="tooltip" type="button" (click)="EliminarFila(d)" class="btn btn-grid btn-danger ">
+                        <i class="material-icons">delete_forever</i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </dx-data-grid>
+            </div>
+            <br/>
+            <div class="row" style="float: right;">
+                  <dx-button icon="fa fa-check" type="success" text="Aceptar" (onClick)="MostrarPopup(0)">
+              </dx-button>
+            </div>
+          </div>
+        </dx-popup>
+      </div>
+      <!-- wizard container -->
+    </div>
+  </div>
+
+</div>

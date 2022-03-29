@@ -1,0 +1,106 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="card">
+      <div class="card-header card-header-text" data-background-color="green">
+        <h4 class="card-title">Listado de Ingresos Inventario</h4>
+      </div>
+      <div class="card-content">
+        <form [formGroup]="_formFilterGroup">
+          <div class="row">
+            <div class="col-md-6 col-xs-6">
+              <span>Finalidad:</span>
+
+              <dx-select-box
+                [dataSource]="_finalidades"
+                displayExpr="FinalidadInventarioDescripcion"
+                valueExpr="FinalidadInventarioId"
+                formControlName="FinalidadId"
+              ></dx-select-box>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-3 col-xs-3">
+              <span>Desde:</span>
+
+              <dx-date-box formControlName="Desde" displayFormat="dd/MM/yyyy" ></dx-date-box>
+            </div>
+
+            <div class="col-md-3 col-xs-3">
+              <span>Hasta:</span>
+
+              <dx-date-box formControlName="Hasta" displayFormat="dd/MM/yyyy"></dx-date-box>
+            </div>
+          </div>
+          <br>
+          <div class="row">
+            <div class="col-md-3 col-xs-3">
+            <dx-button text="Mostrar" (onClick)="cargarReporte()"></dx-button>
+          </div></div>
+        </form>
+        <br />
+        <dx-data-grid
+          [dataSource]="_dataSource"
+          [showColumnLines]="true"
+          [showRowLines]="true"
+          [showBorders]="true"
+          [columnAutoWidth]="true"
+          [rowAlternationEnabled]="true"
+        >
+          <dxo-filter-row [visible]="true"> </dxo-filter-row>
+          <dxo-header-filter [visible]="true"></dxo-header-filter>
+          <dxi-column caption="Id" dataField="IngresoProductosId"></dxi-column>
+          <dxi-column
+            caption="Doc.Dist."
+            dataField="NoDocumentoDistribuidor"
+          ></dxi-column>
+          <div *dxTemplate="let cellData of 'butonCell'">
+            <dx-button (onClick)="MostrarPopup(cellData.value)" text="Ver"
+              >Ver</dx-button
+            >
+          </div>
+          <dxi-column
+            caption="Observaciones"
+            dataField="Observaciones"
+          ></dxi-column>
+          <dxi-column
+            caption="Finalidad"
+            dataField="FinalidadInventario"
+          ></dxi-column>
+          <dxi-column
+            caption="Fecha"
+            dataField="FechaCrea"
+            dataType="date"
+            cellTemplate="dateCell"
+          ></dxi-column>
+          <div *dxTemplate="let cellData of 'dateCell'">
+            {{ cellData.value | date: "dd/MM/yyyy" }}
+          </div>
+          <dxi-column caption="Sucursal" dataField="Sucursal"></dxi-column>
+          <dxi-column
+            caption="Documento"
+            dataField="ImagenUrl"
+            cellTemplate="butonCell"
+          ></dxi-column>
+        </dx-data-grid>
+      </div>
+    </div>
+  </div>
+</div>
+<dx-popup
+  class="popup"
+  id="popup"
+  height="80%"
+  width="60%"
+  [showTitle]="true"
+  title="Documento Adjunto"
+  [dragEnabled]="false"
+  [closeOnOutsideClick]="true"
+  [(visible)]="_mostrarPopup"
+  [showCloseButton]="true"
+  [resizeEnabled]="true"
+>
+  <div *dxTemplate="let data of 'content'">
+    <img *ngIf="_urlImagen" [src]="_urlImagen" />
+    <h1 *ngIf="!_urlImagen">No hay domento adjunto</h1>
+  </div>
+</dx-popup>

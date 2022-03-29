@@ -1,0 +1,187 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-icon" data-background-color="red">
+            <i class="material-icons">queue</i>
+          </div>
+          <div class="card-content">
+            <h4 class="card-title">
+              Administración de Productos Restringidos en Envíos Internacionales
+            </h4>
+            <form [formGroup]="formGroupProductosRestringidos">
+              <div class="row">
+                <div class="col-md-8">
+                  <label for="">Producto: </label>
+                  <dx-drop-down-box
+                    [(value)]="productoSeleccionado"
+                    [readOnly]="esEdicion"
+                    valueExpr="identificador"
+                    displayExpr="nombre"
+                    placeholder="Seleccione un Producto"
+                    [showClearButton]="true"
+                    [dataSource]="productosSeleccionadoDataSource"
+                    formControlName="productoId"
+                  >
+                    <div *dxTemplate="let data of 'content'">
+                      <dx-data-grid
+                        #gridProductos
+                        [dataSource]="productos"
+                        (onRowClick)="filaClickeada($event)"
+                        [remoteOperations]="true"
+                        [columns]="['identificador', 'nombre']"
+                        [hoverStateEnabled]="true"
+                        [paging]="{ enabled: true, pageSize: 30 }"
+                        [filterRow]="{ visible: true }"
+                        [scrolling]="{ mode: 'infinite' }"
+                        [height]="300"
+                      >
+                      </dx-data-grid>
+                      <dxi-column
+                        dataField="identificador"
+                        dataType="string"
+                        caption="Identificador"
+                      ></dxi-column>
+                      <dxi-column
+                        dataField="nombre"
+                        caption="Nombre"
+                        selectedFilterOperation="contains"
+                      ></dxi-column>
+                    </div>
+                  </dx-drop-down-box>
+
+                  <div *ngIf="submit && validacion.productoId.error">
+                    <span class="text-danger">{{
+                      validacion.productoId.mensaje
+                    }}</span>
+                  </div>
+                </div>
+                
+              </div>
+
+              <div class="row">
+                <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
+                  <div class="row">
+                    <div class="form-group">
+                      <div class="col-md-2">
+                        <dx-button
+                          [disabled]="botonAgregarDeshabilitado"
+                          *ngIf="!esEdicion"
+                          text="Agregar"
+                          (click)="agregar()"
+                          type="success"
+                        >
+                        </dx-button>
+                      </div>
+                      <div class="col-md-2">
+                        <dx-button
+                          text="Limpiar"
+                          type="danger"
+                          (onClick)="limpiar()"
+                        >
+                        </dx-button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card">
+              <div class="card-content">
+                <div class="col-md-12" id="gridProductosRestringidos">
+                  <dx-data-grid
+                    #gridProductosRestringidos
+                    [dataSource]="productosRestringidos"
+                    height="600"
+                    [allowColumnReordering]="true"
+                    [allowColumnResizing]="true"
+                    keyExpr="id"
+                    [showBorders]="true"
+                    style="width: 100%"
+                  >
+                    <dxo-filter-row [visible]="true"></dxo-filter-row>
+                    
+                    <dxo-paging [pageSize]="10"></dxo-paging>
+                    <dxo-pager
+                      [showPageSizeSelector]="true"
+                      [allowedPageSizes]="[10, 20, 30]"
+                      [showInfo]="true"
+                      [visible]="true"
+                      [showNavigationButtons]="true"
+                    >
+                    </dxo-pager>
+                    <dxo-scrolling
+                      mode="standard"
+                      showScrollbar="always"
+                    ></dxo-scrolling>
+                    <dxo-column-chooser
+                      [enabled]="true"
+                      mode="select"
+                    ></dxo-column-chooser>
+                    <dxi-column
+                      dataType="date"
+                      caption="Fecha"
+                      dataField="fecha"
+                      [allowEditing]="false"
+                      [width]="150"
+                      cellTemplate="expiresOnTemplate"
+                      
+                    ></dxi-column>
+                    <div *dxTemplate="let card of 'expiresOnTemplate'">  
+                      <span>{{card.value | date: 'dd/MM/yyyy'}}</span>  
+                    </div>  
+                    <dxi-column
+                      caption="Cód. Producto"
+                      dataField="prod_ID"
+                      [allowEditing]="false"
+                      [width]="150"
+                    >
+                    </dxi-column>
+                    <dxi-column
+                      caption="Descripción"
+                      dataField="descripcion"
+                      [allowEditing]="false"
+                      [width]="500"
+                    >
+                    </dxi-column>
+                    
+                    
+                    
+                    <dxi-column
+                      caption="Acciones"
+                      cellTemplate="accionTemplate"
+                      [width]="400"
+                    >
+                    </dxi-column>
+                    <div *dxTemplate="let c of 'accionTemplate'">
+                      <div class="text-center">
+                        <button
+                          rel="tooltip"
+                          title="Desactivar"
+                          *ngIf="c.data.activo"
+                          type="button"
+                          (click)="inactivar(c.data.prod_ID)"
+                          class="btn btn-grid btn-danger"
+                        >
+                          <i class="material-icons">delete</i>
+                        </button>
+                        
+                        
+                      </div>
+                    </div>
+                  </dx-data-grid>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

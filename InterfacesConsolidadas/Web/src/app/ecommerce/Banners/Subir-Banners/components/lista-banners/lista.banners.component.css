@@ -1,0 +1,15 @@
+.width-img{
+  width: 100%;
+}
+
+.labelsNoAplica{
+  color: #b0bec5 !important;;
+}
+
+.align-left{
+  text-align: left;
+}
+
+.url{
+  cursor: pointer;
+}

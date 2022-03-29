@@ -1,0 +1,30 @@
+<div class="col-lg-12 col-md-12">
+  <div class="card">
+    <div class="card-content">
+      <form [formGroup]="formGroupTextArea">
+        <div class="row">
+          <div class="col-md-12">
+            <quill-editor
+              [style]="{ height: '200px' }"
+              formControlName="valor"
+              (onContentChanged)="onContentChanged()"
+              [modules]="modules"
+              (onEditorCreated)="setFocus($event)"
+            ></quill-editor>
+            <div *ngIf="submit && validacion.valor.error">
+              <span class="text-danger">{{ validacion.valor.mensaje }}</span>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="form-group">
+              <label for="">
+                ¿Es Visible en la Web?
+                <dx-check-box formControlName="visibleWeb"> </dx-check-box>
+              </label>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

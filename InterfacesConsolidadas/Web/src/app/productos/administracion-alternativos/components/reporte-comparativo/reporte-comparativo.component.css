@@ -1,0 +1,25 @@
+.alinear{
+  margin-top: 20px;
+}
+.m-top-2{
+  margin-top: 2%;
+}
+
+.m-bottom-2{
+  margin-bottom: 2%;
+}
+
+.m-top-3{
+  margin-top: 3%;
+}
+
+.personalizado{
+  opacity: 1;
+  background-color: red;
+}
+::ng-deep .error .dx-texteditor-input{
+  color: white;
+  background-color: #ff0000;
+}
+
+

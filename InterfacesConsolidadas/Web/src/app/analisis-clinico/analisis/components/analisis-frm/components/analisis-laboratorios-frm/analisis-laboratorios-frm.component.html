@@ -1,0 +1,132 @@
+<div class="form-group">
+  <div class="row">
+    <dx-form>
+      <dxi-item itemType="group" [colCount]="12">
+        <dxi-item itemType="group" [colSpan]="4">
+          <label class="dx-field-item-label dx-field-item-label-location-top"
+            ><span class="dx-field-item-label-content" style="width: 108px"
+              ><span class="dx-field-item-label-text">&nbsp;</span></span
+            ></label
+          >
+          <dx-lookup
+            #item
+            noDataText="No se encontraron laboratorios."
+            searchPlaceholder="Ingrese el código o descripción del laboratorio"
+            [dataSource]="laboratorios"
+            [displayExpr]="GetDisplayExpr"
+            placeholder="Seleccione un laboratorio"
+          >
+          </dx-lookup>
+        </dxi-item>
+        <dxi-item itemType="group" [colSpan]="2">
+          <label class="dx-field-item-label dx-field-item-label-location-top"
+            ><span class="dx-field-item-label-content" style="width: 108px"
+              ><span class="dx-field-item-label-text">Costo Análisis:</span></span
+            ></label
+          >
+          <dx-number-box
+            placeholder="Costo Análisis"
+            #costo
+            value="0"
+            [showSpinButtons]="true"
+            [showClearButton]="true"
+            [disabled]="false"
+            [readOnly]="false"
+            [min]="0"
+            [max]="100000"
+          >
+          </dx-number-box>
+        </dxi-item>
+        <dxi-item itemType="group" [colSpan]="2">
+          <label class="dx-field-item-label dx-field-item-label-location-top"
+            ><span class="dx-field-item-label-content" style="width: 108px"
+              ><span class="dx-field-item-label-text">&nbsp;</span></span
+            ></label
+          >
+          <dx-check-box #predeterminado [value]="false" text="Predeterminado">
+          </dx-check-box>
+        </dxi-item>
+        <dxi-item itemType="group" [colSpan]="2">
+          <label class="dx-field-item-label dx-field-item-label-location-top"
+            ><span class="dx-field-item-label-content" style="width: 108px"
+              ><span class="dx-field-item-label-text">&nbsp;</span></span
+            ></label
+          >
+          <dx-button
+            (click)="Validar(item.value, costo.value, predeterminado.value)"
+            class="btn-Azulsiman"
+            text="Agregar"
+          ></dx-button>
+        </dxi-item>
+      </dxi-item>
+    </dx-form>
+  </div>
+</div>
+
+<div class="row" style="margin-top: 50px;">
+  <div class="col-md-12">
+      <dx-data-grid
+        [rowAlternationEnabled]="true"
+        [dataSource]="analisisLaboratorios"
+        noDataText = "No se han agregado laboratorios"
+        showBorders = true
+      >
+        <dxo-editing [(allowUpdating)]="editarAnalisisLaboratorio" mode="cell">
+        </dxo-editing>
+
+        <dxo-filter-row [visible]="true"> </dxo-filter-row>
+        <dxi-column
+          [allowEditing]="false"
+          caption="Código Laboratorio"
+          dataField="laboratorioId"
+          [width]="200"
+        ></dxi-column>
+        <dxi-column
+          [allowEditing]="false"
+          caption="Nombre"
+          dataField="laboratorio.nombre"
+        ></dxi-column>
+        <dxi-column
+          caption="Costo Análisis"
+          dataField="costo"
+          [allowEditing]="true"
+        ></dxi-column>
+        <dxi-column
+          [allowEditing]="true"
+          caption="Predeterminado"
+          dataField="predeterminado"
+        ></dxi-column>
+        <dxi-column
+          caption="Acción"
+          cellTemplate="accionTemplate"
+          [width]="100"
+        ></dxi-column>
+
+        <div *dxTemplate="let d of 'accionTemplate'">
+          <button
+            rel="tooltip"
+            (click)="EditarLaboratorio(d.data)"
+            type="button"
+            class="btn btn-grid {{
+              editarAnalisisLaboratorio == true ? 'btn-info' : 'btn-success'
+            }}"
+          >
+            <i *ngIf="editarAnalisisLaboratorio == false" class="material-icons"
+              >mode_edit</i
+            >
+            <i *ngIf="editarAnalisisLaboratorio == true" class="material-icons"
+              >done</i
+            >
+          </button>
+          <button
+            rel="tooltip"
+            (click)="EliminarLaboratorio(d.data)"
+            type="button"
+            class="btn btn-grid btn-danger"
+          >
+            <i class="material-icons">delete</i>
+          </button>
+        </div>
+      </dx-data-grid>
+  </div>
+</div>

@@ -1,0 +1,316 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-icon" data-background-color="red">
+            <em class="material-icons">queue</em>
+          </div>
+          <div class="card-content">
+            <h4 class="card-title">
+              Administración de Subsecciones de Productos
+            </h4>
+            <form [formGroup]="formGroupSeccionProductos">
+              <div class="col-md-6">
+                <label for="">Producto: </label>
+                <product-lookup
+                  [product]="producto"
+                  [esReadonly]="elProductoEsReadonly"
+                  [esPrimeraCargaRequerida]="false"
+                  [productosEdit]="productosEdit"
+                  (onProductoSeleccionado)="onProductoSeleccionado($event)"
+                >
+                </product-lookup>
+                <div *ngIf="submit && validacion.productoId.error">
+                  <span class="text-danger">{{
+                    validacion.productoId.mensaje
+                  }}</span>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label for="">Subsección: </label>
+                <dx-lookup
+                  #lookupSeccion
+                  noDataText="No se encontró la información."
+                  searchPlaceholder="Ingrese la descripción de la sección"
+                  [dataSource]="seccionLookup"
+                  displayExpr="descripcion"
+                  [(value)]="seccionId"
+                  [disabled]="esEdicion"
+                  (onValueChanged)="onSeccionChanged()"
+                  valueExpr="id"
+                  placeholder="Seleccione una Sección"
+                >
+                </dx-lookup>
+                <div
+                  *ngIf="
+                    submit && validacion.productoInformacionSeccionId.error
+                  "
+                >
+                  <span class="text-danger">{{
+                    validacion.productoInformacionSeccionId.mensaje
+                  }}</span>
+                </div>
+              </div>
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label for="">
+                    ¿Es Activo?
+                    <dx-check-box formControlName="activo"> </dx-check-box>
+                  </label>
+                </div>
+              </div>
+              <div class="col-lg-12" *ngIf="seccionSeleccionada">
+                <div class="card">
+                  <div class="card-content">
+                    <h4 class="card-title">
+                      {{ seccionSeleccionada.descripcion }}:
+                    </h4>
+                    <div
+                      class="row"
+                      [ngSwitch]="seccionSeleccionada.seccionTipoId"
+                    >
+                      <div
+                        class="col-lg-12"
+                        *ngSwitchCase="seccionTipo.TextArea"
+                      >
+                        <!-- Text Area -->
+
+                        <wysiwyg
+                          [submit]="submit"
+                          [formGroupTextArea]="formGroupTextArea"
+                          [validacion]="validacion"
+                          [esEdicion]="esEdicion"
+                          (onEdit)="
+                            verificarSiElValorEsElMismoQueElOriginal($event)
+                          "
+                        ></wysiwyg>
+                      </div>
+                      <div
+                        class="col-lg-12"
+                        *ngSwitchCase="seccionTipo.ListView"
+                      >
+                        <!-- List View -->
+                        <list-view
+                          (onChangeDto)="setearDetalles($event)"
+                          [seccionProductoId]="seccionProductoSeleccionadaId"
+                          [detalles]="detallesListView"
+                        ></list-view>
+                      </div>
+                      <div class="col-lg-12" *ngSwitchCase="seccionTipo.Table">
+                        <!-- Table -->
+                        <tabla
+                          [events]="eventsSubjectTable"
+                          (limpiarDetalle)="limpiarDetalle($event)"
+                          [seccionProductoId]="seccionProductoSeleccionadaId"
+                        ></tabla>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-12">
+                <div class="row" style="margin-left: 10px">
+                  <div class="form-inline">
+                    <dx-button
+                      [disabled]="botonAgregarDeshabilitado"
+                      *ngIf="!esEdicion"
+                      text="Guardar"
+                      (click)="agregarProducto()"
+                      type="success"
+                    >
+                    </dx-button>
+                    <dx-button
+                      *ngIf="esEdicion"
+                      [disabled]="botonEditarDeshabilitado"
+                      text="Modificar"
+                      (click)="editarProducto()"
+                      type="success"
+                    >
+                    </dx-button>
+                    <dx-button
+                      text="Limpiar"
+                      type="danger"
+                      (onClick)="limpiarProducto()"
+                    >
+                    </dx-button>
+                  </div>
+                </div>
+              </div>
+            </form>
+            <div class="row" *ngIf="!esEdicion">
+              <div class="col-md-12 mt-25">
+                <label class="form-section-title boton-subir-csv">Importar desde CSV </label>
+                <dx-file-uploader
+                 #dxFile
+                  (onValueChanged)="inputExcelChanged(seccionTipo.TextArea)"
+                  selectButtonText="Subir archivo csv"
+                  accept=".csv"
+                  [multiple]="false"
+                  uploadUrl="{{ urlProcesarCsv }}"
+                  (onUploaded)="onUploadedCsv($event)"
+                  (onUploadError)="onUploadedErrorCsv($event)"
+                  [multiple]="false"
+                  uploadedMessage="Se ha subido exitosamente"
+                  uploadMode="useButtons"
+                  labelText="Subir o Soltar el archivo aquí"
+                >
+                </dx-file-uploader>
+              </div>
+            </div>
+            <div class="col-lg-12">
+              <div class="card">
+                <div class="card-content">
+                  <dx-data-grid
+                    [dataSource]="customStoreSeccionProductos"
+                    [remoteOperations]="true"
+                    [allowColumnReordering]="true"
+                    [allowColumnResizing]="true"
+                    keyExpr="id"
+                    #dataGridProductos
+                    [showBorders]="true"
+                    style="width: 100%"
+                  >
+                  <dxo-remote-operations [sorting]="true" [paging]="true" [filtering]="true" [grouping]="true"></dxo-remote-operations>
+                    <dxo-filter-row [visible]="true"></dxo-filter-row>
+                    <dxo-selection mode="single"></dxo-selection>
+                    <dxo-editing
+                      mode="cell"
+                      [allowUpdating]="true"
+                    ></dxo-editing>
+                    <dxo-paging [pageSize]="20"></dxo-paging>
+                    <dxo-pager
+                      [showPageSizeSelector]="true"
+                      [showInfo]="true"
+                      [visible]="true"
+                      [showNavigationButtons]="true"
+                    >
+                    </dxo-pager>
+                    <dxo-scrolling
+                      mode="standard"
+                      showScrollbar="always"
+                    ></dxo-scrolling>
+                    <dxo-selection mode="multiplex"></dxo-selection>
+                    <dxo-export
+                      [enabled]="true"
+                      fileName="SecciónProductos"
+                      [allowExportSelectedData]="true"
+                    ></dxo-export>
+                    <dxo-column-chooser
+                      [enabled]="true"
+                      mode="select"
+                    ></dxo-column-chooser>
+                    <dxi-column
+                      caption="Id"
+                      [formControlName]
+                      dataField="id"
+                      [allowEditing]="false"
+                      [width]="50"
+                    >
+                    </dxi-column>
+                    <dxi-column
+                      caption="Subsección"
+                      dataField="seccionDescripcion"
+                      [allowEditing]="false"
+                      [width]="350"
+                    >
+                    </dxi-column>
+                    <dxi-column
+                      caption="Código"
+                      dataField="productoId"
+                      [allowEditing]="false"
+                      [width]="120"
+                    >
+                    </dxi-column>
+                    <dxi-column
+                      caption="Producto"
+                      dataField="productoDescripcion"
+                      [allowEditing]="false"
+                      [groupIndex]="0"
+                      [autoExpandGroup]="true"
+                      [width]="300"
+
+                    >
+                    </dxi-column
+                    >¿
+                    <dxi-column
+                      caption="Usuario Agrega"
+                      dataField="usuarioAgregaId"
+                      [allowEditing]="false"
+                      [width]="100"
+                    >
+                    </dxi-column>
+                    <dxi-column
+                      caption="Usuario Modifica"
+                      dataField="usuarioModificaId"
+                      [allowEditing]="false"
+                      [width]="100"
+                    >
+                    </dxi-column>
+                    <dxi-column
+                      caption="Fecha Agrega"
+                      dataField="fechaAgrega"
+                      dataType="date"
+                      format="dd/MM/yyyy"
+                      [allowEditing]="false"
+                      [width]="90"
+                    >
+                    </dxi-column>
+                    <dxi-column
+                      caption="Fecha Modifica"
+                      dataField="fechaModifica"
+                      [allowEditing]="false"
+                      dataType="date"
+                      format="dd/MM/yyyy"
+                      [width]="90"
+                    ></dxi-column>
+                    <dxi-column
+                      caption="Acciones"
+                      cellTemplate="accionTemplate"
+                      [allowExporting]="false"
+                      [width]="100"
+                    >
+                    </dxi-column>
+                    <div *dxTemplate="let c of 'accionTemplate'">
+                      <div class="text-center">
+                        <button
+                          rel="tooltip"
+                          title="Desactivar"
+                          *ngIf="c.data.activo"
+                          type="button"
+                          (click)="inactivarProducto(c.data.id)"
+                          class="btn btn-grid btn-danger"
+                        >
+                          <i class="material-icons">arrow_downward</i>
+                        </button>
+                        <button
+                          rel="tooltip"
+                          title="Activar"
+                          *ngIf="!c.data.activo"
+                          (click)="activarProducto(c.data.id)"
+                          type="button"
+                          class="btn btn-grid btn-success"
+                        >
+                          <i class="material-icons">arrow_upward</i>
+                        </button>
+                        <button
+                          rel="tooltip"
+                          title="Editar"
+                          type="button"
+                          (click)="obtenerValoresParaActualizarProducto(c.data)"
+                          class="btn btn-grid btn-Azulsiman"
+                        >
+                          <em class="material-icons">mode_edit</em>
+                        </button>
+                      </div>
+                    </div>
+                  </dx-data-grid>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

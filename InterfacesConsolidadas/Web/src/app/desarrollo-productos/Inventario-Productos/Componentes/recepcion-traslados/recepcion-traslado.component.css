@@ -1,0 +1,8 @@
+::ng-deep .dx-data-row .cell-highlighted {
+  background-color: #e6e6e6;
+}
+
+::ng-deep .dx-header-row .cell-highlighted {
+  color: gray;
+  font-style: italic;
+}

@@ -1,0 +1,56 @@
+<dx-popup class="popup" [width]="540" [height]="520" [showTitle]="true" title='{{ editar == true ? "Editar Política":"Nueva Política" }}' [dragEnabled]="true"
+  [closeOnOutsideClick]="false" [(visible)]="visible"  [resizeEnabled]="true">
+  
+  <div *dxTemplate="let data of 'content'">
+    <dx-scroll-view #scrollViewContent id="scrollViewContent" scrollByContent="true" showScrollbar="always">
+      <form [formGroup]="PoliticaForm" class="horizontal-form">
+        <div class="row">
+
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Descripción:</label>
+              <dx-text-box formControlName="descripcion" required [maxLength]="300">
+                <dx-validator>
+                  <dxi-validation-rule type="required" message="Ingrese la descripción de la política"></dxi-validation-rule>
+                </dx-validator>
+              </dx-text-box>
+            </div>
+          </div>
+          <div class="col-md-6" >
+            <div class="form-group">
+              <label>Meses Acepta Vencidos:</label>
+              <dx-text-box formControlName="mesesVencidos" 
+              required mode= "number"
+              valueChangeEvent="change keyup"
+              (onValueChanged)= "meses($event)">
+                <dx-validator>
+                  <dxi-validation-rule type="required" message="Ingrese los meses que acepta vencidos"></dxi-validation-rule>
+                </dx-validator>
+                
+              </dx-text-box>
+              <label>{{IndicadorMeses}}</label>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group is-empty">
+              <label class="control-label ">Distribuidor</label>
+              <dx-lookup [dataSource]="Distibuidores" [closeOnOutsideClick]="true" required displayExpr="nombre" valueExpr="identificador" title="Distribuidor"
+                placeholder="Seleccione un distribuidor" [showClearButton]="true" [(value)]="EtiquetaId">
+              </dx-lookup>
+            </div>
+          </div>
+        </div>
+
+        <div class="btn-contenedor">
+          <div class="btn-item">
+            <dx-button *ngIf="editar === false" text="Guardar" [useSubmitBehavior]="false" type="default" (onClick)="guardar()">
+            </dx-button>
+            <dx-button *ngIf="editar === true" text="Editar" [useSubmitBehavior]="false" type="default" (onClick)="editarPolitica()">
+            </dx-button>
+          </div>
+        </div>
+      </form>
+    </dx-scroll-view>
+  </div>
+
+</dx-popup>

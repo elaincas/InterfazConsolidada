@@ -1,0 +1,52 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="card">
+      <div class="card-header card-header-text" data-background-color="red">
+        <h4 class="card-title">Ingresar Productos</h4>
+      </div>
+      <div class="card-content">
+        <form [formGroup]="formIngresos">
+          <div class="row">
+          <div class="col-md-6">
+                  <label class="control-label ">Distribuidor</label>
+                  <dx-lookup [dataSource]="dataSourceDistribuidores" [closeOnOutsideClick]="true"  displayExpr="Nombre" valueExpr="DistribuidorId" title="Distribuidor"
+                  placeholder="Seleccione un distribuidor"   [(value)]="ingresoEncabezado.DistribuidorId">
+                </dx-lookup>
+            </div>
+            <div class="col-md-6">
+                  <label class="control-label " for="NoDocumento">No. Documento:</label>
+                  <dx-text-box   class="form-control" type="text" formControlName="NoDocumento"></dx-text-box>
+              </div>
+            </div>
+          <div class="row">
+            <div class="col-md-6">
+                  <label class="control-label">Finalidad</label>
+                  <dx-select-box [dataSource]="finalidades" displayExpr="FinalidadInventarioDescripcion" valueExpr="FinalidadInventarioId" [(value)]="ingresoEncabezado.FinalidadInventarioId"></dx-select-box>
+            </div>
+            <div class="col-md-6">
+                  <label class="control-label" for="Observaciones">Observaciones:</label>
+                  <dx-text-box id="Observaciones" class="form-control" type="text" formControlName="Observaciones"></dx-text-box>
+
+            </div>
+          </div>
+
+      </form>
+      <div class="row">
+        <br>
+        <div class="col-md-5">
+          <dx-file-uploader #ImagenAgregar  selectButtonText="Seleccionar" labelText="o arrastrar la imagen"
+          accept=".png,.JPG" uploadMode="useform" type="default" allowCanceling="true" uploadButtonText=""
+          readyToUploadMessage="Listo para subir" (onValueChanged)="ObtenerImagenSeleccionadoDxFileUploader($event)"
+          (onOptionChanged)="QuitarImagen($event)">
+        </dx-file-uploader>
+        <img  *ngIf="fileDataUri"[src]="fileDataUri" style="max-height: 350px; max-width: 350px;">
+        </div>
+      </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container-fluid">
+    <app-tabla-agregar-productos #TablaAgregar (onIngresar)="onIngresar($event)"></app-tabla-agregar-productos>
+  </div>
+</div>

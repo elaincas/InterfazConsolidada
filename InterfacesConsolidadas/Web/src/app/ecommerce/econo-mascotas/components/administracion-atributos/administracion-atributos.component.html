@@ -1,0 +1,143 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-icon" data-background-color="green">
+            <i class="material-icons">360</i>
+          </div>
+          <div class="card-content">
+            <h4 class="card-title">
+              <strong>Administrar Atributos Productos</strong>
+            </h4>
+            <form [formGroup]="formGroupAtributo">
+              <div class="row">
+                <div class="col-lg-offset-1 col-lg-10 col-md-10 col-sm-12 col-xs-12">
+                  <div class="row">
+                    <div class="col-md-6" style="margin-top: 20px;">
+                      <span class="labelsFormularios">Producto:</span>
+                    </div>
+                  </div>
+                  <div class="row">
+                     <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
+
+                      <dx-lookup class="field-customization" noDataText="No se encontraron productos." searchPlaceholder="Ingrese el código o descripción del producto"
+                      [(value)]="producto_seleccionado" valueExpr="productoId" searchExpr="descripcion" displayExpr="descripcion" [(dataSource)]="dataSourceProductos" formControlName="productoId"
+                      placeholder="Seleccione un producto" itemTemplate="item">
+                      <div *dxTemplate="let item of 'item'">
+                        <div class="custom-field">
+                          {{item.productoId}} - {{item.descripcion}}
+                        </div>
+                      </div>
+                    </dx-lookup>
+
+                    </div>
+
+                  </div>
+                  <br>
+
+                  <div class="row">
+                    <div class="col-md-6" style="margin-top: 20px;">
+                      <span class="labelsFormularios">Atributo:</span>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
+                      <dx-lookup #dropDowndistribuidor displayExpr="descripcion" valueExpr="id"
+                        placeholder="Select un Atributo" [showClearButton]="true" [dataSource]="_productoAtributos"
+                        closeOnOutsideClick="true" name="dropDownAtributo"
+                        (onValueChanged)="onValueChanged($event)" formControlName="productoAtributoId">
+                      </dx-lookup>
+                    </div>
+
+                  </div>
+                  <br>
+                  <div class="row">
+                    <div class="col-md-6" style="margin-top: 20px;">
+                      <span class="labelsFormularios">Atributo Valor:</span>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
+                      <dx-lookup #dropDownAtributoValor displayExpr="descripcion" valueExpr="id"
+                        placeholder="Select un Atributo Valor" [showClearButton]="true" [dataSource]="_productoAtributosValor"
+                        closeOnOutsideClick="true" name="dropDownAtributoValor"  (onValueChanged)="onValueChangedValor($event)"
+                        formControlName="productoAtributoValorId">
+                      </dx-lookup>
+                    </div>
+
+                  </div>
+                  <br>
+                  <div class="row">
+                    <div class="col-md-6" style="margin-top: 20px;">
+                      <span class="labelsFormularios">Valor:</span>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
+                      <dx-text-box placeholder="Valor..." formControlName="valor">
+                      </dx-text-box>
+                    </div>
+                  </div>
+                  <br><h5>O suba un archivo de excel</h5>
+                  <hr class="hr-color">
+                  <div class="row">
+                    <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
+                      <div class="row" style="float: right;">
+                        <div class="col-md-6">
+                          <dx-file-uploader #fileExcel selectButtonText="Selecciona" labelText="o arraste aqui"
+                            [multiple]="false" [showFileList]="true" uploadMode="useForm"
+                            (onValueChanged)="uploadExcel($event)">
+                          </dx-file-uploader>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                    <div class="row">
+                      <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
+                        <div class="row" style="float: right;">
+                          <dx-button icon="fa fa-plus-circle" type="success" text="Guardar"
+                            [disabled]="!formGroupAtributo.valid && !_excelLoad" (onClick)="GuardarProductoDetalle()">
+                          </dx-button>
+                          <dx-button icon="fa fa-eraser" type="danger" text="Limpiar"
+                            (onClick)="limpiar()">
+                        </dx-button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+            </form>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-content">
+            <dx-data-grid [dataSource]="_productosGrid"  [showColumnLines]="true" [showRowLines]="true"
+            [showBorders]="true" [columnAutoWidth]="true" [rowAlternationEnabled]="true" keyExpr="productoId"
+            [masterDetail]="{ enabled: true, template: 'detail'}"  (onRowExpanding)="onRowExpanding($event)"
+            >
+            <dxo-filter-row [visible]="true"> </dxo-filter-row>
+            <dxo-header-filter [visible]="true"></dxo-header-filter>
+            <dxi-column dataField="productoId" caption="Cod Prod.">
+            </dxi-column>
+            <dxi-column dataField="descripcion" caption="Nombre Prod.">
+            </dxi-column>
+
+            <dxo-master-detail [enabled]="true" template="detail"></dxo-master-detail>
+            <div *dxTemplate="let producto of 'detail'">
+
+             <app-detail-grid [key]="producto.key" ></app-detail-grid>
+            </div>
+          </dx-data-grid>
+          </div>
+        </div>
+        </div>
+    </div>
+  </div>
+</div>

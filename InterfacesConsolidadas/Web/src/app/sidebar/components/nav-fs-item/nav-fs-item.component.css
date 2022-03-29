@@ -1,0 +1,78 @@
+
+.navFs, .navFs-subMenu{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+
+.navFs-item-link{
+  display: block;
+  display: block;
+  padding: 10px 20px;
+  transition: all 200ms;
+}
+
+.navFs-item-link{
+  display: block;
+  display: block;
+  padding: 10px 20px;
+  transition: all 200ms;
+  color: #304ffe;
+  position: relative;
+}
+
+
+.navFs-item-link .caret{
+  position: absolute;
+  top: 42%;
+  right: 20px;
+  transform: rotate(90deg);
+}
+
+.navFs-item-link__expanded .caret{
+  transform: rotate(0deg);
+}
+
+.navFs-item-link:hover, .navFs-item-link__active{
+  background: rgb(0, 88, 168);
+  color: white;
+}
+
+.navFs-item-link-icon{
+  width: 30px;
+  line-height: 30px;
+  height: 30px;
+}
+
+.navFs-subMenu-item-link{
+  padding: 10px 20px 10px 35px;
+}
+
+.navFs-subMenu{
+  transition: all 200ms;
+}
+
+.navFs-subMenu{
+  overflow: hidden;
+  height: 0;
+}
+
+.navFs-subMenu__expanded{
+  height: auto;
+  background: rgb(238, 245, 249);
+}
+
+.navFs-item-link-icon__span{
+  float: left;
+}
+
+.navFs-item-link-text__span{
+  display: inline-block;
+  height: 30px;
+  line-height: 30px;
+}
+
+.fa {
+  font-size: 24px !important;
+}

@@ -1,0 +1,116 @@
+<div class="row">
+  <dx-form>
+    <dxi-item itemType="group" [colCount]="12">
+      <dxi-item itemType="group" [colSpan]="11">
+        <dx-drop-down-box
+          #item
+          [(value)]="gridBoxValue"
+          [displayExpr]="GetDisplayExpr"
+          valueExpr="id"
+          placeholder="Seleccione un parámetro..."
+          [showClearButton]="true"
+          [dataSource]="parametros"
+        >
+          <div *dxTemplate="let data of 'content'">
+            <dx-data-grid
+              [wordWrapEnabled]="true"
+              [scrolling]="{ mode: 'infinite' }"
+              [dataSource]="parametros"
+              [selection]="{ mode: 'single' }"
+              [hoverStateEnabled]="true"
+              [filterRow]="{ visible: true }"
+              [height]="400"
+              [(selectedRowKeys)]="gridBoxValueSelect"
+              [masterDetail]="{ enabled: true, template: 'rangosTemplate' }"
+            >
+              <dxo-search-panel [visible]="true"></dxo-search-panel>
+              <dxi-column dataField="id" caption="Id" [width]="80">
+              </dxi-column>
+              <dxi-column dataField="nombre" caption="Nombre"> </dxi-column>
+              <dxi-column dataField="descripcion" caption="Descripción">
+              </dxi-column>
+              <dxi-column
+                dataField="unidadDeMedida.nombre"
+                caption="Unidad Medida"
+              >
+              </dxi-column>
+              <dxi-column
+                dataField="resultadoTipo.descripcion"
+                caption="Tipo Resultado"
+              >
+              </dxi-column>
+
+              <div *dxTemplate="let rango of 'rangosTemplate'">
+                <h4>Rangos</h4>
+                <dx-data-grid
+                  [dataSource]="rango.data.parametroRangos"
+                  [columns]="[
+                    { dataField: 'descripcion', caption: 'Descripción' },
+                    {dataField:'valorMinimo',caption:'Valor Mínimo'},
+
+                    {dataField:'valorMaximo',caption:'Valor Mínimo'},
+                    {dataField:'edadMinima',caption:'Edad Mínima'},
+                    {dataField:'edadMaxima',caption:'Edad Máxima'},
+                    {dataField:'parametroGrupo.nombre',caption:'Grupo'},
+                    {dataField:'nivelResultado.descripcion',caption:'Nivel Resultado'}
+                  ]"
+                  [selection]="{ mode: 'single' }"
+                  [hoverStateEnabled]="true"
+                  [paging]="{ enabled: true, pageSize: 30 }"
+                  [filterRow]="{ visible: true }"
+                  [scrolling]="{ mode: 'infinite' }"
+                  height="100%"
+                >
+                </dx-data-grid>
+              </div>
+            </dx-data-grid>
+          </div>
+        </dx-drop-down-box>
+      </dxi-item>
+      <dxi-item itemType="group" [colSpan]="1">
+        <dx-button
+          (click)="Validar(item.value)"
+          class="btn-Azulsiman"
+          text="Agregar"
+        ></dx-button>
+      </dxi-item>
+    </dxi-item>
+  </dx-form>
+</div>
+<div class="row" style="margin-top: 50px">
+  <div class="col-md-12">
+    <dx-data-grid
+      [rowAlternationEnabled]="true"
+      [dataSource]="analisisParametros"
+      showBorders="true"
+    >
+      <dxo-filter-row [visible]="true"> </dxo-filter-row>
+      <dxi-column
+        caption="Código Parámetro"
+        dataField="parametro.id"
+        [width]="200"
+      ></dxi-column>
+      <dxi-column caption="Nombre" dataField="parametro.nombre"></dxi-column>
+      <dxi-column
+        caption="Descripción"
+        dataField="parametro.descripcion"
+      ></dxi-column>
+      <dxi-column
+        caption="Acción"
+        cellTemplate="accionTemplate"
+        [width]="100"
+      ></dxi-column>
+
+      <div *dxTemplate="let d of 'accionTemplate'">
+        <button
+          rel="tooltip"
+          (click)="EliminarParametro(d.data)"
+          type="button"
+          class="btn btn-grid btn-danger"
+        >
+          <i class="material-icons">delete</i>
+        </button>
+      </div>
+    </dx-data-grid>
+  </div>
+</div>

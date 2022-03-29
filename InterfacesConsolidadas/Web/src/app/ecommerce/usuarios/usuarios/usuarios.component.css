@@ -1,0 +1,14 @@
+.btn-search{
+  padding: 10px;
+}
+
+.btn-search i{
+  font-size: 25px;
+}
+
+.form-group__checkbox {
+  height: 55px;
+    align-items: center;
+    display: flex;
+    margin-top: 40px;
+}

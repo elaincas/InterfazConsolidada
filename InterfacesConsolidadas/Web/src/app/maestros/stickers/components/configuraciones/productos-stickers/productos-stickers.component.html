@@ -1,0 +1,312 @@
+<h4 class="h4 mb-10">
+  Productos en los cuales se Regalará el Sticker {{ nombreSticker }}:
+</h4>
+
+<dx-form
+  #frmConfiguracionSticker
+  id="form"
+  [formData]="formDataStickersProductos"
+  labelLocation="top"
+  validationGroup="validarStickerProducto"
+  [showValidationSummary]="false"
+>
+  <dxi-item itemType="group" [colCount]="12">
+    <dxi-item
+      dataField="productoId"
+      [label]="{ text: 'Producto' }"
+      [colSpan]="6"
+    >
+      <product-lookup
+        #lookupProductos
+        id="lookupProductos"
+        class="producto-lookup"
+        [product]="producto"
+        [esProductoValido]="productoValido"
+        [esReadonly]="elProductoEsReadonly"
+        [esPrimeraCargaRequerida]="false"
+        [productosEdit]="productosEdit"
+        [mostrarBotonLimpiar]="true"
+        (onProductoLimpiado)="onProductoLimpiado($event)"
+        (onProductoSeleccionado)="onProductoSeleccionado($event)"
+      >
+      </product-lookup>
+      <div
+        *ngIf="mostrarMensajeProductoValido && !productoValido"
+        class="dx-invalid-message"
+        style="z-index: 1504; position: absolute"
+      >
+        <div
+          class="dx-overlay-content dx-resizable"
+          style="
+            width: auto;
+            height: auto;
+            z-index: 1504;
+            margin: 0px;
+            left: 0px;
+            top: 0px;
+            transform: translate(-1px, 1px);
+            max-width: 486px;
+          "
+        >
+          {{ mensaje.productoRequerido }}
+        </div>
+      </div>
+    </dxi-item>
+    <dxi-item
+      [label]="{ text: 'Cantidad de Productos Requerida' }"
+      dataField="cantidadNecesaria"
+      editorType="dxNumberBox"
+      [colSpan]="3"
+      #cantidadRequerida
+      [editorOptions]="{
+        min: 0.01
+      }"
+    >
+      <dxi-validation-rule
+        type="required"
+        [message]="mensaje.MSCS004"
+      ></dxi-validation-rule>
+    </dxi-item>
+  </dxi-item>
+  <dxi-item itemType="group" [colCount]="12">
+    <dxi-item
+      [label]="{ text: 'Cantidad de Stickers a Regalar' }"
+      dataField="cantidadRegala"
+      editorType="dxNumberBox"
+      [colSpan]="3"
+      #cantidadRegala
+      [editorOptions]="{
+        min: 0.01
+      }"
+    >
+      <dxi-validation-rule
+        type="custom"
+        [validationCallback]="verificarCantidadRegala"
+        [message]="mensaje.MSCS005"
+      ></dxi-validation-rule>
+    </dxi-item>
+    <dxi-item
+      dataField="activo"
+      editorType="dxCheckBox"
+      [label]="{ text: 'Activo' }"
+      [colSpan]="1"
+      [editorOptions]="{
+        readOnly: readOnlyAgregar
+      }"
+    ></dxi-item>
+  </dxi-item>
+</dx-form>
+<dx-tooltip
+  showEvent="mouseenter"
+  hideEvent="mouseleave"
+  target="label[for*='productoId']"
+>
+  <div *dxTemplate="let data = data; of: 'content'">
+    Producto que comprará el cliente para ganar el sticker {{ nombreSticker }}.
+  </div>
+</dx-tooltip>
+<dx-tooltip
+  showEvent="mouseenter"
+  hideEvent="mouseleave"
+  target="label[for*='cantidadNecesaria']"
+>
+  <div *dxTemplate="let data = data; of: 'content'">
+    Cantidad de productos necesaria para ganar el sticker {{ nombreSticker }}.
+  </div>
+</dx-tooltip>
+<dx-tooltip
+  showEvent="mouseenter"
+  hideEvent="mouseleave"
+  target="label[for*='cantidadRegala']"
+>
+  <div *dxTemplate="let data = data; of: 'content'">
+    {{ tooltipCantidadDeStickersARegalar }}
+  </div>
+</dx-tooltip>
+<dx-tooltip
+  showEvent="mouseenter"
+  hideEvent="mouseleave"
+  target="label[for*='activo']"
+>
+  <div *dxTemplate="let data = data; of: 'content'">¿Es registro Activo?</div>
+</dx-tooltip>
+<div class="row mt-10">
+  <div class="form-inline ml-15">
+    <dx-button
+      [disabled]="readOnlyAgregar"
+      *ngIf="modo == formsModo.Modo.Agregar"
+      text="Agregar"
+      [useSubmitBehavior]="true"
+      validationGroup="validarStickerProducto"
+      (onClick)="agregar($event)"
+      type="success"
+    >
+    </dx-button>
+    <dx-button
+      [disabled]="readOnlyAgregar"
+      *ngIf="modo == formsModo.Modo.Actualizar"
+      text="Editar"
+      [useSubmitBehavior]="true"
+      validationGroup="validarStickerProducto"
+      (onClick)="editar($event)"
+      type="success"
+    >
+    </dx-button>
+    <dx-button text="Limpiar" type="danger" (onClick)="limpiar()"> </dx-button>
+  </div>
+</div>
+<dx-data-grid
+  #productosStickersDataGrid
+  [showBorders]="true"
+  [rowAlternationEnabled]="true"
+  [dataSource]="productosStickers"
+  [columnAutoWidth]="true"
+  [columnHidingEnabled]="true"
+  [allowColumnResizing]="true"
+  columnResizingMode="columnResizingMode"
+>
+  <dxo-load-panel [enabled]="true" text="Cargando Información"></dxo-load-panel>
+
+  <dxo-paging [pageSize]="10"> </dxo-paging>
+  <dxo-pager
+    [showPageSizeSelector]="true"
+    [allowedPageSizes]="[10, 25, 50, 100]"
+    [showInfo]="true"
+  ></dxo-pager>
+  <dxo-editing>
+    <dxo-texts
+      [deleteRow]="'Eliminar'"
+      [confirmDeleteTitle]="'Eliminar Fila'"
+      [confirmDeleteMessage]="'¿Estás seguro que deseas eliminar esta fila?'"
+    >
+    </dxo-texts>
+  </dxo-editing>
+
+  <dxo-filter-row [visible]="true"> </dxo-filter-row>
+
+  <dxo-header-filter [visible]="true"></dxo-header-filter>
+  <dxo-search-panel
+    [visible]="true"
+    [width]="240"
+    placeholder="Buscar..."
+  ></dxo-search-panel>
+
+  <dxi-column
+    caption="Id"
+    [visible]="modo === formsModo.Modo.Actualizar"
+    [allowEditing]="false"
+    dataField="id"
+    [width]="60"
+  >
+  </dxi-column>
+
+  <dxi-column
+    caption="Producto"
+    [allowEditing]="false"
+    dataField="productoId"
+    [width]="100"
+  >
+  </dxi-column>
+  <dxi-column
+    caption="Producto"
+    [allowEditing]="false"
+    dataField="descripcionProducto"
+    [width]="250"
+  >
+  </dxi-column>
+  <dxi-column
+    caption="Cantidad Productos Requerida"
+    [allowEditing]="false"
+    dataField="cantidadNecesaria"
+    [width]="220"
+  >
+  </dxi-column>
+  <dxi-column
+    caption="Cantidad Stickers Regala"
+    [allowEditing]="false"
+    dataField="cantidadRegala"
+    [width]="200"
+  >
+  </dxi-column>
+  <dxi-column
+    caption="Usuario Agrega"
+    [allowEditing]="false"
+    dataField="usuarioAgregaId"
+    [hidingPriority]="0"
+    [width]="130"
+  >
+  </dxi-column>
+  <dxi-column
+    caption="Fecha Agrega"
+    dataField="fechaAgrega"
+    [hidingPriority]="1"
+    dataType="date"
+    format="dd/MM/yyyy"
+    [allowEditing]="false"
+    [width]="120"
+  >
+  </dxi-column>
+  <dxi-column
+    caption="Usuario Modifica"
+    dataField="usuarioModificaId"
+    [allowEditing]="false"
+    [hidingPriority]="2"
+    [width]="150"
+  >
+  </dxi-column>
+  <dxi-column
+    caption="Fecha Modifica"
+    dataField="fechaModifica"
+    [allowEditing]="false"
+    [hidingPriority]="3"
+    dataType="date"
+    format="dd/MM/yyyy"
+    [width]="120"
+  >
+  </dxi-column>
+  <dxi-column caption="Activo" dataField="activo" [width]="100"> </dxi-column>
+  <dxi-column caption="Acciones" cellTemplate="accionTemplate" [width]="100">
+  </dxi-column>
+  <div *dxTemplate="let accion of 'accionTemplate'">
+    <button
+      rel="tooltip"
+      title="Desactivar"
+      *ngIf="accion.data.activo && accion.data.id"
+      type="button"
+      (click)="inactivar(accion.data.id)"
+      class="btn btn-grid btn-danger"
+    >
+      <i class="material-icons">arrow_downward</i>
+    </button>
+    <button
+      rel="tooltip"
+      title="Activar"
+      *ngIf="!accion.data.activo && accion.data.id"
+      (click)="activar(accion.data.id)"
+      type="button"
+      class="btn btn-grid btn-success"
+    >
+      <i class="material-icons">arrow_upward</i>
+    </button>
+    <button
+      rel="tooltip"
+      title="Editar"
+      type="button"
+      *ngIf="accion.data.id"
+      (click)="obtenerValoresParaActualizar(accion.data)"
+      class="btn btn-grid btn-Azulsiman"
+    >
+      <em class="material-icons">mode_edit</em>
+    </button>
+    <button
+      rel="tooltip"
+      title="Eliminar"
+      type="button"
+      *ngIf="!accion.data.id"
+      (click)="removerRow(accion)"
+      class="btn btn-grid btn-danger"
+    >
+      <em class="material-icons">delete</em>
+    </button>
+  </div>
+</dx-data-grid>

@@ -1,0 +1,141 @@
+<!-- <app-main-loader></app-main-loader> -->
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-icon" data-background-color="green">
+                        <i class="material-icons">panorama</i>
+                    </div>
+                    <div class="card-content">
+                        <h4 class="card-title">Auxiliar Productos Remotos</h4>
+                    </div>
+                    <div class="card-content">
+
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <span class="labelsFormularios">Sucursal:</span>
+                                        <dx-select-box #lueSucursal [dataSource]="sucursales" displayExpr="nombreCorto"
+                                            valueExpr="codigo" title="Seleccione una Sucursal"
+                                            [(ngModel)]="filtro.sucursalId" [searchEnabled]="true"
+                                            placeholder="Seleccione la Sucursal"
+                                            (onValueChanged)="ObtenerDataSucursal()">
+                                        </dx-select-box>
+                                    </div>
+
+                                </div>
+                                <br>
+                                <div class="row">
+
+                                    <div class="col-md-6">
+
+                                        <span class="labelsFormularios">Producto:</span>
+                                        <dx-select-box #lueProducto [dataSource]="productos"
+                                            displayExpr="productoDescripcion" valueExpr="productoId"
+                                            title="Seleccione un Producto"
+                                            [(ngModel)]="filtro.productoId" [searchEnabled]="true"
+                                            placeholder="Seleccione un producto"
+                                            >
+                                        </dx-select-box>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label for=""> Fecha Desde</label>
+                                                <dx-date-box [(ngModel)]="filtro.fechaDesde" type="date"
+                                                    [showClearButton]="true">
+                                                </dx-date-box>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for=""> Fecha Hasta</label>
+                                                <dx-date-box [(ngModel)]="filtro.fechaHasta" type="date"
+                                                    [showClearButton]="true">
+                                                </dx-date-box>
+                                            </div>
+                                           
+                                        </div>
+                                        <br>
+                                        <div style="float:right">
+                                            <dx-button type="success" (onClick)="Buscar()"
+                                                type="default" text="Buscar">
+                                            </dx-button>
+                                        </div>
+                                    </div>
+
+                                  
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <dx-data-grid [rowAlternationEnabled]="true" [dataSource]="transacciones">
+                                        <dxi-column caption="Cod Traslado" dataField="id">
+                                        </dxi-column>
+                                        <dxi-column caption="Cod.Prod." dataField="productoId"> </dxi-column>
+                                        <dxi-column caption="Descripcion" dataField="productoId">
+                                            <dxo-lookup [dataSource]="productos" valueExpr="productoId"
+                                                displayExpr="productoDescripcion">
+                                            </dxo-lookup>
+                                        </dxi-column>
+                                        <dxi-column caption="Cantidad Enviada" dataField="cantidadEnviada">
+                                        </dxi-column>
+                                        <dxi-column caption="Fecha" [hidingPriority]="0" dataField="fecha"  cellTemplate="dateCell">
+                                        </dxi-column>
+                                        <dxi-column caption="Usuario" [hidingPriority]="1" dataField="usuario">
+                                        </dxi-column>
+                                        <dxi-column caption="Estado" dataField="estado">
+                                        </dxi-column>
+                                        <dxi-column caption="Sucursal Envía" dataField="sucursalEnvia">
+                                        </dxi-column>
+                                        <dxi-column caption="Cant. Factura / Restante" dataField="cantidadFR">
+                                        </dxi-column>
+                                        <dxi-column caption="Cant. Disponible" dataField="cantidadDisponible">
+                                        </dxi-column>
+                                        <dxi-column caption="Observaciones" [hidingPriority]="3" dataField="observaciones">
+                                        </dxi-column>
+
+
+                                        <dxi-column caption="Acciones" cellTemplate="accionTemplate" [width]="70">
+                                        </dxi-column>
+                                        <dxo-paging [pageSize]="15" [pageIndex]="0"></dxo-paging>
+                                        <div *dxTemplate="let cellData of 'dateCell'">
+                                            {{cellData.value | date: 'dd/MM/yyyy'}}
+                                        </div>
+                                        <div *dxTemplate="let d of 'accionTemplate'">
+                                            <button rel="tooltip" title="Aceptar" *ngIf="d.data.estadoId==1"
+                                                (click)="AceptarTraslado(d.data)"
+                                                type="button" class="btn btn-grid  ">
+                                                <i class="material-icons">check</i>
+                                            </button>
+                                            <button rel="tooltip" title="Denegar" *ngIf="d.data.estadoId==1"
+                                                (click)="Denegar(d.data)"
+                                                type="button" class="btn btn-grid btn-danger ">
+                                                <i class="material-icons">close</i>
+                                            </button>
+                                        </div>
+                                    </dx-data-grid>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <br>
+
+
+
+
+
+
+    </div>
+    <br>
+</div>

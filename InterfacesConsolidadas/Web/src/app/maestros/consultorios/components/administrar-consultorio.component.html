@@ -1,0 +1,213 @@
+<!-- <app-main-loader></app-main-loader> -->
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-icon" data-background-color="green">
+                        <i class="material-icons">add_shopping_cart</i>
+                    </div>
+                    <div class="card-content">
+                        <h4 class="card-title">
+                            <strong>Consultorios</strong>
+                        </h4>
+                        <!-- <form class="form-horizontal" #frm> -->
+                        <div class="col-lg-offset-1 col-lg-11 col-md-11 col-sm-11 col-xs-11">
+                            <div class="row">
+                                <br />
+                                <div class="col-md-7">
+
+                                    <span class="labelsFormularios">Nombre Consultorio: </span>
+                                    <dx-text-box [(ngModel)]="consultorio.Nombre" placeholder="Nombre Consultorio"
+                                        [disabled]="desactivarCampoConsultorio"></dx-text-box>
+
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-lg-7 col-md-7 col-sm-7 col-xs-7">
+                                    <span class="labelsFormularios">Dirección:</span>
+                                    <dx-text-box [(ngModel)]="consultorio.Direccion" placeholder="Dirección Consultorio"
+                                        [disabled]="desactivarCampoConsultorio"></dx-text-box>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-lg-7 col-md-7 col-sm-7 col-xs-7">
+                                    <div class="row">
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                            <span class="labelsFormularios">Nombre Médico:</span>
+                                            <dx-text-box [(ngModel)]="consultorio.Medico" placeholder="Nombre Medico"
+                                                [disabled]="desactivarCampoConsultorio"></dx-text-box>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                            <span class="labelsFormularios">Especialidad: </span>
+                                            <dx-text-box [(ngModel)]="consultorio.Especialidad"
+                                                placeholder="Especialidad" [disabled]="desactivarCampoConsultorio">
+                                            </dx-text-box>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-lg-7 col-md-7 col-sm-7 col-xs-7">
+                                    <div class="row">
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                            <span class="labelsFormularios">Email: </span>
+                                            <dx-text-box [(ngModel)]="consultorio.Email"
+                                                placeholder="Correo Electrónico"
+                                                [disabled]="desactivarCampoConsultorio"></dx-text-box>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                            <span class="labelsFormularios">Teléfono:</span>
+                                            <dx-text-box [(ngModel)]="consultorio.Telefono" placeholder="Teléfono"
+                                                [disabled]="desactivarCampoConsultorio"></dx-text-box>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-lg-7 col-md-7 col-sm-7 col-xs-7">
+                                    <div class="row">
+                                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                                            <span class="labelsFormularios">Horario Lunes-Viernes:</span>
+                                            <dx-text-box [(ngModel)]="consultorio.HorarioLunesViernes"  placeholder="7:30 am - 5:30 pm"
+                                                [disabled]="desactivarCampoConsultorio"></dx-text-box>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                                            <span class="labelsFormularios">Horario Sábado :</span>
+                                            <dx-text-box [(ngModel)]="consultorio.HorarioSabado" placeholder="7:30 am - 5:30 pm"
+                                                [disabled]="desactivarCampoConsultorio"></dx-text-box>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                                            <span class="labelsFormularios">Horario Domingo :</span>
+                                            <dx-text-box [(ngModel)]="consultorio.HorarioDomingo" placeholder="7:30 am - 5:30 pm"
+                                                [disabled]="desactivarCampoConsultorio"></dx-text-box>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="row">
+                                <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5" style="float:right">
+                                    <dx-button icon="save" type="success" text="Guardar"
+                                        (onClick)="IngresarConsultorio()">
+                                    </dx-button>
+                                    <dx-button icon="check" type="default" text="Limpiar" (onClick)="Limpiar()">
+                                    </dx-button>
+                                </div>
+                            </div>
+                            <br>
+
+                            <dx-data-grid [dataSource]="consultorios" [showColumnLines]="true" [showRowLines]="true"
+                                [showBorders]="true" [columnAutoWidth]="true" [rowAlternationEnabled]="true">
+                                <dxo-filter-row [visible]="true"> </dxo-filter-row>
+                                <dxo-header-filter [visible]="true"></dxo-header-filter>
+                                <dxi-column caption="Nombre" dataField="nombre"> </dxi-column>
+                                <dxi-column dataField="medico" caption="Médico"></dxi-column>
+                                <dxi-column dataField="especialidad" caption="Especialidad"> </dxi-column>
+                                <dxi-column dataField="email" caption="Email"></dxi-column>
+                                <dxi-column caption="Teléfono" dataField="telefono"> </dxi-column>
+                                <dxi-column caption="Acciones" cellTemplate="accionTemplate" [width]="120">
+                                </dxi-column>
+                                <div *dxTemplate="let cellData of 'dateCell'">
+                                    {{cellData.value | date: 'dd/MM/yyyy'}}
+                                </div>
+                                <div *dxTemplate="let d of 'accionTemplate'">
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <button rel="tooltip" title="Mostrar Medicos"
+                                                (click)="MostrarMedicos(d.data)" type="button" class="btn btn-grid  ">
+                                                <i class="material-icons">group_add</i>
+                                            </button>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <button rel="tooltip" title="Editar" (click)="EditarConsultorio(d.data)"
+                                                type="button" class="btn btn-grid  ">
+                                                <i class="material-icons">edit</i>
+                                            </button>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <button rel="tooltip" title="Eliminar" (click)="EliminarConsultorio(d.data)"
+                                                type="button" class="btn btn-grid  ">
+                                                <i class="material-icons">delete</i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <dxo-scrolling mode="virtual"></dxo-scrolling>
+                            </dx-data-grid>
+
+                            <!-- </form> -->
+                        </div>
+
+                        <dx-popup class="popup" id="popupMedicoConsultorio" [width]="450" [height]="460"
+                            [showTitle]="true" ng-controller="Ctrl" title="Medicos Por Consultorio"
+                            [dragEnabled]="false" [closeOnOutsideClick]="true" [(visible)]="_mostrarPopup"
+                            [resizeEnabled]="true">
+                            <div *dxTemplate="let data of 'content'">
+                                <span>Consultorio : {{nombreConsultorioPopup}}</span>
+
+                                <div class="row ">
+                                    <div class="col-md-10">
+                                        <dx-lookup [dataSource]="medicos" [closeOnOutsideClick]="true"
+                                            displayExpr="nombre" valueExpr="id" [(ngModel)]="consultorioMedico.MedicoId"
+                                            title="Seleccione un Médico" placeholder="Seleccione un Médico">
+                                        </dx-lookup>
+                                    </div>
+                                </div>
+                                <br />
+                                <dx-data-grid [dataSource]="consultorioMedicos" [showColumnLines]="true"
+                                    [showRowLines]="true" [showBorders]="true" [columnAutoWidth]="true"
+                                    [rowAlternationEnabled]="true">
+                                    <dxo-filter-row [visible]="true"> </dxo-filter-row>
+                                    <dxo-header-filter [visible]="true"></dxo-header-filter>
+                                    <dxi-column dataField="medicoId" caption="Medico">
+                                        <dxo-lookup [dataSource]="medicos" closeOnOutsideClick="true"
+                                            showPopupTitle="false" displayExpr="nombre" valueExpr="id">
+                                        </dxo-lookup>
+                                    </dxi-column>
+                                    <dxi-column caption="Acciones" cellTemplate="accionTemplate" [width]="120">
+                                    </dxi-column>
+                                    <div *dxTemplate="let cellData of 'dateCell'">
+                                        {{cellData.value | date: 'dd/MM/yyyy'}}
+                                    </div>
+                                    <div *dxTemplate="let d of 'accionTemplate'">
+                                        <div class="row">
+                                            <div class="col-md-2">
+                                                <button rel="tooltip" title="Eliminar" (click)="EliminarMedico(d.data)"
+                                                    type="button" class="btn btn-grid  ">
+                                                    <i class="material-icons">delete</i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <dxo-scrolling mode="virtual"></dxo-scrolling>
+                                </dx-data-grid>
+                                <div class=" col-md-5" style="margin-top:3%">
+                                    <dx-button icon="save" text="Guardar" type="success" style="float:right"
+                                        (onClick)="AgregarMedico()">
+                                    </dx-button>
+                                </div>
+                                <div class="col-md-5" style="margin-top:3%">
+                                    <dx-button icon="remove" text="Cancelar" type="default" style="float:right"
+                                        (onClick)="Salir()">
+                                    </dx-button>
+                                </div>
+                                <br>
+
+                            </div>
+
+                        </dx-popup>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

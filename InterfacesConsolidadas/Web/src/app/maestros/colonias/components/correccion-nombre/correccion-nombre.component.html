@@ -1,0 +1,60 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-icon" data-background-color="green">
+            <i class="material-icons">mode_edit</i>
+          </div>
+
+          <div class="card-content">
+            <h4 class="card-title">Corección de Nombres</h4>
+            <form [formGroup]="formGroupColonias">
+              <div class="col-md-12">
+                <div class="row">
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label for="">Ciudad:</label>
+                      <dx-select-box formControlName="selectCiudad" [dataSource]="ciudades" displayExpr="descripcion"
+                        valueExpr="id" [readOnly]="false" [disabled]="false" [showClearButton]="true"
+                        [searchEnabled]="true" (onValueChanged)="onValueChangedCiudad($event)">
+                      </dx-select-box>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <dx-data-grid #gridColonias [dataSource]="colonias" [showBorders]="true" [columnAutoWidth]="true"
+                    (onRowValidating)="onRowValidatingGrid($event)" [height]="450" [selection]="{ mode: 'single' }">
+                    <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+                    <dxo-selection mode="single"></dxo-selection>
+                    <dxo-filter-row [visible]="true"></dxo-filter-row>
+                    <dxo-header-filter [visible]="true"></dxo-header-filter>
+                    <dxo-search-panel [visible]="true" [width]="240" placeholder="Search..."></dxo-search-panel>
+                    <dxo-editing mode="cell" [allowUpdating]="true"></dxo-editing>
+                    <dxi-column caption="Código" dataField="id" [allowEditing]="false" [width]="100"></dxi-column>
+                    <dxi-column caption="Nombre" dataField="nombre" [allowEditing]="false"></dxi-column>
+                    <dxi-column caption="Seleccionada" dataField="seleccionada" [allowEditing]="true" [width]="120">
+                    </dxi-column>
+                    <dxi-column caption="Correcta" dataField="esCorrecta" [allowEditing]="true" [width]="120">
+                    </dxi-column>
+                  </dx-data-grid>
+                </div>
+
+                <br>
+                <div class="row" style="float: right;margin-bottom: 10px;">
+                  <dx-button text="Limpiar Selección" type="danger" (onClick)="limpiarSeleccion()">
+                  </dx-button>
+                  <dx-button text="Guardar" type="success" (onClick)="actualizarColoniaCorrecta()">
+                  </dx-button>
+                </div>
+                <br>
+              </div>
+            </form>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

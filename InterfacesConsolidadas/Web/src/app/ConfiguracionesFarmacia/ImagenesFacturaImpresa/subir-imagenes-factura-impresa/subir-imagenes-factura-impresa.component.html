@@ -1,0 +1,108 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="card">
+      <div class="card-header card-header-icon" data-background-color="green">
+        <i class="material-icons">panorama</i>
+      </div>
+      <div class="card-content">
+        <h4 class="card-title">Administración imagenes factura impresa</h4>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <span class="labelsFormularios">Nombre Imagen: </span>
+              <dx-text-box [(ngModel)]="NombreImagen" #txtNombre>
+              </dx-text-box>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-group">
+              <span class="labelsFormularios">Secciones: </span>
+              <dx-lookup [dataSource]="SeccionesFactura" [closeOnOutsideClick]="true" displayExpr="descripcion"
+                valueExpr="id" title="Sección" [(ngModel)]="SeccionSeleccionadaId" placeholder="Sección"
+                (onValueChanged)="OnSeccionSeleccionadaChange($event)">
+                <dx-validator>
+                  <dxi-validation-rule type="required" message="Debe ingresar un nombre"></dxi-validation-rule>
+                </dx-validator>
+              </dx-lookup>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-group">
+              <span class="labelsFormularios">Empresa:</span>
+              <dx-select-box [dataSource]="empresas" valueExpr="id" displayExpr="nombre" [(ngModel)]="empresaId">
+              </dx-select-box>
+
+            </div>
+          </div>
+        </div>
+
+        <div class="row" *ngIf="mostrarSucursales">
+          <div class="col-md-4">
+            <div class="form-group">
+              <span class="labelsFormularios">Sucursal:</span>
+              <dx-select-box [dataSource]="sucursales" valueExpr="id" displayExpr="nombre" [(ngModel)]="sucursalId">
+              </dx-select-box>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-3">
+            <br>
+            <img [src]="fileDataUri">
+            <dx-file-uploader *ngIf="!Actualizar()" selectButtonText="Seleccionar" labelText="o arrastrar la imagen"
+              accept=".png,.JPG" uploadMode="useform" type="default" allowCanceling="true" uploadButtonText=""
+              readyToUploadMessage="Listo para subir" (onValueChanged)="ObtenerImagenSeleccionadoDxFileUploader($event)"
+              (onOptionChanged)="QuitarImagen($event)">
+            </dx-file-uploader>
+
+            <button *ngIf="!Actualizar()" class="btn btn-Azulsiman" (click)="UploadFile()">Guardar</button>
+            <button *ngIf="Actualizar()" class="btn btn-Azulsiman" (click)="ActualizarInformacion()">Actualizar</button>
+            <button class="btn btn-danger " (click)="Limpiar()">Limpiar</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="card">
+      <dx-data-grid [showBorders]="true" [rowAlternationEnabled]="true" [dataSource]="ListaImagenes">
+        <dxo-selection mode="single">
+        </dxo-selection>
+        <dxi-column caption="Código" dataField="id" [width]="80"> </dxi-column>
+        <dxi-column caption="Nombre" dataField="nombre" [width]="130"> </dxi-column>
+        <dxi-column caption="Nombre en archivo" dataField="nombreEnArchivo" [width]="130"> </dxi-column>
+        <dxi-column dataField="Url" caption="Imagen" [width]="100" [allowFiltering]="false" [allowSorting]="false"
+          cellTemplate="cellTemplate"></dxi-column>
+        <div *dxTemplate="let data of 'cellTemplate'">
+          <img [src]="data.data.url" />
+        </div>
+        <dxi-column caption="Sección" dataField="descripcion"> </dxi-column>
+        <dxi-column caption="Empresa" dataField="empresaId">
+          <dxo-lookup [dataSource]="empresas" valueExpr="id" displayExpr="nombre"></dxo-lookup>
+        </dxi-column>
+        <dxi-column caption="Sucursal" dataField="sucursalId"
+          [visible]="mostrarSucursales">
+          <dxo-lookup [dataSource]="sucursales" valueExpr="id" displayExpr="nombre"></dxo-lookup>
+        </dxi-column>
+
+        <dxi-column caption="Acción" [width]="100" cellTemplate="accionTemplate"></dxi-column>
+        <div *dxTemplate="let d of 'accionTemplate'">
+          <button rel="tooltip" (click)="EditarImagen(d.data)" type="button" class="btn btn-grid btn-Azulsiman ">
+            <i class="material-icons">mode_edit</i>
+          </button>
+          <button rel="tooltip" (click)="EliminarSubGrupo(d.data)" type="button" class="btn btn-grid btn-danger ">
+            <i class="material-icons">close</i>
+          </button>
+
+        </div>
+        <dxo-paging [pageSize]="10" [pageIndex]="0">
+        </dxo-paging>
+      </dx-data-grid>
+
+    </div>
+
+  </div>
+</div>

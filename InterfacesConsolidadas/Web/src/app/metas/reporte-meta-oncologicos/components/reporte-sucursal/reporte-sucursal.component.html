@@ -1,0 +1,55 @@
+<dx-data-grid
+  #dgReporteSucursal
+  [dataSource]="metasOncologicosPorSucursal"
+  keyExpr="sucursalId"
+  [showBorders]="true"
+  [showRowLines]="true"
+  [showColumnLines]="true"
+  [rowAlternationEnabled]="true"
+  [allowColumnResizing]="true"
+>
+  <dxo-export
+    [enabled]="true"
+    fileName="Reporte_Meta_Oncologicos_Por_Sucursal"
+    [allowExportSelectedData]="false"
+  ></dxo-export>
+  <dxo-paging [pageSize]="10"> </dxo-paging>
+  <dxo-pager
+    [showPageSizeSelector]="true"
+    [allowedPageSizes]="[10, 25, 50, 100]"
+    [showInfo]="true"
+  ></dxo-pager>
+  <dxo-filter-row [visible]="true"> </dxo-filter-row>
+
+  <dxi-column
+    dataField="sucursal"
+    caption="Sucursal"
+    [width]="250"
+  ></dxi-column>
+  <dxi-column dataField="ciudad" caption="Ciudad" [width]="250"></dxi-column>
+  <dxi-column dataField="zona" caption="Zona" [width]="250"></dxi-column>
+  <dxi-column
+    dataField="meta"
+    caption="Meta"
+    format="#,##0.00"
+    [width]="100"
+  ></dxi-column>
+  <dxi-column
+    dataField="venta"
+    caption="Ventas"
+    format="#,##0.00"
+    [width]="100"
+  ></dxi-column>
+  <dxi-column
+    dataField="diferencia"
+    caption="Diferencia"
+    format="#,##0.00"
+    [width]="100"
+  ></dxi-column>
+  <dxi-column
+    dataField="alcanzado"
+    caption="Alcanzado"
+    format="#,##0.00"
+    [width]="100"
+  ></dxi-column>
+</dx-data-grid>

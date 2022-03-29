@@ -1,0 +1,363 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-icon" data-background-color="green">
+            <i class="material-icons">list</i>
+          </div>
+          <div class="card-content">
+            <h4 class="card-title">Listado de Servicios</h4>
+          </div>
+          <div class="card-content">
+            <div class="row">
+              <div class="col-md-3 pull-right">
+                <table class="tabla-estados">
+                  <tr>
+                    <td>
+                      <div class="cuadro-muestra deshabilitado"></div>
+                    </td>
+                    <td>
+                     <strong><span class="labelsFormularios">Deshabilitado por Fecha de Vigencia</span></strong>
+                    </td>
+                  </tr>
+                  <tr>
+                      <td>
+                        <div class="cuadro-muestra habilitado"></div>
+                      </td>
+                      <td>
+                       <strong><span class="labelsFormularios">Visible en Página Web</span></strong>
+                      </td>
+                    </tr>
+                </table>
+              </div>
+            </div>
+            <div class="row">              
+              <div class="col-md-12">
+                <dx-data-grid #grid [showBorders]="true" [masterDetail]="{ enabled: true, template:'serviciosTemplate'}" keyExpr="servicioId"
+                  [showRowLines]="true" [dataSource]="listadoServicios" [wordWrapEnabled]="true" (onRowPrepared)="colorearFila($event)">
+                  <dxi-column caption="#" dataField="servicioId" [width]="50"></dxi-column>
+                  <dxi-column caption="Servicio" dataField="descripcion" [width]="300"></dxi-column>
+                  <dxi-column caption="Subtítulo 1" dataField="subtitulo1" dataType="string"></dxi-column>
+                  <dxi-column caption="Subtítulo 2" dataField="subtitulo2" dataType="string"></dxi-column>
+                  <dxi-column caption="Visible en la Web" cellTemplate="paginaWebVisibleTemplate" [width]="80"></dxi-column>
+                  <dxi-column caption="Acciones" cellTemplate="accionServicioTemplate" [width]="100"></dxi-column>
+                  <div *dxTemplate="let v of 'paginaWebVisibleTemplate'" class="text-center">
+                    <button rel="tooltip" title="Habilitar/Deshabilitar en página Web" type="button" (click)="actualizarEstadoVisibleEnPaginaWeb(v.data.servicioId, v.data.paginaWebVisible, v.data)"
+                      class="btn btn-grid btn-pagina" [ngClass]="{'visible': v.data.paginaWebVisible, 'visible-off':!v.data.paginaWebVisible}">
+                      <i *ngIf="v.data.paginaWebVisible" class="material-icons" style="color:green">visibility</i>
+                      <i *ngIf="!v.data.paginaWebVisible" class="material-icons" style="color:red">visibility_off</i>
+                    </button>
+                  </div>
+                  <div *dxTemplate="let s of 'accionServicioTemplate'" class="text-center">
+                    <button rel="tooltip" title="Editar" (click)="EditarServicio(s.data)" type="button" class="btn btn-grid btn-Azulsiman ">
+                      <i class="material-icons">mode_edit</i>
+                    </button>
+                    <button rel="tooltip" title="Eliminar" type="button" (click)="EliminarServicio(s.data)" class="btn btn-grid btn-danger ">
+                      <i class="material-icons">close</i>
+                    </button>
+                  </div>
+                  <div *dxTemplate="let seccion of 'serviciosTemplate'">
+                    <dx-data-grid [showBorders]="true" [masterDetail]="{ enabled: true, template:'seccionesTemplate'}"
+                      [rowAlternationEnabled]="true" [dataSource]="seccion.data.secciones">
+                      <dxi-column caption="#" dataField="servicioSeccionId" [width]="100"></dxi-column>
+                      <dxi-column caption="Icono" cellTemplate="iconoTemplate" [width]="150"></dxi-column>
+                      <div *dxTemplate="let seccion of 'iconoTemplate'">
+                        <img class="icono-seccion" [src]="seccion.data.iconoUrl">
+                      </div>
+                      <dxi-column caption="Sección" dataField="titulo"></dxi-column>
+                      <dxi-column caption="Acciones" cellTemplate="accionSeccionTemplate" [width]="155"> </dxi-column>
+                      <div *dxTemplate="let sc of 'accionSeccionTemplate'">
+                        <button rel="tooltip" title="Editar" (click)="EditarSeccion(sc.data)" type="button" class="btn btn-grid btn-Azulsiman ">
+                          <i class="material-icons">mode_edit</i>
+                        </button>
+                        <button rel="tooltip" title="Eliminar" type="button" (click)="EliminarSeccion(sc.data, seccion.data.secciones )"
+                          class="btn btn-grid btn-danger ">
+                          <i class="material-icons">close</i>
+                        </button>
+                      </div>
+                      <div *dxTemplate="let columna of 'seccionesTemplate'">
+                        <dx-data-grid [rowAlternationEnabled]="true" [showBorders]="true" [dataSource]="columna.data.columnas" [wordWrapEnabled]="true">
+                          <dxi-column caption="Tipo Contenido" cellTemplate="contenidoTemplate" dataField="Contenido">
+                          </dxi-column>
+                          <div *dxTemplate="let c of 'contenidoTemplate'">
+                            <h4  *ngIf="c.data.contenidoTipoId === 1">TEXTO</h4>
+                            <h4  *ngIf="c.data.contenidoTipoId === 2">IMAGEN</h4>
+                            <h4  *ngIf="c.data.contenidoTipoId === 3">LISTA</h4>
+                            <h4  *ngIf="c.data.contenidoTipoId === 4">ENLACE</h4>
+                            <span *ngIf="c.data.contenidoTipoId == 1">{{c.data.contenido}}</span>
+                            <img *ngIf="c.data.contenidoTipoId == 2" style="max-height: 150px; width: auto" [src]="c.data.contenido" />
+                            <ul *ngIf="c.data.contenidoTipoId == 3">
+                              <li *ngFor="let item of c.data.listaContenido">
+                                {{item}}
+                              </li>
+                            </ul>
+                            <a *ngIf="c.data.contenidoTipoId == 4">{{c.data.contenido}}</a>
+                          </div>
+                          <dxi-column caption="Acciones" cellTemplate="accionTemplate" [width]="155"> </dxi-column>
+                          <div *dxTemplate="let col of 'accionTemplate'">
+                            <button rel="tooltip" title="Editar" (click)="EditarColumna(col.data)" type="button" class="btn btn-grid btn-Azulsiman ">
+                              <i class="material-icons">mode_edit</i>
+                            </button>
+                            <button rel="tooltip" title="Eliminar" type="button" class="btn btn-grid btn-danger "
+                              (click)="EliminarColumna(col.data, columna.data.columnas)">
+                              <i class="material-icons">close</i>
+                            </button>
+                          </div>
+                        </dx-data-grid>
+                        <button id="nColumna" class="btn btn-fill btn-info" *ngIf="columna.data.columnas.length <=1" style="width: 100%" type="submit" (click)="onNuevaColumna(columna.data)">
+                          <i class="material-icons">add</i> Nueva Columna
+                        </button>
+                      </div>
+                    </dx-data-grid>
+                    <div>
+                      <button id="nSeccion" class="btn btn-fill btn-success" style="width: 100%" type="submit" (click)="onNuevaSeccion(seccion.data)">
+                        <i class="material-icons">add</i> Nueva Sección
+                      </button>
+                    </div>
+                    <div>
+                        <button id="nOrdenarSeccion" class="btn btn-fill btn-info" style="width: 100%" *ngIf="seccion.data.secciones.length > 1" type="submit" (click)="onOrdenarElementosSecciones(seccion.data.secciones)">
+                          <i class="material-icons">format_list_numbered</i> Ordenar Secciones
+                        </button>
+                    </div>
+                  </div>
+                  <dxo-paging [pageSize]="15" [pageIndex]="0"></dxo-paging>
+                </dx-data-grid>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECCION -->
+<dx-popup class="popup" [width]="500" [height]="500" [showTitle]="true" title="Editar Sección" [dragEnabled]="false"
+  [closeOnOutsideClick]="false" [(visible)]="mostrarPopUpSeccion">
+  <div *dxTemplate="let data of 'content'">
+    <div class="col-md-12">
+      <div class="row">
+        <div class="col-md-12">
+          <span class="labelsFormularios">Título de Sección:</span>
+          <dx-text-box [(ngModel)]="SeccionEditar.titulo" name="txtTituloSeccion"></dx-text-box>
+          <br>
+          <br>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <span class="labelsFormularios">Icono de Sección:</span>
+          <div class="row">
+            <div class="col-md-7">
+              <dx-file-uploader #fuContenidoImagen id="fupIconoSeccion" [(value)]="SeccionEditar.archivoSeccionIcono"
+                selectButtonText="Seleccionar" labelText="" accept=".png, .JPG, .GIF" uploadMode="userForm" type="default"
+                (onValueChanged)="onSeleccionarIconoSeccion_DxFile($event)">
+              </dx-file-uploader>
+            </div>
+            <div class="col-md-5 dimensiones-icono-seccion container-imagenes-color">
+              <img class="" *ngIf="urlIconoSeccion" [src]="urlIconoSeccion" style="max-width: 100%">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <button id="nSeccion" class="btn btn-fill btn-Azulsiman" style="width: 100%" type="submit" (click)="onEditarSeccion()">
+        <i class="material-icons">save</i> Guardar Cambios
+      </button>
+    </div>
+  </div>
+</dx-popup>
+
+<!-- COLUMNA -->
+<dx-popup class="popup" [width]="700" [height]="500" [showTitle]="true" title="Editar Columna" [dragEnabled]="true"
+  [closeOnOutsideClick]="false" [(visible)]="mostrarPopUpColumna" [resizeEnabled]="true">
+  <div *dxTemplate="let data of 'content'">
+    <div class="col-md-12">
+      <div class="row">
+        <div class="col-xs-12 col-md-8 col-lg-8">
+          <span class="labelsFormularios">Título de la Columna:</span>
+          <dx-text-box [(ngModel)]="ColumnaEditar.titulo" name="txtTituloColumna"></dx-text-box>
+        </div>
+        <div class="col-xs-12 col-md-4 col-lg-4">
+          <span class="labelsFormularios">Tipo de Contenido:</span>
+          <dx-select-box #lueTipoContenido [dataSource]="tiposSecciones" displayExpr="descripcion" valueExpr="id"
+            (onValueChanged)="onTipoSeccionChanged(tipoContenido.id)" [(value)]="tipoContenido.id">
+          </dx-select-box>
+        </div>
+      </div>
+      <bR>
+      <div class="row">
+        <div class="col-md-12" *ngIf="mostrarTextoSeccion">
+          <span class="labelsFormularios">Ingrese el texto para esta
+            Columna:
+            <dx-text-area [(ngModel)]="ColumnaEditar.contenido" height="90" name="txaContenido"></dx-text-area>
+          </span>
+        </div>
+        <div class="col-md-12" *ngIf="mostrarVideoEnlaceSeccion">
+          <span class="labelsFormularios">Ingrese el Texto del Enlace:
+            <dx-text-box [(ngModel)]="ColumnaEditar.contenido" name="txtContenido"></dx-text-box>
+          </span>
+          <span class="labelsFormularios">Ingrese el Enlace:
+            <dx-text-box [(ngModel)]="ColumnaEditar.enlace" name="txtContenido"></dx-text-box>
+          </span>
+        </div>
+        <div class="col-md-12" *ngIf="mostrarImagenSeccion">
+          <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+            <dx-file-uploader #fuContenidoImagen id="fuArchivoColumna" [(value)]="ColumnaEditar.archivoContenido"
+              selectButtonText="Seleccionar" labelText="" accept=".png, .JPG, .GIF" uploadMode="userForm" type="default"
+              (onValueChanged)="onSeleccionarArchivoColumna_DxFile($event)">
+            </dx-file-uploader>
+          </div>
+          <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8 container-imagenes-color dimensiones-img-contenido">
+            <img style="max-width: 100%; max-height: 200px" class="" *ngIf="urlContenido" [src]="urlContenido">
+            <i class="material-icons md-dark md-inactive md-48" *ngIf="!urlContenido">image</i>
+          </div>
+          <div class="col-md-12">
+            <span class="labelsFormularios">Ingrese el Enlace:
+              <dx-text-box [(ngModel)]="ColumnaEditar.enlace" name="txtContenido"
+                  placeholder="http://www.farmaciasiman.com"></dx-text-box>
+            </span>
+          </div>
+        </div>
+        <br>
+        <div class="col-md-12" *ngIf="mostrarListaSeccion">
+          <div class="row">
+            <div class="col-md-7">
+              <dx-text-box #txtTextoListado></dx-text-box>
+            </div>
+            <div class="col-md-2">
+              <button rel="tooltip" title="Agregar" type="button" style="margin-top:-5px" (click)="onAgregarTextoALista()"
+                class="btn btn-just-icon btn-round mat-raised-button btn-success ">
+                <i class="material-icons">add</i>
+              </button>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12 borde-redondeado" *ngIf="ColumnaEditar.contenidoLista.length > 0">
+              <table style="width: 100%; max-height: 200px" >
+                  <tr>
+                      <th class="text-center">Texto</th>
+                      <th colspan="2" class="text-center" style="width: 10%">Acción</th>
+                  </tr>
+                  <tr *ngFor="let item of ColumnaEditar.contenidoLista; let i = index" class="items-listado">
+                      <td class="items-listado">
+                          <span *ngIf="!editandoContenido || item != contenido">{{item}}</span>
+                          <dx-text-box #txtEditar name="txtedit"  [(ngModel)]="txtEditarElementoLista" *ngIf="editandoContenido && item == contenido"></dx-text-box>
+                      </td>
+                      <td>
+                          <button type="button" class="btn-link mat-button"
+                              (click)="onEliminarElementoLista(item)">
+                              <span class="mat-button-wrapper">
+                                  <i class="material-icons" style="color:red">close</i>
+                              </span>
+                          </button>
+                      </td>
+                      <td>
+                          <button type="button" class="btn-link mat-button"
+                              (click)="onEditarElementoLista(item)">
+                              <i *ngIf="!editandoContenido || item != contenido" class="material-icons" style="color:green">edit</i>
+                              <i *ngIf="editandoContenido && item == contenido" class="material-icons" style="color:#F44336">save</i>
+                          </button>
+                      </td>
+                  </tr>
+                  <tr *ngIf="ColumnaEditar.contenidoLista.length > 1">
+                      <td colspan="3">
+                          <button class="btn btn-fill btn-success" style="width: 100%" type="button" (click)="onOrdenarElementosLista()">
+                              <i class="material-icons">format_list_numbered</i>  Ordenar Items de Lista
+                          </button>
+                      </td>
+                  </tr>
+              </table>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <button id="nSeccion" class="btn btn-fill btn-Azulsiman" style="width: 100%" type="submit" (click)="onEditarColumna()">
+        <i class="material-icons">save</i> Guardar Cambios
+      </button>
+    </div>
+  </div>
+</dx-popup>
+
+<dx-popup class="popup" [width]="500" [height]="650" [showTitle]="true" title="Ordenar Secciones"
+    [dragEnabled]="true" [closeOnOutsideClick]="false" [(visible)]="mostrarPopUpOrdenarListaSecciones" [resizeEnabled]="true" >
+
+    <div *dxTemplate="let data of 'content'">
+        <div class="row" >
+            <div class="col-md-12">
+                <div class="col-md-offset-10">
+                    <button rel="tooltip" title="Subir" type="button" class="btn btn-grid btn-default"
+                        (click)="cambiarOrdenItem(grid.instance.getSelectedRowsData()[0], true)">
+                        <i class="material-icons">arrow_upward</i>
+                    </button>
+                    <button rel="tooltip" title="Bajar" type="button" class="btn btn-grid btn-default"
+                        (click)="cambiarOrdenItem(grid.instance.getSelectedRowsData()[0], false)">
+                        <i class="material-icons">arrow_downward</i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-12">
+                <dx-data-grid #grid [showBorders]="true" [dataSource]="listadoSeccionesOrdenar" [height]="450" [hoverStateEnabled]="true" [selectedRowKeys]="[]">
+                    <dxo-selection mode="single"></dxo-selection>
+                    <dxi-column caption="#" dataField="orden" [width]="30"></dxi-column>
+                    <dxi-column caption="Icono" [width]="100" cellTemplate="iconoTemplate"></dxi-column>
+                    <dxi-column caption="Item" dataField="titulo"></dxi-column>
+                    <div *dxTemplate="let seccion of 'iconoTemplate'">
+                      <img class="icono-seccion" [src]="seccion.data.iconoUrl">
+                    </div>
+                    <dxo-scrolling mode="stansard"></dxo-scrolling>
+                </dx-data-grid>
+            </div>
+            <div class="col-md-12">
+                <button id="nSeccion" class="btn btn-fill btn-Azulsiman" style="width: 100%" type="submit"
+                    (click)="OrdenarElementosSecciones()">
+                    <i class="material-icons">save</i> Guardar Cambios
+                </button>
+            </div>
+        </div>
+    </div>
+</dx-popup>
+
+<dx-popup class="popup" [width]="500" [height]="500" [showTitle]="true" title="Ordenar Items de Lista"
+    [dragEnabled]="false" [closeOnOutsideClick]="false" [(visible)]="mostrarPopUpOrdenarLista" (onContentReady)="onPopUpColumnaContentReady()">
+
+    <div *dxTemplate="let data of 'content'">
+        <div class="row" >
+            <div class="col-md-12">
+                <div class="col-md-offset-10">
+                    <button rel="tooltip" title="Subir" type="button" class="btn btn-grid btn-default"
+                        (click)="cambiarOrdenItemLista(grid.instance.getSelectedRowsData()[0], true)">
+                        <i class="material-icons">arrow_upward</i>
+                    </button>
+                    <button rel="tooltip" title="Bajar" type="button" class="btn btn-grid btn-default"
+                        (click)="cambiarOrdenItemLista(grid.instance.getSelectedRowsData()[0], false)">
+                        <i class="material-icons">arrow_downward</i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <dx-data-grid #grid [showBorders]="true" [dataSource]="itemsListaOrdenar" [height]="450" [hoverStateEnabled]="true" [selectedRowKeys]="[]">
+                    <dxo-selection mode="single"></dxo-selection>
+                    <dxi-column caption="#" dataField="orden" [width]="30" [allowEditing]="false"></dxi-column>
+                    <dxi-column caption="Item" dataField="valor" [allowEditing]="false"></dxi-column>
+                    <dxo-scrolling mode="virtual"></dxo-scrolling>
+                </dx-data-grid>
+            </div>
+            <div class="col-md-12">
+                <button id="nSeccion" class="btn btn-fill btn-Azulsiman" style="width: 100%" type="submit"
+                    (click)="OrdenarElementosLista()">
+                    <i class="material-icons">save</i> Guardar Cambios
+                </button>
+            </div>
+        </div>
+    </div>
+</dx-popup>

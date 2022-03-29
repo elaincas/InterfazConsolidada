@@ -1,0 +1,249 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-icon" data-background-color="red">
+            <em class="material-icons">queue</em>
+          </div>
+          <div class="card-content">
+            <h4 class="card-title">
+              Administración de Productos con Descuentos Exclusivos
+            </h4>
+            <form [formGroup]="formGroupProductosDescuentosExclusivos">
+              <div class="row">
+                <div class="col-md-8">
+                  <label for="">Producto: </label>
+                  <dx-drop-down-box
+                    [(value)]="productoSeleccionado"
+                    [readOnly]="esEdicion"
+                    valueExpr="identificador"
+                    displayExpr="nombre"
+                    placeholder="Seleccione un Producto"
+                    [showClearButton]="true"
+                    [dataSource]="productosSeleccionadoDataSource"
+                    formControlName="productoId"
+                  >
+                    <div *dxTemplate="let data of 'content'">
+                      <dx-data-grid
+                        #gridProductos
+                        [dataSource]="productos"
+                        (onRowClick)="filaClickeada($event)"
+                        [remoteOperations]="true"
+                        [columns]="['identificador', 'nombre']"
+                        [hoverStateEnabled]="true"
+                        [paging]="{ enabled: true, pageSize: 30 }"
+                        [filterRow]="{ visible: true }"
+                        [scrolling]="{ mode: 'infinite' }"
+                        [height]="300"
+                      >
+                      </dx-data-grid>
+                      <dxi-column
+                        dataField="identificador"
+                        dataType="string"
+                        caption="Identificador"
+                      ></dxi-column>
+                      <dxi-column
+                        dataField="nombre"
+                        caption="Nombre"
+                        selectedFilterOperation="contains"
+                      ></dxi-column>
+                    </div>
+                  </dx-drop-down-box>
+
+                  <div *ngIf="submit && validacion.productoId.error">
+                    <span class="text-danger">{{
+                      validacion.productoId.mensaje
+                    }}</span>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <label for="">Descuento: </label>
+                  <dx-number-box
+                    [showSpinButtons]="true"
+                    [min]="1"
+                    [max]="99"
+                    [step]="1"
+                    format="###,##0.00"
+                    [showSpinButtons]="true"
+                    formControlName="descuento"
+                  >
+                  </dx-number-box>
+                  <div *ngIf="submit && validacion.descuento.error">
+                    <span class="text-danger">{{
+                      validacion.descuento.mensaje
+                    }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
+                  <div class="row">
+                    <div class="form-group">
+                      <div class="col-md-2">
+                        <dx-button
+                          [disabled]="botonAgregarDeshabilitado"
+                          *ngIf="!esEdicion"
+                          text="Agregar"
+                          (click)="agregar()"
+                          type="success"
+                        >
+                        </dx-button>
+                        <dx-button
+                          *ngIf="esEdicion"
+                          [disabled]="botonEditarDeshabilitado"
+                          text="Editar"
+                          (click)="editar()"
+                          type="success"
+                        >
+                        </dx-button>
+                      </div>
+                      <div class="col-md-2">
+                        <dx-button
+                          text="Limpiar"
+                          type="danger"
+                          (onClick)="limpiar()"
+                        >
+                        </dx-button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+            <div class="row" *ngIf="!esEdicion" style="margin-top: 15px">
+              <div class="col-md-12">
+                <fieldset class="form-section-title">
+                  Excel con productos:
+                </fieldset>
+              </div>
+              <div class="col-md-12">
+                <dx-file-uploader
+                  [(value)]="archivosExcel"
+                  (onValueChanged)="inputExcelChanged()"
+                  selectButtonText="Subir archivo csv"
+                  accept=".csv"
+                  [multiple]="false"
+                  uploadUrl="{{ url }}"
+                  [multiple]="false"
+                  uploadedMessage="Se ha subido exitosamente"
+                  (onUploaded)="onUploadedCsv($event)"
+                  (onUploadError)="onUploadedErrorCsv($event)"
+                  uploadMode="instantly"
+                  labelText="Subir o Soltar el archivo aquí"
+                >
+                </dx-file-uploader>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card">
+              <div class="card-content">
+                <div class="col-md-12" id="gridProductosDescuentosExclusivos">
+                  <dx-data-grid
+                    #gridProductosDescuentosExclusivos
+                    [dataSource]="productosDescuentosExclusivos"
+                    height="600"
+                    [allowColumnReordering]="true"
+                    [allowColumnResizing]="true"
+                    keyExpr="id"
+                    [showBorders]="true"
+                    style="width: 100%"
+                  >
+                    <dxo-filter-row [visible]="true"></dxo-filter-row>
+                    <dxo-selection mode="single"></dxo-selection>
+                    <dxo-editing
+                      mode="cell"
+                      [allowUpdating]="true"
+                    ></dxo-editing>
+                    <dxo-paging [pageSize]="10"></dxo-paging>
+                    <dxo-pager
+                      [showPageSizeSelector]="true"
+                      [allowedPageSizes]="[10, 20, 30]"
+                      [showInfo]="true"
+                      [visible]="true"
+                      [showNavigationButtons]="true"
+                    >
+                    </dxo-pager>
+                    <dxo-scrolling
+                      mode="standard"
+                      showScrollbar="always"
+                    ></dxo-scrolling>
+                    <dxo-column-chooser
+                      [enabled]="true"
+                      mode="select"
+                    ></dxo-column-chooser>
+                    <dxi-column
+                      caption="Cod. Producto"
+                      dataField="productoId"
+                      [allowEditing]="false"
+                      [width]="150"
+                    >
+                    </dxi-column>
+                    <dxi-column
+                      caption="Descripcion"
+                      dataField="descripcionProducto"
+                      [allowEditing]="false"
+                      [width]="500"
+                    >
+                    </dxi-column>
+                    <dxi-column
+                      caption="Descuento"
+                      dataField="descuento"
+                      [allowEditing]="false"
+                      [width]="100"
+                    >
+                    </dxi-column>
+                    <dxi-column
+                      caption="Acciones"
+                      cellTemplate="accionTemplate"
+                      [width]="400"
+                    >
+                    </dxi-column>
+                    <div *dxTemplate="let c of 'accionTemplate'">
+                      <div class="text-center">
+                        <button
+                          rel="tooltip"
+                          title="Desactivar"
+                          *ngIf="c.data.activo"
+                          type="button"
+                          (click)="inactivar(c.data.id)"
+                          class="btn btn-grid btn-danger"
+                        >
+                          <i class="material-icons">arrow_downward</i>
+                        </button>
+                        <button
+                          rel="tooltip"
+                          title="Activar"
+                          *ngIf="!c.data.activo"
+                          (click)="activar(c.data.id)"
+                          type="button"
+                          class="btn btn-grid btn-success"
+                        >
+                          <i class="material-icons">arrow_upward</i>
+                        </button>
+                        <button
+                          rel="tooltip"
+                          title="Editar"
+                          type="button"
+                          (click)="obtenerValoresParaActualizar(c.data)"
+                          class="btn btn-grid btn-Azulsiman"
+                        >
+                          <i class="material-icons">mode_edit</i>
+                        </button>
+                      </div>
+                    </div>
+                  </dx-data-grid>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,200 @@
+<div class="main-content1">
+  <div class="container-fluid">
+    <div class="col-sm-8 col-sm-offset-2">
+      <!--      Wizard container        -->
+      <div class="wizard-container">
+        <div class="card wizard-card" data-color="blue" id="wizardProfile">
+          <form action="" method="">
+            <!--        You can switch " data-color="purple" "  with one of the next bright colors: "green", "orange", "red", "blue"       -->
+            <div class="wizard-header1">
+              <h3 class="wizard-title">
+                Subir Archivos de Productos
+              </h3>
+            </div>
+
+            <div class="wizard-navigation ">
+              <ul>
+                <li>
+                  <a href="#producto" data-toggle="tab">Producto</a>
+                </li>
+                <li>
+                  <a href="#archivos" data-toggle="tab">Seleccionar Archivos</a>
+                </li>
+              </ul>
+            </div>
+
+            <div class="tab-content">
+              <div class="tab-pane" id="producto">
+                <div class="row">
+                  <h4 class="info-text"> A continuación seleccione el producto para subir archivo /s. </h4>
+                  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="row">
+                      <div class="col-md-12 col-lg-12 ">
+                        <span>Productos:</span>
+                        <dx-lookup name="cmbProductos"  [(ngModel)]="productosArchivo.ProductoId" [dataSource]="producto" [grouped]="false"
+                         noDataText="No se encontraron productos." searchPlaceholder="Ingrese el código o descripción del producto" [searchExpr]="['productoId', 'prodcutoDescripcion']"
+                          [closeOnOutsideClick]="true" [showPopupTitle]="false"  (onValueChanged)="ObtenerArchviosProductoSeleccionado()"  displayExpr="prodcutoDescripcion"
+                           valueExpr="productoId"   itemTemplate="item">
+                          <div *dxTemplate="let item of 'item'">
+                            <div class="custom-field">
+                              {{item.productoId}} - {{item.prodcutoDescripcion}}
+                            </div>
+                          </div>
+                        </dx-lookup>
+                      </div>
+                    </div>
+                    <br />
+                    <!-- <div class="row">
+                      <div class="col-md-12 col-lg-12 ">
+                        <span>Tags:</span>
+                        <dx-lookup name="cmbTags"  [(ngModel)]="productosArchivo.TagId" [dataSource]="tags" [grouped]="false"
+                         noDataText="No se encontraron tags." [closeOnOutsideClick]="true" [showPopupTitle]="false"   displayExpr="descripcion"
+                           valueExpr="id"   itemTemplate="item">
+                         
+                        </dx-lookup>
+                      </div>
+                    </div> -->
+                  </div>
+                </div>
+              </div>
+              <div class="tab-pane" id="archivos">
+                <div class="row">
+                
+                  <div class="col-lg-offset-3 col-lg-6 col-md-12 col-sm-12 col-xs-12">
+                    <div class="row">
+                      <span style="margin-left: 5%;">Vista Previa Imagenes: </span>
+                      <dx-gallery #gallery id="gallery" [dataSource]="urlImage" width="100%" [height]="150"
+                        [loop]="false" [showIndicator]="true" [stretchImages]="true" [initialItemWidth]="120"  [showNavButtons]="true">
+                        <div *dxTemplate="let galleryItem of 'item'">
+                          <div>
+                            <img [src]="galleryItem" />
+                          </div>
+                        </div>
+                      </dx-gallery>
+                    </div>
+                    <br>
+                    <div class="row" *ngIf="mostrarVideo">
+                      <span style="margin-left: 5%;">Vista Previa del Video: </span>
+                      <video  id ="videoPlayer1"width="320"  height="240"  autoplay controls style="margin-left: 5%;margin-right: 5%" ></video>
+                
+                    </div>
+               
+                  </div>
+                  <div class="col-lg-offset-3 col-lg-7 col-md-12 col-sm-12 col-xs-12">
+                 
+                    <br />
+                    <div class="row " style="margin-left: 30%;margin-right: 30%">
+                      <dx-button name="btnSubir" (onClick)="MostrarPopup(1)" text="Agregar" icon="fa fa-upload">
+                      </dx-button>
+                    </div>
+                    <br />
+                    <span style="color: crimson; text-align: center;font-weight: 900">
+                      ** Solo se permite subir los archivos tipo .JPG .JPEG .MP4 ** 
+                    </span>
+                    <br>
+                    <dx-progress-bar #progressBar
+                    [visible]="mostrarBarra"
+                    id="progress-bar-status"
+                     width="90%"
+                    [class.complete]="progressBar.value == maxValue"
+                    [min]="0"
+                    [max]="maxValue"
+                    [statusFormat]="format"
+                    [value]="maxValue - seconds">
+                </dx-progress-bar>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            <div class="wizard-footer">
+              <div class="pull-right">
+                <button class='btn btn-next btn-fill  btn-AzulFarsiman btn-wd' type="submit" (click)="MostrarVideo();">Siguiente</button>
+                <button class='btn btn-finish  btn-fill btn-Verde btn-wd' (click)="GuardarDatos()" type="submit">Guardar y
+                  Enviar</button>
+              </div>
+              <div class="pull-left">
+                <button class='btn btn-previous btn-fill btn-Anterior btn-wd' type="submit">Anterior</button>
+              </div>
+              <div class="clearfix"></div>
+            </div>
+          </form>
+        </div>
+        <dx-popup class="popup" id="nuevoTipoPlanimetria" height="15%" width="45%" [showTitle]="true"
+          title="Tipo Planimetría" [dragEnabled]="false" [closeOnOutsideClick]="true"
+          [(visible)]="_mostrarPopupTipoPlanimetria" showCloseButton="true" [resizeEnabled]="true">
+          <div *dxTemplate="let data of 'content'">
+            <div class="row">
+              <div class="col-md-6">
+                <dx-text-box name="txtNomnreTipo" [(ngModel)]="tipoPlanimetriaDescripcion" placeholder="Nuevo tipo...">
+                </dx-text-box>
+              </div>
+              <div class="col-md-3">
+                <dx-button icon="fa fa-check" type="success" text="Guardar" (onClick)="GuardarTipoPlanimetria()">
+                </dx-button>
+              </div>
+              <div class="col-md-3">
+                <dx-button icon="fa fa-close" type="danger" text="Cancelar" (onClick)="MostrarPopupTipoPlanimetrias(0)">
+                </dx-button>
+              </div>
+            </div>
+          </div>
+        </dx-popup>
+        <dx-popup class="popup" id="ingresoNuevaPlanimetria" style="height: 65%;" width="45%" [showTitle]="true"
+          ng-controller="Ctrl" title="Subir Archivos" [dragEnabled]="false" [closeOnOutsideClick]="false"
+          [(visible)]="_mostrarPopup" [showCloseButton]="true" [resizeEnabled]="true">
+          <div *dxTemplate="let data of 'content'">
+            <div class="row">
+              <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6" style="margin: auto">
+                <dx-file-uploader name="SubirArvhivoImagen" selectButtonText="Adjuntar Imagen"
+                  labelText="Este campo es obligatorio" (onValueChanged)="subirArvhivoImagen($event)"
+                  accept=".jpg,.jpeg,.mp4" uploadMode="userForm" type="default">
+                </dx-file-uploader>
+              </div>
+            </div>
+            <div class="row">
+              <dx-data-grid [rowAlternationEnabled]="true" width="100%" [dataSource]="archivos">
+                <dxo-filter-row [visible]="true"></dxo-filter-row>
+                <dxo-header-filter [visible]="true"></dxo-header-filter>
+                <dxo-paging [pageSize]="5"></dxo-paging>
+                <dxo-editing mode="cell" [allowUpdating]="true">
+                </dxo-editing>
+                <dxi-column caption="Nombre Imagen" dataField="ArchivoImagen.FileName" [visible]="true"></dxi-column>
+                <dxi-column caption="Orden" dataField="ArchivoImagen.OrdenId" [visible]="true"></dxi-column>
+                <dxi-column caption="Descripción Image" dataField="ArchivoImagen.Alt" [visible]="true"></dxi-column>
+                <dxi-column caption="Obs" dataField="ArchivoImagen.Observaciones" [visible]="true"></dxi-column>
+                <dxi-column caption="Acción" [width]="60" cellTemplate="accionTemplateImagen"></dxi-column>
+
+                <div *dxTemplate="let d of 'accionTemplateImagen'">
+                  <div class="row">
+                    <div class="col-md-3">
+                      <button rel="tooltip" type="button" (click)="EliminarFila(d)" class="btn btn-grid btn-danger ">
+                        <i class="material-icons">delete_forever</i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div *dxTemplate="let d of 'accionTemplateExcel'">
+                  <div class="col-md-8">
+                    <dx-file-uploader name="SubirArvhivoExcel" selectButtonText="Subir" editorType="" labelText=""
+                      item-width="100%" (onValueChanged)="subirArvhivoExcel($event,d.data)" accept=".xls,.xlsx"
+                      uploadMode="userForm" type="default">
+                    </dx-file-uploader>
+                  </div>
+                </div>
+              </dx-data-grid>
+            </div>
+            <br />
+            <div class="row" style="float: right;">
+              <dx-button icon="fa fa-check" type="success" text="Aceptar" (onClick)="MostrarPopup(0)">
+              </dx-button>
+            </div>
+          </div>
+        </dx-popup>
+      </div>
+      <!-- wizard container -->
+    </div>
+  </div>
+
+</div>

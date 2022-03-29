@@ -1,0 +1,166 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="card">
+          <div
+            class="card-header card-header-icon"
+            data-background-color="green">
+            <i class="material-icons">collections</i>
+          </div>
+          <div class="card-content">
+            <h4 class="card-title">Listado de Banners</h4>
+          </div>
+          <div class="card-content">
+            <div class="row">
+              <div class="col-md-12">
+                <dx-data-grid [showBorders]="true" [masterDetail]="{ enabled: true, template:'paginasPosicionTemplate'}" [rowAlternationEnabled]="true" [dataSource]="ListaBanners">
+                  <dxi-column caption="Página" dataField="descripcion"></dxi-column>
+                  <dxi-column caption="Carpeta" dataField="carpeta"></dxi-column>
+                  <dxo-paging [pageSize]="15" [pageIndex]="0">
+                  </dxo-paging>            
+                  <div *dxTemplate="let banner of 'paginasPosicionTemplate'" >
+                    <dx-data-grid [rowAlternationEnabled]="true" [dataSource]="banner.data.banners">
+                      <dxi-column caption="Posición de la Página" dataField="banner.paginaPosicion.descripcion">  </dxi-column>
+                      <dxi-column caption="Banner" dataField="descripcion">  </dxi-column>
+                      <dxi-column caption="Posición/Orden" dataField="posicion"> </dxi-column>
+                      <dxi-column caption="Es Versión Movil" dataField="banner.esVersionMovil"> </dxi-column>                      
+                      <dxi-column dataField="empresaId" caption="Empresa">  
+                          <dxo-lookup 
+                              [dataSource]="ListaCatalogoEmpresas"
+                              valueExpr="empresaId"
+                              displayExpr="descripcion">
+                          </dxo-lookup>       
+                      </dxi-column>
+                      <dxi-column dataField="paisId" caption="Pais">  
+                        <dxo-lookup 
+                            [dataSource]="ListaCatalogoPaises"
+                            valueExpr="id"
+                            displayExpr="descripcion">
+                        </dxo-lookup>       
+                      </dxi-column>
+                      <dxi-column caption="Fecha Creación" dataField="fechaAgrega" datatype="date" cellTemplate="dateCell" > </dxi-column>
+                      <!--<dxi-column caption="Aplica Fechas Inicio/Fin" dataField="tieneFechaFinalizacion" > </dxi-column>-->
+                      <!--<dxi-column caption="Fecha Inicio" dataField="fechaInicio_Visible" datatype="date" cellTemplate="dateCell" > </dxi-column>-->
+                      <div *dxTemplate="let cellData of 'dateCell'">
+                        {{cellData.value | date: 'dd/MM/yyyy'}}
+                      </div>
+                      <!--<dxi-column caption="Fecha Finaliza" dataField="fechaFin_Visible" datatype="date" cellTemplate="dateCell" > </dxi-column>-->
+                      <dxi-column caption="Acciones" cellTemplate="accionTemplate" [width]="155"> </dxi-column>
+                      <dxo-paging [pageSize]="15" [pageIndex]="0"></dxo-paging>
+                      <div *dxTemplate="let d of 'accionTemplate'">
+                        <button rel="tooltip" title="Eliminar" (click)="EliminarBanner(d.data.bannerDetalleId, banner.data, d.data)" type="button" class="btn btn-grid btn-danger ">
+                          <i class="material-icons">close</i>
+                        </button>
+                        <button rel="tooltip" title="Editar" (click)="EditarBanner(d.data,banner.data)" type="button" class="btn btn-grid btn-Azulsiman ">
+                          <i class="material-icons">mode_edit</i>
+                        </button>
+                        <button rel="tooltip" title="Más detalles del Banner" (click)="VerDetallesBanner(d.data)" type="button" class="btn btn-grid btn-warning ">
+                          <i class="material-icons">more</i>
+                        </button>
+                        <button rel="tooltip" title="Ver Banner" (click)="VerBanner(d.data)" type="button" class="btn btn-grid btn-info ">
+                          <i class="material-icons">search</i>
+                        </button>
+                      </div>
+                    </dx-data-grid>
+                  </div>
+                </dx-data-grid>                
+              </div>
+            </div>
+          </div>
+    <dx-popup
+      class="popup"
+      [width]="dimensionX"
+      [height]="dimensionY"
+      [showTitle]="true"
+      title="{{titulo}}"
+      [dragEnabled]="false"
+      [closeOnOutsideClick]="true"
+      [(visible)]="popupBannerVisible"
+      (onHiding)="onHidePopPupBanner()">
+
+      <div *dxTemplate="let data of 'content'">
+        <img class="width-img" src="{{rutaBanner}}">
+      </div>
+    </dx-popup>
+    <dx-popup
+      class="popup"
+      [width]="550"
+      [height]="300"
+      [showTitle]="true"
+      title="{{titulo}}"
+      [dragEnabled]="false"
+      [closeOnOutsideClick]="false"
+      [(visible)]="popupDetallesVisible">
+      <div *dxTemplate="let data of 'content'">
+        <div class="card">
+           <div class="card-content">
+             <div class="row">
+               <div class="col-md-6">
+                 <span class="labelsFormularios" *ngIf="bannerDetalle.tieneFechaFinalizacion">
+                   <strong>Tiene Fecha de Finalización</strong>
+                 </span>
+                 <span class="labelsFormularios" *ngIf="!bannerDetalle.tieneFechaFinalizacion">
+                   <strong>NO tiene Fecha de Finalización</strong>
+                 </span>
+               </div>
+             </div>
+              <div class="row">
+                <div class="col-xs-offset-1 col-md-4">
+                  <span class="labelsFormularios" [ngClass]="{'labelsNoAplica':!bannerDetalle.tieneFechaFinalizacion}">
+                    <strong>Fecha Inicio Visible:</strong>
+                  </span>
+                </div>
+                <div class=" col-md-6">
+                  <span class="labelsFormularios align-left" [ngClass]="{'labelsNoAplica':!bannerDetalle.tieneFechaFinalizacion}">
+                    {{bannerDetalle.fechaInicio_Visible | date : "dd/MM/yyyy"}}
+                  </span>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xs-offset-1 col-md-4">
+                  <span class="labelsFormularios" [ngClass]="{'labelsNoAplica':!bannerDetalle.tieneFechaFinalizacion}">
+                    <strong>Fecha Fin Visible:</strong>
+                  </span>
+                </div>
+                <div class="col-md-6">
+                  <span class="labelsFormularios align-left" [ngClass]="{'labelsNoAplica':!bannerDetalle.tieneFechaFinalizacion}">
+                    {{bannerDetalle.fechaFin_Visible | date : "dd/MM/yyyy"}}
+                  </span>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4" >
+                  <span class="labelsFormularios" [ngClass]="{'labelsNoAplica':!bannerDetalle.enlace}"><strong>Enlace:</strong> </span>
+                </div>
+                <div class="col-md-6">
+                  <span class="text-info url align-left" [ngClass]="{'labelsNoAplica':!bannerDetalle.enlace}">{{bannerDetalle.enlace}}</span>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4">
+                  <span class="labelsFormularios" ><strong>Dimensiones:</strong> </span>
+                </div>
+                <div class="col-md-6">
+                  <span class="labelsFormularios align-left">{{bannerDetalle.banner.dimensionX}}x{{bannerDetalle.banner.dimensionY}}px</span>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4">
+                  <span class="labelsFormularios" ><strong>Ruta Imagen:</strong> </span>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <a class="text-info url" href="{{bannerDetalle.rutaImagen}}" target="_blank">{{bannerDetalle.rutaImagen}}</a>
+                </div>
+              </div>
+            </div>
+        </div>
+      </div>
+    </dx-popup>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

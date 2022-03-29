@@ -1,0 +1,58 @@
+.satisfecho-insatisfecho {
+  min-width: 50%;
+  max-width: 50%;
+}
+
+.imagen {
+  display: block;
+  width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.imagen-seleccionar {
+  border: solid 1px #4ab805;
+  margin: 10px;
+}
+.imagen-seleccionada {
+  box-shadow: 0px 12px 22px 1px rgb(123, 123, 151);
+}
+.contenido-izquierdo {
+  border-right: 1px solid rgb(195, 195, 195);
+}
+
+.mt-2rem {
+  margin-top: 2.5rem;
+}
+
+.mt-1rem {
+  margin-top: 1rem !important;
+}
+
+.fondo-blanco {
+  background-color: #f8f9fa !important;
+}
+
+.padding-disminuido-jumbotron {
+  padding-right: 15px;
+  padding-left: 15px;
+  padding-top: 15px;
+  padding-bottom: 20px;
+}
+
+.espacio-lados-sm {
+  padding-left: 28px;
+  padding-right: 28px;
+}
+
+.espacio-abajo-sm {
+  margin-bottom: 1.5rem;
+}
+
+.mt-5px {
+  margin-top: 5px;
+}
+
+.dx-header-row > td > .dx-datagrid-text-content {
+  white-space: normal!important;
+}

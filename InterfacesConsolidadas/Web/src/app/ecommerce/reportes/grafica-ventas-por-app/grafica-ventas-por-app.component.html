@@ -1,0 +1,20 @@
+<dx-chart id="chart" [dataSource]="ecommerceDashboardService.resumen?.pedidos?.ventasPorMes" >
+  <dxi-series valueField="portalWeb" name="Portal Web"></dxi-series>
+  <dxi-series valueField="iosApp" name="iOS App"></dxi-series>
+  <dxi-series valueField="androidApp" name="Android App"></dxi-series>
+
+
+
+  <dxo-common-series-settings argumentField="mes" type="bar" hoverMode="allArgumentPoints" selectionMode="allArgumentPoints">
+      <dxo-label
+      [visible]="true"
+      [format]="{
+          type: 'fixedPoint',
+          precision: '2'
+      }">
+  </dxo-label>
+  </dxo-common-series-settings>
+
+  <dxo-legend verticalAlignment="bottom" horizontalAlignment="center">
+  </dxo-legend>
+</dx-chart>

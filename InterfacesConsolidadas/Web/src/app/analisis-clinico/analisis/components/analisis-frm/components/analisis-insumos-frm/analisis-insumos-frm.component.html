@@ -1,0 +1,124 @@
+<div class="form-group">
+  <div class="row">
+    <dx-form>
+      <dxi-item itemType="group" [colCount]="12">
+        <dxi-item itemType="group" [colSpan]="6">
+          <label class="dx-field-item-label dx-field-item-label-location-top"
+            ><span class="dx-field-item-label-content" style="width: 108px"
+              ><span class="dx-field-item-label-text">&nbsp;</span></span
+            ></label
+          >
+          <dx-lookup
+            #item
+            noDataText="No se encontraron insumos."
+            searchPlaceholder="Ingrese el código o descripción del insumo"
+            [dataSource]="insumos"
+            [displayExpr]="GetDisplayExpr"
+            placeholder="Seleccione un insumo"
+            [searchExpr]="search"
+          >
+          </dx-lookup>
+        </dxi-item>
+        <dxi-item itemType="group" [colSpan]="2">
+          <label class="dx-field-item-label dx-field-item-label-location-top"
+            ><span class="dx-field-item-label-content" style="width: 108px"
+              ><span class="dx-field-item-label-text">Cantidad:</span></span
+            ></label
+          >
+          <dx-number-box
+            #cantidad
+            placeholder="Cantidad"
+            value="1"
+            [showSpinButtons]="true"
+            [showClearButton]="true"
+            [disabled]="false"
+            [readOnly]="false"
+            [min]="1"
+            [max]="1000"
+          >
+          </dx-number-box>
+        </dxi-item>
+        <dxi-item itemType="group" [colSpan]="2">
+          <label class="dx-field-item-label dx-field-item-label-location-top"
+            ><span class="dx-field-item-label-content" style="width: 108px"
+              ><span class="dx-field-item-label-text">&nbsp;</span></span
+            ></label
+          >
+          <dx-button
+            (click)="Validar(item.value, cantidad.value)"
+            class="btn-Azulsiman"
+            text="Agregar"
+          ></dx-button>
+        </dxi-item>
+      </dxi-item>
+    </dx-form>
+  </div>
+
+</div>
+
+<div class="row" style="margin-top: 50px;">
+  <div class="col-md-12">
+    <dx-data-grid
+        [rowAlternationEnabled]="true"
+        [dataSource]="analisisInsumos"
+        (onRowUpdated) = "edit($event)"
+        (onEditCanceled) = "editCanceled($event)"
+        noDataText = "No se han agregado insumos"
+        showBorders = true
+      >
+      <dxo-editing [(allowUpdating)]="editarAnalisisInsumo" mode="cell"> </dxo-editing>
+        <dxo-filter-row [visible]="true"> </dxo-filter-row>
+        <dxi-column
+        [allowEditing]="false"
+          caption="Código Insumo"
+          dataField="insumo.prodId"
+          [width]="200"
+        ></dxi-column>
+        <dxi-column
+          [allowEditing]="false"
+          caption="Nombre"
+          dataField="insumo.descripcion"
+        ></dxi-column>
+        <dxi-column
+          [allowEditing]="false"
+          caption="Cantidad Insumo"
+          dataField="insumo.cantidad"
+        ></dxi-column>
+        <dxi-column
+          caption="Cantidad Necesaria Para Análisis"
+          dataField="cantidad"
+        ></dxi-column>
+        <dxi-column
+          caption="Acción"
+          cellTemplate="accionTemplate"
+          [width]="100"
+        ></dxi-column>
+
+        <div *dxTemplate="let d of 'accionTemplate'">
+          <button
+            rel="tooltip"
+            (click)="EditarInsumo(d.data)"
+            type="button"
+            class="btn btn-grid {{
+              editarAnalisisInsumo == true ? 'btn-info' : 'btn-success'
+            }}"
+          >
+            <i *ngIf="editarAnalisisInsumo == false" class="material-icons"
+              >mode_edit</i
+            >
+            <i *ngIf="editarAnalisisInsumo == true" class="material-icons"
+              >done</i
+            >
+          </button>
+          <button
+            rel="tooltip"
+            (click)="EliminarInsumo(d.data)"
+            type="button"
+            class="btn btn-grid btn-danger"
+          >
+            <i class="material-icons">delete</i>
+          </button>
+        </div>
+      </dx-data-grid>
+  </div>
+</div>

@@ -1,0 +1,171 @@
+<!-- <app-main-loader></app-main-loader> -->
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-icon" data-background-color="green">
+            <i class="material-icons">360</i>
+          </div>
+          <div class="card-content">
+            <h4 class="card-title">
+              <strong>Administrar Productos</strong>
+            </h4>
+            <div class="row">
+              <div class="col-lg-offset-1 col-lg-10 col-md-10 col-sm-12 col-xs-12">
+                <div class="row">
+                  <div class="col-md-6" style="margin-top: 20px;">
+                    <span class="labelsFormularios">Categoria:</span>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
+                    <dx-drop-down-box #dropDownAplicacion [(value)]="gridBoxValue" displayExpr="nombre" valueExpr="id"
+                      placeholder="Select a value..." [showClearButton]="true" [dataSource]="distribuidoresCategorias"
+                      name="aplicaciones" [validationError]="{
+                              type: 'required',
+                              message: 'Debe de seleccionar como minimo una Aplicación.'
+                            }" (onValueChanged)="ObtenerProductosCategoria()">
+
+                      <div *dxTemplate="let data of 'content'">
+                        <dx-data-grid #gridAplicacion [wordWrapEnabled]="true" [dataSource]="distribuidoresCategorias"
+                          [selection]="{ mode: 'single' }" [hoverStateEnabled]="true" [filterRow]="{ visible: true }"
+                          [height]="250" [(selectedRowKeys)]="gridBoxValueSelect">
+                          <dxo-paging [pageSize]="10"></dxo-paging>
+                          <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true">
+                          </dxo-pager>
+                          <dxi-column dataField="id" caption="Categoria">
+                            <dxo-lookup [dataSource]="distribuidoresCategorias" closeOnOutsideClick="true"
+                              showPopupTitle="false" displayExpr="nombre" valueExpr="id">
+                            </dxo-lookup>
+                          </dxi-column>
+                          <dxi-column dataField="distribuidorExternoId" caption="Distribuidor">
+                            <dxo-lookup [dataSource]="distribuidores" closeOnOutsideClick="true" showPopupTitle="false"
+                              displayExpr="nombre" valueExpr="id">
+                            </dxo-lookup>
+                          </dxi-column>
+                          <dxo-search-panel [visible]="true"></dxo-search-panel>
+                        </dx-data-grid>
+                      </div>
+                    </dx-drop-down-box>
+                  </div>
+                </div>
+                <br>
+                <div class="row">
+                  <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
+                    <dx-data-grid [dataSource]="productosCategoria" [showColumnLines]="true" [showRowLines]="true"
+                      [showBorders]="true" [columnAutoWidth]="true" [rowAlternationEnabled]="true"
+                      [wordWrapEnabled]="true">
+                      <dxo-filter-row [visible]="true"> </dxo-filter-row>
+                      <dxo-header-filter [visible]="true"></dxo-header-filter>
+                      <dxi-column caption="Eliminar" cellTemplate="accionTemplate" [width]="130"></dxi-column>
+                      <div *dxTemplate="let accion of 'accionTemplate'">
+                        <div style="text-align: center">
+                          <dx-button type="button" type="danger" (click)="DesactivarCategoria(accion.data)"
+                            icon="fa fa-close">
+                          </dx-button>
+                        </div>
+                      </div>
+                      <dxi-column dataField="productoId" caption="Cod Prod.">
+                      </dxi-column>
+                      <dxi-column dataField="productoNombre" caption="Nombre Prod.">
+                      </dxi-column>
+                      <dxo-paging [pageSize]="10" [pageIndex]="0"></dxo-paging>
+                    </dx-data-grid>
+                  </div>
+                </div>
+                <br>
+                <div class="row">
+                  <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
+                    <div class="row" style="float: right;">
+                      <dx-button icon="fa fa-plus-circle" type="default" text="Agregar Producto"
+                        (onClick)="AgregarProducto()">
+                      </dx-button>
+                      <dx-button icon="fa fa-plus-circle" type="default" text="Agregar Productos desde Excel"
+                        (onClick)="_mostrarPopupExcel=true">
+                      </dx-button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <dx-popup class="popup" id="popup" height="80%" width="40%" [showTitle]="true" ng-controller="Ctrl"
+    [title]="nombreCategoriaSeleccionada" [dragEnabled]="false" [closeOnOutsideClick]="true" [(visible)]="_mostrarPopup"
+    [showCloseButton]="true" [resizeEnabled]="true">
+    <div *dxTemplate="let data of 'content'">
+      <br />
+
+      <div class="row">
+        <!-- <dx-text-box [(ngModel)]="distribuidor.nombre" placeholder="Nombre Distribuidor..."></dx-text-box> -->
+      </div>
+      <BR>
+      <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+          <dx-data-grid #Agregarproductos [dataSource]="productos" [showColumnLines]="true" [showRowLines]="true"
+            [showBorders]="true" [columnAutoWidth]="true" [rowAlternationEnabled]="true" [wordWrapEnabled]="true">
+            <dxo-filter-row [visible]="true"> </dxo-filter-row>
+            <dxo-header-filter [visible]="true"></dxo-header-filter>
+            <dxo-selection mode="multiple" showCheckBoxesMode="onClick">
+            </dxo-selection>
+            <dxi-column dataField="productoId" caption="Cod Prod.">
+            </dxi-column>
+            <dxi-column dataField="productoNombre" caption="Nombre Prod.">
+            </dxi-column>
+            <dxo-paging [pageSize]="7" [pageIndex]="0"></dxo-paging>
+          </dx-data-grid>
+        </div>
+      </div>
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="row" style="float: right;">
+          <br>
+          <dx-button icon="fa fa-times-circle" type="danger" text="Cerrar" (onClick)="MostrarPopup(1)">
+          </dx-button>
+          <dx-button icon="fa fa-plus-circle" type="success" text="Guardar" (onClick)="Guardar(Agregarproductos)">
+          </dx-button>
+        </div>
+      </div>
+
+    </div>
+  </dx-popup>
+  <dx-popup class="popup" id="popupProductosExcel"  width="30%"
+  [height]="150"  [showTitle]="true" ng-controller="Ctrl"
+  title="Subir productos desde excel" [dragEnabled]="false" [closeOnOutsideClick]="true"
+    [(visible)]="_mostrarPopupExcel" [showCloseButton]="true" [resizeEnabled]="true">
+    <div id="pp" *dxTemplate="let data of 'content'">
+        <dx-load-panel
+        #loadPanel
+        shadingColor="rgba(0,0,0,0.4)"
+        [position]="{ of: '#pp' }"
+        [(visible)]="loadingVisible"
+        [showIndicator]="true"
+        [showPane]="true"
+        [shading]="true"
+        message="Subiendo archivo..."
+       
+        [closeOnOutsideClick]="false"
+       >
+    </dx-load-panel>
+      <div class="row" id='fileUploader'>
+        <div class="col-lg-offset-1 col-lg-10 col-md-10 col-sm-12 col-xs-12">
+         
+          <div class="row">
+            <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
+
+              <dx-file-uploader #fileUploaderDocs multiple="false" uploadMode="useForm"[(value)]='fileDataUri'
+                selectButtonText="Seleccione archivo" labelText="o soltar archivo aquí"
+                invalidFileExtensionMessage="El tipo de archivo no está permitido" allowedFileExtensions="['.xls', '.xlsx' ]"
+                invalidMaxFileSizeMessage="El archivo es demasiado grande" readyToUploadMessage="Listo para cargar"
+                (onValueChanged)="ObtenerImagenSeleccionadoDxFileUploader($event)"></dx-file-uploader>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </dx-popup>

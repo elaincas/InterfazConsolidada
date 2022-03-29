@@ -1,0 +1,71 @@
+.labelsFormularios{
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+    font-size: 15px;
+    font-style: bold;
+    font-weight: 300;
+    line-height: 1.5em;
+    display: block;
+}
+.form-section-title{
+    font-size: 1.5em;
+    margin: 10px 0;
+    font-weight: bold;
+    color: #615a5a;
+}
+.AzulFarsiman{
+    background-color: #0058a8 !important;
+}
+
+#planimetria .input-group-addon{
+    padding: 26px 15px 0px 0px !important;
+}
+
+#archivos .input-group-addon{
+    padding: 26px 15px 0px 0px !important;
+}
+#envio .input-group-addon{
+    padding: 26px 15px 0px 0px !important;
+}
+
+.colorTab{
+  background-color:#0058a8!important;
+}
+.btn-Anterior{
+  background-color: #a80000 !important;
+  box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(0, 88, 168, 0.29) !important;
+}
+.btn-AzulFarsiman
+{
+    background-color: #0058a8 !important;
+    box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(0, 88, 168, 0.29) !important;
+}
+.btn-Verde   
+{
+    background-color: #00a808 !important;
+    box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(0, 88, 168, 0.29) !important;
+}
+.input-btnAdd
+{
+    margin-left: 40px !important;
+}
+
+::ng-deep .widget-container {
+    margin-right: 240px;
+}
+::ng-deep .dx-gallery-item {
+  width: 500px;
+  max-width: 100%;
+}
+::ng-deep .dx-gallery-item img {
+  height: 300px;
+  width: 450px;
+  max-width: 100%;
+}
+img.resize {
+  width:40%; /* you can use % */
+  height: 50%;
+}
+
+.dx-fileuploader-file-container{
+    display: none!important;
+}

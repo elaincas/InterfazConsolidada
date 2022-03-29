@@ -1,0 +1,205 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-icon" data-background-color="green">
+            <i class="material-icons">assignment_ind</i>
+          </div>
+          <div class="card-content">
+            <h4 class="card-title">Reporte De Clientes Suscritos</h4>
+            <form [formGroup]="formReporte">
+              <div class="row">
+                <dx-data-grid style="width: 100%;"
+                              #gridColonias
+                              [dataSource]="dataSource"
+                              [showBorders]="true"
+                              [showColumnLines]="true"
+                              [showRowLines]="true"
+                              [hoverStateEnabled]="true"
+                              [columnAutoWidth]="true"
+                              [wordWrapEnabled]="true"
+                              [remoteOperations]="true"
+                              noDataText="No se encontraron registros."
+                              [masterDetail]="{ enabled: true, template: 'detail' }"
+                              (onToolbarPreparing)="onToolbarPreparing($event)">
+                  <dxo-paging [pageSize]="20"></dxo-paging>
+                  <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10, 20, 30]" [showInfo]="true"></dxo-pager>
+                  <dxo-search-panel [visible]="true" [width]="240" placeholder="Buscar..."></dxo-search-panel>
+                  <dxi-column caption="Nombre Cliente" dataField="nombreCliente" [allowEditing]="false"></dxi-column>
+                  <dxi-column caption="Identidad" dataField="identidad" [allowEditing]="false"></dxi-column>
+                  <dxi-column caption="celular" dataField="celular" [allowEditing]="false"></dxi-column>
+                  <dxi-column caption="Total" dataField="total" [allowEditing]="false" format="###,##0.00"></dxi-column>
+                  <dxo-summary>
+                    <dxi-total-item column="total" summaryType="sum" valueFormat="###,###,###,##0.00"></dxi-total-item>
+                  </dxo-summary>
+                  <dxo-load-panel [enabled]="true" text="Cargando reporte"></dxo-load-panel>
+                  <dxo-export [enabled]="true" [fileName]="nombreArchivoExcel()" [allowExportSelectedData]="true"></dxo-export>
+                  <div *dxTemplate="let pedido of 'detail'">
+                    <dx-data-grid [dataSource]="pedido.data.detalle" [showBorders]="true" [columnAutoWidth]="true" [showRowLines]="true">
+                      <dxi-column dataField="productoId" caption="Producto ID"></dxi-column>
+                      <dxi-column dataField="productoDescripcion" caption="Producto"></dxi-column>
+                      <dxi-column dataField="sucursal" caption="Sucursal"></dxi-column>
+                      <dxi-column dataField="tipoPedido" caption="Tipo De Pedido"></dxi-column>
+                      <dxi-column caption="Total" dataField="total" [allowEditing]="false" [width]="100"
+                      format="###,##0.00"></dxi-column>
+                      <dxi-column dataField="fechaSuscripcion" caption="Fecha Suscripcion" dataType="date"></dxi-column>
+                    </dx-data-grid>
+                  </div>
+                </dx-data-grid>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<dx-popup class="popup p-b-0"
+  [showTitle]="true"
+  title="Panel de Filtros"
+  [dragEnabled]="false"
+  [closeOnOutsideClick]="true"
+  [(visible)]="popupFiltrosVisible"
+  [maxWidth]=620
+  [maxHeight]=550>
+  <div *dxTemplate="let data of 'content'" class="container-fluid">
+    <dx-scroll-view [showScrollbar]="onHover">
+      <form [formGroup]="formReporte">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="lookupEmpresa">Empresa: </label>
+              <dx-lookup
+                formControlName="lookupEmpresa"
+                id="lookupEmpresa"
+                [dataSource]="listadoEmpresas"
+                displayExpr="descripcion"
+                valueExpr="empresaId"
+                [showClearButton]="false"
+                [searchEnabled]="false"
+                >
+              </dx-lookup>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Identidad Del Cliente:</label>
+              <dx-text-box formControlName="noIdentidad" placeholder="Buscar por identidad"></dx-text-box>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Nombre Del Cliente:</label>
+              <dx-text-box formControlName="nombreCliente" placeholder="Buscar por nombre"></dx-text-box>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group mt-0">
+              <label>Celular Del Cliente:</label>
+              <dx-text-box formControlName="celularCliente" placeholder="Buscar por celular"></dx-text-box>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group mt-0">
+              <label>Codigo Producto:</label>
+              <dx-text-box formControlName="codigoProducto" placeholder="Buscar codigo producto"></dx-text-box>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group mt-0">
+              <label>Sucursal:</label>
+              <dx-lookup formControlName="sucursalId"
+                [dataSource]="sucursales"
+                displayExpr="nombrePublico"
+                valueExpr="codigo"
+                [showClearButton]="true"
+                [searchEnabled]="true"
+                placeholder="Seleccionar"
+                clearButtonText="Quitar filtro"
+                cancelButtonText="Cancelar"
+                noDataText="No se encontraron registros">
+              </dx-lookup>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group mt-0">
+              <label>Estado:</label>
+              <dx-lookup formControlName="pedidoReorderEstado"
+                [dataSource]="pedidoReorderEstados"
+                displayExpr="nombre"
+                valueExpr="id"
+                [searchEnabled]="true"
+                [showClearButton]="true"
+                placeholder="Seleccionar"
+                clearButtonText="Quitar filtro"
+                cancelButtonText="Cancelar"
+                noDataText="No se encontraron registros">
+              </dx-lookup>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group mt-0">
+              <label>Fecha pedido debe realizarse desde:</label>
+              <dx-date-box
+                formControlName="fechaDebeRealizarsePedidoDesde"
+                accesskey="dx-fechaDebeRealizarsePedidoDesde"
+                [displayFormat]="'dd/MM/yyyy'"
+                type="date"
+                width="auto"
+                [max]="fechaDebeRealizarsePedidoHasta"
+                [(ngModel)]="fechaDebeRealizarsePedidoDesde">
+              </dx-date-box>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group mt-0">
+              <label>Fecha pedido debe realizarse hasta:</label>
+              <dx-date-box
+                formControlName="fechaDebeRealizarsePedidoHasta"
+                accesskey="dx-fechaDebeRealizarsePedidoHasta"
+                [displayFormat]="'dd/MM/yyyy'"
+                type="date"
+                width="auto"
+                [min]="fechaDebeRealizarsePedidoDesde"
+                [(ngModel)]="fechaDebeRealizarsePedidoHasta">
+              </dx-date-box>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group mt-0">
+              <label>Tipo de pedido:</label>
+              <dx-lookup formControlName="tipoPedido"
+                [dataSource]="pedidoTipos"
+                displayExpr="nombre"
+                valueExpr="id"
+                [showClearButton]="true"
+                [searchEnabled]="true"
+                placeholder="Seleccionar"
+                clearButtonText="Quitar filtro"
+                cancelButtonText="Cancelar"
+                noDataText="No se encontraron registros">
+              </dx-lookup>
+            </div>
+          </div>
+          <div class="col-md-6 align-self-end">
+            <div class="form-group">
+              <dx-check-box formControlName="checkSuscrito" text="Mostrar Clientes Suscritos" (onValueChanged)="cargarReporte()" class="mt-10">
+              </dx-check-box>
+            </div>
+          </div>
+          <div class="col-md-12 text-center">
+            <div class="form-group mt-10">
+              <button type="button" class="btn btn-default mt-0 mb-0" (click)="cargarReporte()">
+                <i class="material-icons fa-2x">filter_list</i> Cargar Reporte
+              </button>
+            </div>
+            <br>
+          </div>
+        </div>
+      </form>
+    </dx-scroll-view>
+  </div>
+</dx-popup>

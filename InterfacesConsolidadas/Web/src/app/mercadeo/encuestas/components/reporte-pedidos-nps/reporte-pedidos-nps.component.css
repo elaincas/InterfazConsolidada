@@ -1,0 +1,36 @@
+.fondo-blanco {
+  background-color: #f8f9fa !important;
+}
+
+.mt-2rem {
+  margin-top: 2.5rem;
+}
+
+.mt-1rem {
+  margin-top: 1rem !important;
+}
+.padding-disminuido-jumbotron {
+  padding-right: 15px;
+  padding-left: 15px;
+  padding-top: 15px;
+  padding-bottom: 20px;
+}
+
+.espacio-lados-sm {
+  padding-left: 28px;
+  padding-right: 28px;
+}
+
+.espacio-abajo-sm {
+  margin-bottom: 1.5rem;
+}
+
+@media only screen and (max-width: 1440px) and (min-width: 1204px) {
+  .aumentar-width {
+    width: 23% !important;
+  }
+}
+
+.mt-5px {
+  margin-top: 5px;
+}

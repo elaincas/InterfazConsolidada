@@ -1,0 +1,117 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-icon" data-background-color="green">
+            <i class="material-icons">360</i>
+          </div>
+          <div class="card-content">
+            <h4 class="card-title">
+              <strong>Administrar Sucursales</strong>
+            </h4>
+
+            <div class="row">
+              <div class="col-lg-offset-1 col-lg-10 col-md-10 col-sm-12 col-xs-12">
+                <div class="row">
+                  <div class="col-md-6" style="margin-top: 20px;">
+                    <span class="labelsFormularios">Distribuidor:</span>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
+                    <dx-lookup  [(ngModel)]="sucusarEditar.distribuidoresExternosId"  #dropDowndistribuidor displayExpr="nombre" valueExpr="id" 
+                      placeholder="Select a Distribuidor" [showClearButton]="true" [dataSource]="distribuidores"
+                      closeOnOutsideClick="true" name="dropDowndistribuidor">
+                    </dx-lookup>
+                  </div>
+
+                </div>
+                <br>
+                <div class="row">
+                  <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
+                    <dx-lookup [(ngModel)]="sucusarEditar.sucursalId" #dropDownsucursal displayExpr="nombre" valueExpr="id" placeholder="Select Sucursal"
+                      [showClearButton]="true" [dataSource]="sucursales" closeOnOutsideClick="true" name="dropSucursal">
+                    </dx-lookup>
+                  </div>
+
+                </div>
+                <br>
+                <div class="row">
+                  <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
+                    <dx-text-box [(ngModel)]="sucusarEditar.sucursalIdExterno" placeholder="Código externo sucursal...">
+                    </dx-text-box>
+                  </div>
+                </div>
+                <br>
+                <div class="row">
+                  <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
+                    <div class="row" style="float: right;">
+                      <dx-button icon="fa fa-plus-circle" type="default" [text]="Texto()"
+                        (onClick)="GuardarCambios()"> 
+                      </dx-button>
+                      <dx-button icon="fa fa-eraser" type="danger" text="Limpiar"
+                        (onClick)="Limpiar()"> 
+                      </dx-button>
+                    </div>
+                  </div>
+                </div>
+                <br>
+                <div class="row">
+                  <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
+                    <dx-data-grid id="gridContainer" #gridListado [dataSource]="dataSource" [showBorders]="true"
+                      [remoteOperations]="true">
+
+                      <dxo-paging [pageSize]="25"></dxo-paging>
+                      <dxo-filter-row [visible]="true"></dxo-filter-row>
+
+                      <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[  25, 50, 100]"></dxo-pager>
+                      <dxi-column dataField="id" caption="Código" [filterOperations]="[ '=']">
+
+                      </dxi-column>
+                      <dxi-column dataField="nombre" caption="Sucursal" [filterOperations]="[ '=']" dataType="string">
+
+                      </dxi-column>
+                      <dxi-column dataField="distribuidoresExternosId" caption="Distribuidor Ext."
+                        cellTemplate="distribuidorTemplate" [filterOperations]="[ '=']" dataType="string">
+                        <dxo-lookup [dataSource]="distribuidores" valueExpr="id" displayExpr="nombre"></dxo-lookup>
+                      </dxi-column>
+                      <div *dxTemplate="let data of 'distribuidorTemplate'">
+                        <dx-lookup #dropDowndistribuidor displayExpr="nombre" valueExpr="id"
+                          placeholder="Select a Distribuidor" [showClearButton]="true" [dataSource]="distribuidores"
+                          closeOnOutsideClick="true" [disabled]="true" [(ngModel)]="data.value"
+                          name="dropDowndistribuidor">
+                        </dx-lookup>
+                      </div>
+                      <dxi-column dataField="sucursalIdExterno" caption="Código Ext." [filterOperations]="[ '=']"
+                        dataType="string">
+
+                      </dxi-column>
+                      <dxi-column caption="Activo" dataField="activo"> </dxi-column>
+                      <dxi-column caption="Editar" cellTemplate="accionTemplate" [width]="130"></dxi-column>
+                      <div *dxTemplate="let accion of 'accionTemplate'">
+                        <div style="text-align: center">
+                          <dx-button type="button" type="success" (click)="ActualizarSucursal(accion.data)"
+                            icon="fa fa-edit">
+                          </dx-button>
+                          <dx-button type="button" type="danger" (click)="DesactivarSucursal(accion.data)"
+                          icon="fa fa-close">
+                        </dx-button>
+                        </div>
+                      </div>
+                    </dx-data-grid>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

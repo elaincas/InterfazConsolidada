@@ -1,0 +1,81 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-icon" data-background-color="green">
+            <i class="material-icons">list</i>
+          </div>
+          <div class="card-content">
+            <h4 class="card-title">Listado de Productos de Carrusel</h4>
+          </div>
+          <div class="card-content">
+            <div class="row">
+              <div class="col-xs-12">
+                <span>¿Necesita ayuda?</span>
+                <a href="https://farmaciasiman.site:1201/manuales/farmacia/ecommerce/administracion/carruseles/" 
+                  class="btn btn-round btn-sm mat-raised-button btn-info" style="margin-top: 0px"
+                  target="popup" onclick="window.open('https://farmaciasiman.site:1201/manuales/farmacia/ecommerce/administracion/carruseles/','popup','width=900,height=600'); return false;">
+                  <i class="material-icons">help</i>Leer manual
+                </a>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <dx-data-grid [showBorders]="true"
+                              [masterDetail]="{ enabled: true, template:'carruselesTemplate'}"
+                              [rowAlternationEnabled]="true"
+                              [dataSource]="listaProductosCarruselPorPagina">
+                  <dxi-column caption="#" dataField="paginaId" [width]="100"></dxi-column>
+                  <dxi-column caption="Página" dataField="pagina"></dxi-column>
+                  <dxi-column caption="Total Carruseles" dataField="totalCarruseles" [width]="120" dataType="string" cssClass="text-align"></dxi-column>
+                    <div *dxTemplate="let carrusel of 'carruselesTemplate'">
+                      <dx-data-grid [showBorders]="true"
+                                    [masterDetail]="{ enabled: true, template:'productosTemplate'}"
+                                    [rowAlternationEnabled]="true"
+                                    *ngIf="carrusel.data.listaCarruselConProductos.length > 0"
+                                    [dataSource]="carrusel.data.listaCarruselConProductos">
+                        <dxi-column caption="#" dataField="carruselId" [width]="100"></dxi-column>
+                        <dxi-column caption="Carrusel" dataField="carrusel"></dxi-column>
+                        <dxi-column caption="Total Productos" dataField="totalProductos" [width]="120" dataType="string" cssClass="text-align"></dxi-column>
+                        <dxi-column caption="Acciones" cellTemplate="accionTemplate" [width]="155"> </dxi-column>
+                        <div *dxTemplate="let c of 'accionTemplate'">
+                          <button rel="tooltip" title="Editar" (click)="EditarCarrusel(c.data)" type="button" class="btn btn-grid btn-Azulsiman ">
+                            <i class="material-icons">mode_edit</i>
+                          </button>
+                          <button rel="tooltip" title="Eliminar" type="button" (click)="EliminarCarrusel(c.data, carrusel.data.listaCarruselConProductos)" class="btn btn-grid btn-danger ">
+                            <i class="material-icons">close</i>
+                          </button>
+                        </div>
+                        <div *dxTemplate="let producto of 'productosTemplate'" >
+                          <dx-data-grid [rowAlternationEnabled]="true" [showBorders]="true" [dataSource]="producto.data.productos">
+                            <dxi-column caption="Código" dataField="productoId" [width]="100">  </dxi-column>
+                            <dxi-column caption="Producto" dataField="descripcion" minWidth="300"> </dxi-column>
+                            <dxi-column caption="Fecha Inicia" dataField="fechaInicioActivo" [width]="100" datatype="date" cellTemplate="dateCell">  </dxi-column>
+                            <dxi-column caption="Fecha Fin" dataField="fechaFinActivo" [width]="100" datatype="date" cellTemplate="dateCell"></dxi-column>
+                            <dxi-column caption="Orden" dataField="orden" width="60">  </dxi-column>
+                            <div *dxTemplate="let cellData of 'dateCell'">
+                              {{cellData.value | date: 'dd/MM/yyyy'}}
+                            </div>
+                            <dxi-column caption="Acciones" cellTemplate="accionTemplate" [width]="155"> </dxi-column>
+                            <div *dxTemplate="let prod of 'accionTemplate'">
+                              <button rel="tooltip" title="Eliminar" type="button" (click)="EliminarProductoDeCarrusel(prod.data, producto.data.productos)" class="btn btn-grid btn-danger ">
+                                <i class="material-icons">close</i>
+                              </button>
+                            </div>
+                          </dx-data-grid>
+                        </div>
+                      </dx-data-grid>
+                    </div>
+                  <dxo-paging [pageSize]="15" [pageIndex]="0"></dxo-paging>
+                </dx-data-grid>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+

@@ -1,0 +1,137 @@
+<!-- <app-main-loader>
+</app-main-loader> -->
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-icon" data-background-color="red">
+            <i class="material-icons">contacts</i>
+          </div>
+          <div class="card-content">
+            <h4 class="card-title">
+              Categoría de Productos {{navegacionCategoria}}
+              <span >
+                \ Nivel {{categoria.nivel}}
+              </span>
+            </h4>
+
+            <button type="button" *ngIf="mostrarIrCategoriaAnterior" class="btn btn-fill btn-simple frm-simple-back" (click)="irCategoriaAnterior()">
+              <i class="material-icons">keyboard_backspace</i> nivel {{categoria.nivel-1}}
+            </button>
+
+            <form class="form-horizontal" #frm>
+              <form class="form-horizontal">
+                <div class="row">
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label>Descripción</label>
+                      <dx-text-box #txtDescripcion [maxLength]="30" [showClearButton]="true"  [(value)]="categoria.descripcion">
+                        <dx-validator [validationRules]="inputDescripcionRules">
+                        </dx-validator>
+                      </dx-text-box>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label>Ruta Web:</label>
+                      <dx-text-box #txtRutaWeb [maxLength]="50"  [(value)]="categoria.rutaWeb" >
+                        <dx-validator [validationRules]="inputRutaWebRules">
+                        </dx-validator>
+                      </dx-text-box>
+                    </div>
+                  </div>
+                  <div class="col-md-3" *ngIf="categoria.nivel > 1">
+                    <div class="form-group">
+                      <label>Banner:</label>
+                      <dx-select-box  #luePaginaId
+                                  [dataSource]="paginas"
+                                  displayExpr="descripcion"
+                                  valueExpr="id"
+                                  title="Seleccione el Banner"
+                                  placeholder="Seleccione el Banner"
+                                  [(value)] = "categoria.paginaId"
+
+                                  searchEnabled = "true"
+                      ></dx-select-box>
+                    </div>
+                  </div>
+                  <div class="col-md-2">
+                    <div class="form-group">
+                      <label>Visible:</label>
+                      <br>
+                      <dx-check-box [(value)]="categoria.esVisible" ></dx-check-box>
+                    </div>
+                  </div>
+                </div>
+                <app-agrupador-productos #productosCmp [productos]="categoria.productos" (alEliminarUnProducto)="alEliminarUnProducto($event)"
+                  (antesDeAgregarUnProducto)="antesDeAgregarUnProducto($event)"></app-agrupador-productos>
+
+                <div class="row margin-section">
+                  <div class="col-md-12">
+                    <fieldset class="form-section-title">
+                      Excel con productos:
+                    </fieldset>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="form-group ">
+                      <dx-file-uploader [(value)]="archivosExcel" (onValueChanged)="inputExcelChanged()" selectButtonText="Subir archivo csv"
+                        labelText="" accept=".csv" uploadMode="useForm">
+                      </dx-file-uploader>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row form-section" *ngIf="(categoria.permiteSubcategorias)">
+                  <div class="col-md-12">
+                    <fieldset class="form-section-title">
+                      Subcategorías
+                    </fieldset>
+
+                    <div class="margin-section">
+                      <div class="form-group no-margin no-padding">
+                        <button type="button" class="btn btn-Azulsiman btn-round btn-fab btn-fab-mini" (click)="nuevaSubcategoria()">
+                          <i class="material-icons">add</i>
+                          <div class="ripple-container"></div>
+                        </button>
+                      </div>
+                    </div>
+
+                    <div class="dx-border-grid">
+                      <dx-data-grid [rowAlternationEnabled]="true" [dataSource]="categoria.subcategorias">
+                        <dxi-column caption="Descripción" dataField="descripcion"> </dxi-column>
+                        <dxi-column caption="Ruta Web" dataField="rutaWeb" [width]="250"></dxi-column>
+                        <dxi-column caption="Acción" [width]="100" cellTemplate="accionTemplate"></dxi-column>
+                        <div *dxTemplate="let d of 'accionTemplate'">
+                          <button rel="tooltip" (click)="eliminarSubcategoria(d.data)" type="button" class="btn btn-grid btn-danger ">
+                            <i class="material-icons">close</i>
+                          </button>
+                          <button rel="tooltip" (click)="editarSubcategoria(d.data)" type="button" class="btn btn-grid btn-Azulsiman ">
+                            <i class="material-icons">mode_edit</i>
+                          </button>
+                        </div>
+                      </dx-data-grid>
+                    </div>
+                  </div>
+                </div>
+              </form>
+              <div class="row margin-section">
+                <div class="col-md-9">
+                  <div class="form-group form-button">
+                    <button type="button" *ngIf="mostrarIrCategoriaAnterior" class="btn btn-fill btn-simple" (click)="irCategoriaAnterior()">
+                      <i class="material-icons">keyboard_backspace</i> nivel {{categoria.nivel-1}}
+                    </button>
+                    <!-- <button type="button" class="btn btn-fill btn-Azulsiman"  (click)="guardar()">Guardar</button> -->
+                    <button type="button" class="btn btn-fill btn-Azulsiman" *ngIf="mostrarBtnGuardar" (click)="guardar()">Guardar</button>
+
+                    <button type="button" class="btn btn-fill btn-danger"  *ngIf="mostrarBtnCancelar" (click)="cancelar()">Cancelar</button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

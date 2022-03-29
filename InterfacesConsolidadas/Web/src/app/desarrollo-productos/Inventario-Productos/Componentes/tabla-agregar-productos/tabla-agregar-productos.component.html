@@ -1,0 +1,152 @@
+<div class="">
+
+  <div class="card">
+    <div class="text-center padding-mensaje">
+      <span class="badge badge-black" *ngIf="mensajeValidacion">{{
+        mensajeValidacion
+      }}</span>
+    </div>
+    <div class="card-content"  >
+      <h4 class="card-title">
+        <strong>Seleccionar Productos</strong>
+      </h4>
+      <div class="row">
+        <div class="col-md-12">
+          <form [formGroup]="formInventarioProductos">
+            <div class="row">
+              <div class="col-md-8">
+                <label class="control-label" for="ProductoId">Producto:</label>
+                <dx-lookup
+                  [dataSource]="dataSourceProductos"
+                  displayExpr="NombreProducto"
+                  valueExpr="ProductoId"
+                  formControlName="CodigoProducto"
+                  (onValueChanged)="obtenerProductoDeImpulsadosPorIdLookup($event)"
+                  placeholder="Descripción..."
+                  [closeOnOutsideClick]="true"
+                >
+                </dx-lookup>
+              </div>
+
+            </div>
+            <div class="row">
+              <div class="col-md-2">
+                <label class="control-label" for="Cantidad">Cantidad:</label>
+                <dx-number-box
+                  formControlName="Cantidad"
+                  format=" ###,###,##0.00"
+                ></dx-number-box>
+              </div>
+              <div class="col-md-2">
+                <label class="control-label" for="Precio">Precio:</label>
+                <dx-number-box
+                  formControlName="Precio"
+                  format="L ###,###,##0.00"
+                ></dx-number-box>
+              </div>
+              <div class="col-md-2">
+                <label class="control-label" for="Costo">Costo:</label>
+                <dx-number-box
+                  formControlName="Costo"
+                  format="L ###,###,##0.00"
+                ></dx-number-box>
+              </div>
+              <div class="col-md-2">
+                <label class="control-label" for="FechaVence">Fecha Vence:</label>
+                <dx-date-box
+                  id="FechaVence"
+                  class="form-control"
+                  type="date"
+                  displayFormat="dd/MM/yyyy"
+                  useMaskBehavior="true"
+                  formControlName="FechaVence"
+                ></dx-date-box>
+              </div>
+              <div class="col-md-1" style="    bottom: -27px;">
+
+                <button
+                  class="btn btn-primary btn-round btn-success btn-fab btn-fab-mini"
+                  rel="tooltip"
+                  title="Agregar"
+                  data-placement="left"
+                  (click)="agregarProducto()"
+                >
+                  <i class="material-icons">add</i>
+                  <div class="tooltip left">Agregar</div>
+                </button>
+              </div>
+            </div>
+    <br>
+            <div class="row">
+
+            </div>
+          </form>
+          <hr/>
+          <br/>
+        </div>
+
+      </div>
+      <div class="row">
+        <div class="table-responsive col-md-12">
+
+          <dx-data-grid [dataSource]="listaProductosIngresar"  [rowAlternationEnabled]="true"
+          [showBorders]="true" keyExpr="ProductoId">
+          <dxo-editing
+          mode="cell"
+         [texts]="{'confirmDeleteTitle':'Eliminar','confirmDeleteMessage':'¿Desea Eliminar?', 'deleteRow':'Eliminar'}"
+          [allowUpdating]="true"
+          [allowDeleting]="true"
+          [allowAdding]="false"   >
+     </dxo-editing>
+     <dxo-filter-row [visible]="true"> </dxo-filter-row>
+     <dxi-column dataField="ProductoId" caption="Código"  [allowEditing]="false" width="80"  ></dxi-column>
+     <dxi-column dataField="NombreProducto" caption="Descripción"  [allowEditing]="false" width="320px" ></dxi-column>
+     <dxi-column dataField="InventarioInicial" caption="Cantidad"    ></dxi-column>
+     <dxi-column dataField="Precio" caption="Precio" format="L ###,###,##0.00"  ></dxi-column>
+     <dxi-column dataField="Costo" caption="Costo" format="L ###,###,##0.00"  ></dxi-column>
+     <dxi-column dataField="Vence" caption="Fecha de Vencimiento"  format="dd/MM/yyyy"    cellTemplate="venceTemplate"
+     editCellTemplate="vencEditTemplate" dataType="date"  >
+      <div *dxTemplate="let data of 'venceTemplate'">
+        {{ data.value | date: "dd/MM/yyyy" }}
+      </div>
+      <div *dxTemplate="let data of 'vencEditTemplate'">
+        <dx-date-box
+          [value]="data.value"
+
+          type="date"
+          displayFormat="d/MM/yyyy"
+          useMaskBehavior="true"
+          (onValueChanged)="data.setValue($event.value)"
+        >
+        </dx-date-box>
+      </div>
+
+    </dxi-column>
+
+
+
+        </dx-data-grid>
+
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-9">
+          <div class="form-group form-button">
+            <button class="btn btn-fill btn-Azulsiman" (click)="ingresar(true)">
+              Ingresar
+            </button>
+            <span class="badge badge-black">{{ mensajeRespuesta }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--<div class="col-md-12">-->
+<!--<div class="card">-->
+<!--<div class="card-header card-header-icon" data-background-color="red">-->
+<!--<i class="material-icons">assignment</i>-->
+<!--</div>-->
+
+<!--</div>-->
+<!--</div>-->

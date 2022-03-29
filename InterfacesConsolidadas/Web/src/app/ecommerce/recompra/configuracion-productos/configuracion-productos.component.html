@@ -1,0 +1,248 @@
+<!-- <app-main-loader></app-main-loader> -->
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="card">
+          <div class="card-header card-header-icon" data-background-color="green">
+            <i class="material-icons">grid_view</i>
+          </div>
+          <div class="card-content">
+            <h4 class="card-title">Configurar productos recompra</h4>
+          </div>
+          <div class="card-content">
+            <div class="row">
+              <div class="col-xs-12">
+
+                <div class="row">
+                  <div class="col-xs-9">
+                    <span>Producto específico:</span>
+                    <dx-drop-down-box [(value)]="productosSeleccionados" valueExpr="identificador" displayExpr="nombre"
+                      placeholder="Seleccione uno o varios productos" [showClearButton]="true"
+                      [dataSource]="productosTodosResult">
+
+                      <div *dxTemplate="let data of 'content'">
+                        <dx-data-grid #gridProductos [dataSource]="productosTodosResult"
+                          [columns]="['identificador', 'nombre']" [selection]="{ mode: 'multiple' }"
+                          [hoverStateEnabled]="true" [paging]="{ enabled: true, pageSize: 30 }"
+                          [filterRow]="{ visible: true }" [scrolling]="{ mode: 'infinite' }" [height]="345"
+                          [(selectedRowKeys)]="productosSeleccionadosChange">
+                        </dx-data-grid>
+                      </div>
+                    </dx-drop-down-box>
+                  </div>
+                  <div class="col-xs-12 col-sm-4">
+                    <button class="btn btn-block btn-success" type="submit"
+                      (click)="CargarProductosEspecificos()">Cargar
+                      seleccionados</button>
+                  </div>
+                </div>
+                <br>
+                <div class="row">
+                  <div class="col-xs-12 col-sm-6">
+                    <span>Proveedor(es):</span>
+                    <dx-drop-down-box [(value)]="proveedoresSeleccionados" valueExpr="identificador"
+                      displayExpr="nombre" placeholder="Seleccione uno o varios proveedores" [showClearButton]="true"
+                      [dataSource]="proveedoresResult">
+
+                      <div *dxTemplate="let data of 'content'">
+                        <dx-data-grid #gridProveedores [dataSource]="proveedoresResult"
+                          [columns]="['identificador', 'nombre']" [selection]="{ mode: 'multiple' }"
+                          [hoverStateEnabled]="true" [paging]="{ enabled: true, pageSize: 30 }"
+                          [filterRow]="{ visible: true }" [scrolling]="{ mode: 'infinite' }" [height]="345"
+                          [(selectedRowKeys)]="proveedoresSeleccionadosChange">
+                        </dx-data-grid>
+                      </div>
+                    </dx-drop-down-box>
+                  </div>
+                </div>
+                <br>
+                <div class="row">
+                  <div class="col-xs-12 col-sm-6">
+                    <span>Distribuidor(es):</span>
+                    <dx-drop-down-box [(value)]="distribuidoresSeleccionados" valueExpr="identificador"
+                      displayExpr="nombre" placeholder="Seleccione uno o varios distribuidores" [showClearButton]="true"
+                      [dataSource]="distribuidoresResult">
+
+                      <div *dxTemplate="let data of 'content'">
+                        <dx-data-grid #gridDistribuidores [dataSource]="distribuidoresResult"
+                          [columns]="['identificador', 'nombre']" [selection]="{ mode: 'multiple' }"
+                          [hoverStateEnabled]="true" [paging]="{ enabled: true, pageSize: 30 }"
+                          [filterRow]="{ visible: true }" [scrolling]="{ mode: 'infinite' }" [height]="345"
+                          [(selectedRowKeys)]="distribuidoresSeleccionadosChange">
+                        </dx-data-grid>
+                      </div>
+                    </dx-drop-down-box>
+                  </div>
+                </div>
+                <br>
+                <div class="row">
+                  <div class="col-xs-12 col-sm-6">
+                    <span>Línea(s):</span>
+                    <dx-drop-down-box [(value)]="lineasSeleccionadas" valueExpr="identificador" displayExpr="nombre"
+                      placeholder="Seleccione una o varias líneas" [showClearButton]="true" [dataSource]="lineasResult">
+
+                      <div *dxTemplate="let data of 'content'">
+                        <dx-data-grid #gridLineas [dataSource]="lineasResult" [columns]="['identificador', 'nombre']"
+                          [selection]="{ mode: 'multiple' }" [hoverStateEnabled]="true"
+                          [paging]="{ enabled: true, pageSize: 30 }" [filterRow]="{ visible: true }"
+                          [scrolling]="{ mode: 'infinite' }" [height]="345"
+                          [(selectedRowKeys)]="lineasSeleccionadasChange">
+                        </dx-data-grid>
+                      </div>
+                    </dx-drop-down-box>
+                  </div>
+                </div>
+                <br>
+                <div class="row">
+                  <div class="col-xs-12 col-sm-6">
+                    <span>Uso continuo:</span>
+                    <dx-select-box [dataSource]="usoContinuoOpciones" displayExpr="texto" valueExpr="id"
+                      title="Producto de uso continuo" [(value)]="usoContinuoValorSeleccionado">
+                    </dx-select-box>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-xs-12 col-sm-3 col-md-4 col-lg-3">
+                    <button class="btn btn-block btn-success" type="submit" (click)="FiltrarProductos()">Cargar
+                      con filtros</button>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xs-12">
+                  <br>
+                  <h3>Lista de productos</h3>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xs-12 col-sm-3">
+                  <span class="labelsFormularios">Puntos por lempira:</span>
+                  <dx-number-box
+                    [min]="1"
+                    [max]="5"
+                    [(ngModel)]="porcentajeDePuntos"></dx-number-box>
+                </div>
+                <!-- <div class="col-xs-12 col-sm-3">
+                  <span class="labelsFormularios">Cantidad de puntos:</span>
+                  <dx-number-box
+                    [min]="1"
+                    [(ngModel)]="cantidadFijaPuntos"></dx-number-box>
+                </div>
+                <div class="col-xs-12 col-sm-3">
+                  <span class="labelsFormularios">% Descuento:</span>
+                  <dx-number-box
+                    [min]="1"
+                    [(ngModel)]="porcentajeDescuento"></dx-number-box>
+                </div> -->
+                <div class="col-xs-12 col-sm-4">
+                  <button class="btn btn-block btn-success" type="submit"
+                    (click)="ActualizarConfiguracionesTodos()">Guardar
+                    configuraciones</button>
+                </div>
+                <div class="col-md-12">
+
+                  <dx-data-grid [showBorders]="true"
+                    [masterDetail]="{ enabled: true, template:'productosConfiguracionTemplate'}"
+                    [rowAlternationEnabled]="true" [dataSource]="productosFiltradosResult">
+                    <dxi-column caption="Cantidad de productos" dataField="cantidadProductos" [width]="170">
+                    </dxi-column>
+                    <dxi-column caption="Puntos por lempira" dataField="porcentajeDePuntos" [width]="120" dataType="string"
+                      cssClass="text-align"></dxi-column>
+                    <!-- <dxi-column caption="% Descuento" dataField="porcentajeDescuento" [width]="120" dataType="string"
+                      cssClass="text-align"></dxi-column>
+                    <dxi-column caption="Puntos" dataField="cantidadFijaPuntos" [width]="120" dataType="string"
+                      cssClass="text-align"></dxi-column> -->
+                    <dxi-column caption="Acciones" cellTemplate="accionTemplate"> </dxi-column>
+
+                    <div *dxTemplate="let fila of 'accionTemplate'">
+                      <table>
+                        <tr>
+                          <td>
+                            <span class="labelsFormularios">Puntos por lempira:</span>
+                            <dx-number-box
+                              [min]="1"
+                              [max]="5"
+                              [(ngModel)]="fila.data.porcentajeDePuntos"></dx-number-box>
+                          </td>
+                          <!-- <td>
+                            <span class="labelsFormularios">Cantidad de puntos:</span>
+                            <dx-number-box
+                              [min]="1"
+                              [(ngModel)]="fila.data.cantidadFijaPuntos"></dx-number-box>
+                          </td>
+                          <td>
+                            <span class="labelsFormularios">% Descuento:</span>
+                            <dx-number-box
+                              [min]="1"
+                              [(ngModel)]="fila.data.porcentajeDescuento"></dx-number-box>
+                          </td> -->
+                        </tr>
+                        <tr>
+                          <td colspan="2">
+                            <button class="btn btn-block btn-success" type="submit"
+                              (click)="ActualizarConfiguracionesGrupo(fila.data.productos, fila.data.porcentajeDescuento, fila.data.cantidadFijaPuntos, fila.data.porcentajeDePuntos)">Guardar
+                              configuraciones</button>
+                          </td>
+                        </tr>
+                      </table>
+                    </div>
+
+                    <div *dxTemplate="let cliente of 'productosConfiguracionTemplate'">
+
+                      <dx-data-grid [showBorders]="true" [rowAlternationEnabled]="true"
+                        [dataSource]="cliente.data.productos">
+                        <dxi-column caption="Código" dataField="identificador" [width]="100"> </dxi-column>
+                        <dxi-column caption="Producto" dataField="nombre" minWidth="300"> </dxi-column>
+                        <!-- <dxi-column caption="Precio" dataField="precio" [width]="100" cellTemplate="precioCell">
+                      </dxi-column>
+                      <div *dxTemplate="let precioData of 'precioCell'">
+                        {{'L. ' + precioData.value}}
+                      </div>
+                    -->
+                        <dxi-column caption="Acciones" cellTemplate="accionTemplate"> </dxi-column>
+                        <div *dxTemplate="let producto of 'accionTemplate'">
+                          <table>
+                            <tr>
+                              <td>
+                                <span class="labelsFormularios">Puntos por lempira:</span>
+                                <dx-number-box
+                                  [min]="1"
+                                  [max]="5"
+                                  [(ngModel)]="producto.data.porcentajeDePuntos"></dx-number-box>
+                              </td>
+                              <!-- <td>
+                                <span class="labelsFormularios">Cantidad de puntos:</span>
+                                <dx-number-box
+                                  [min]="1"
+                                  [(ngModel)]="producto.data.cantidadFijaPuntos"></dx-number-box>
+                              </td>
+                              <td>
+                                <span class="labelsFormularios">% Descuento:</span>
+                                <dx-number-box
+                                  [min]="1"
+                                  [(ngModel)]="producto.data.porcentajeDescuento"></dx-number-box>
+                              </td> -->
+                            </tr>
+                            <tr>
+                              <td colspan="2">
+                                <button class="btn btn-block btn-success" type="submit"
+                                  (click)="ActualizarConfiguracionesProducto(producto.data)">Guardar</button>
+                              </td>
+                            </tr>
+                          </table>
+                        </div>
+                      </dx-data-grid>
+                    </div>
+
+                  </dx-data-grid>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

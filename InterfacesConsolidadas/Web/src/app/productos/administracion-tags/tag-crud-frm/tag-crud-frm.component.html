@@ -1,0 +1,13 @@
+<form class="form-horizontal">
+  <div class="form-group">
+      <label>Descripción:</label>
+    <dx-text-box #txtDescripcion [(value)]="tag.descripcion" required [maxLength]="50">
+      <dx-validator [validationRules]="inputDescripcionRules">
+      </dx-validator>
+    </dx-text-box>
+  </div>
+  <div class="form-group form-button">
+    <button class="btn btn-fill btn-Azulsiman" (click)="guardar(tag)">Guardar</button>
+    <button class="btn btn-fill btn-danger" (click)="cancelar()"> Cancelar</button>
+  </div>
+</form>

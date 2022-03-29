@@ -1,0 +1,151 @@
+.form-group-btn-inline .btn {
+  padding: 10px 30px 10px 30px;
+  margin: 24px 1px 0 1px;
+}
+
+.table-header-text {
+  font-size: 13px;
+  line-height: 1.42857;
+  color: #aaaaaa;
+  font-weight: 400;
+}
+
+.overflow {
+  overflow: hidden;
+}
+
+.btn-grid {
+  padding: 4px 8px;
+  margin: 0;
+}
+
+.form-section-title {
+  font-size: 1.5em;
+  margin: 10px 0;
+  font-weight: bold;
+  color: #615a5a;
+}
+
+.dx-overlay-shader {
+  background: rgba(0, 0, 0, 0.3) !important;
+}
+
+.dx-popup-wrapper.popup > .dx-overlay-content {
+  box-shadow: 0 27px 24px 0 rgba(0, 0, 0, 0.2),
+    0 40px 77px 0 rgba(0, 0, 0, 0.22);
+  border-radius: 6px;
+  border: none;
+}
+
+.dx-modal-header {
+  text-align: center;
+  font-size: 1.6em;
+}
+
+.dx-modal-header .modal-title {
+  text-align: center;
+  font-size: 1.2em;
+}
+
+.dx-modal-footer {
+  position: absolute;
+  bottom: 0;
+  width: calc(100% - 40px);
+}
+
+.dx-modal-footer .btn {
+  float: right;
+}
+
+.dx-border-grid {
+  border-style: solid;
+  border-width: 1px;
+  border-color: #dddddd;
+}
+
+.swal2-container {
+  z-index: 9999;
+}
+
+.loader-container {
+  z-index: 9999;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  opacity: 1;
+  background: #eeeeee;
+  transition: all 100ms;
+}
+
+.margin-section {
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.no-margin {
+  margin: 0;
+}
+
+.no-margin-top {
+  margin-top: 0;
+}
+
+.no-margin-bottom {
+  margin-bottom: 0;
+}
+
+.no-margin-top-bottom {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.no-padding {
+  padding: 0;
+}
+
+.frm-simple-back {
+  margin: 0;
+}
+
+.form-group__inline {
+  float: left;
+}
+
+.form-group__inline-btn {
+  margin-bottom: 0px;
+  margin-top: 25px;
+  padding: 10px 15px;
+  margin-left: 5px;
+}
+
+.swal2-icon.swal2-info,
+.swal2-icon.swal2-question,
+.swal2-icon.swal2-warning {
+  font-size: 15px !important ;
+  line-height: 69px !important;
+  text-align: center;
+}
+
+.swal2-container {
+  z-index: 1000 !important;
+}
+
+.dx-popup-wrapper {
+  z-index: 100 !important;
+}
+
+.mt-10 {
+  margin-top: 10px;
+}
+
+.mb-10 {
+  margin-bottom: 10px;
+}
+
+.ml-10 {
+  margin-left: 10px;
+}
+
+.ml-15 {
+  margin-left: 15px;
+}

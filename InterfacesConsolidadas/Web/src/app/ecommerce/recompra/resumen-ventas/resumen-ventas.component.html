@@ -1,0 +1,128 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-icon" data-background-color="green">
+            <i class="material-icons">analytics</i>
+          </div>
+
+          <div class="card-content">
+            <h4 class="card-title">Resumen de Ventas</h4>
+            <form [formGroup]="formReporte">
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label for="lookupEmpresa">Empresa: </label>
+                    <dx-lookup
+                      formControlName="lookupEmpresa"
+                      id="lookupEmpresa"
+                      [dataSource]="listadoEmpresas"
+                      displayExpr="descripcion"
+                      valueExpr="empresaId"
+                      [showClearButton]="false"
+                      [searchEnabled]="false"
+                      >
+                    </dx-lookup>
+                  </div>
+                </div>
+                
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label for=""> Fecha Desde</label>
+                    <dx-date-box displayFormat="dd/MM/yyyy" formControlName="dateDesde" type="date"
+                      [showClearButton]="true"></dx-date-box>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label for=""> Fecha Hasta</label>
+                    <dx-date-box displayFormat="dd/MM/yyyy" formControlName="dateHasta" type="date"
+                      [showClearButton]="true"></dx-date-box>
+                  </div>
+                </div>
+              </div>
+
+              <br>
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <dx-button text="Mostrar" type="default" (onClick)="obtenerReporteDeVentas()">
+                    </dx-button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-12">
+                  <dx-data-grid style="width: 100%;" #gridColonias [dataSource]="reporteVentasPorDia"
+                    [showBorders]="true" [columnAutoWidth]="true" [height]="500" [wordWrapEnabled]="true">
+                    <dxo-paging [pageSize]="10"></dxo-paging>
+                    <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10, 20, 30]" [showInfo]="true">
+                    </dxo-pager>
+                    <dxo-filter-row [visible]="true"></dxo-filter-row>
+                    <dxo-header-filter [visible]="true"></dxo-header-filter>
+                    <dxo-search-panel [visible]="false" [width]="240" placeholder="Search..."></dxo-search-panel>
+                    <dxo-editing mode="cell" [allowUpdating]="true"></dxo-editing>
+                    <dxi-column caption="Fecha" dataField="fecha" [allowEditing]="false" dataType="date"
+                      alignment="center" cellTemplate="dateCell">
+                    </dxi-column>
+                    <dxi-column caption="Clientes Suscritos" dataField="meta" [allowEditing]="false" alignment="center">
+                    </dxi-column>
+                    <dxi-column caption="Total Facturas" dataField="cantidadFacturas" [allowEditing]="false"
+                      alignment="center"> </dxi-column>
+                    <dxi-column caption="Llamada Reprogramada por Usuario" dataField="cantidadPospuestasPorUsuario"
+                      [allowEditing]="false" alignment="center"> </dxi-column>
+                    <dxi-column caption="Llamada Reprogramada por Call Center" dataField="cantidadPospuestasPorCallCenter"
+                      [allowEditing]="false" alignment="center"> </dxi-column>
+                    <dxi-column caption="Suscripción Cancelado por Usuario" dataField="cantidadCanceladaPorUsuario"
+                      [allowEditing]="false" alignment="center"> </dxi-column>
+                    <dxi-column caption="Suscripción Cancelado por Call Center" dataField="cantidadCanceladaPorCallCenter"
+                      [allowEditing]="false" alignment="center"> </dxi-column>
+                    <dxi-column caption="Confirmado por Call Center" dataField="cantidadConfirmadoPorCallCenter"
+                      [allowEditing]="false" alignment="center"> </dxi-column>
+                    <dxi-column caption="Confirmado por Sistema" dataField="cantidadConfirmadoPorSistema"
+                      [allowEditing]="false" alignment="center"> </dxi-column>
+                    <dxi-column caption="Llamadas no Realizada" dataField="cantidadSinConfirmar"
+                      [allowEditing]="false" alignment="center"> </dxi-column>
+                    <dxi-column caption="%" dataField="porcentajeAvance" [allowEditing]="false" alignment="center">
+                    </dxi-column>
+                    <div *dxTemplate="let cellData of 'dateCell'">
+                      {{cellData.value | date: 'dd/MM/yyyy'}}
+                    </div>
+                  </dx-data-grid>
+                </div>
+              </div>
+
+              <br>
+
+              <div class="row">
+                <div class="col-md-10">
+                  <dx-chart palette="soft" [dataSource]="reporteVentasPorDia" title="Resumen Por Día">
+                    <dxi-series valueField="cantidadFacturas" name="Cantidad Facturas"></dxi-series>
+                    <dxi-series valueField="meta" name="Suscripciones"></dxi-series>
+                    <dxo-common-series-settings #seriesSettings argumentField="fecha">
+                    </dxo-common-series-settings>
+                    <dxo-margin [bottom]="20"></dxo-margin>
+                    <dxo-common-axis-settings>
+                      <dxo-grid [visible]="true"></dxo-grid>
+                    </dxo-common-axis-settings>
+                    <dxo-legend verticalAlignment="top" horizontalAlignment="right">
+                    </dxo-legend>
+                    <dxo-argument-axis [allowDecimals]="false" [axisDivisionFactor]="60">
+                      <dxo-label>
+                        <dxo-format type="decimal"></dxo-format>
+                      </dxo-label>
+                    </dxo-argument-axis>
+                    <dxo-export [enabled]="true"></dxo-export>
+                    <dxo-tooltip [enabled]="true"></dxo-tooltip>
+                  </dx-chart>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

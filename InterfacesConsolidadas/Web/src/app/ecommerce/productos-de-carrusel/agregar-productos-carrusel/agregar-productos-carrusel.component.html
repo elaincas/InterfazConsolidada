@@ -1,0 +1,205 @@
+<!-- <app-main-loader></app-main-loader> -->
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-icon" data-background-color="green">
+            <i class="material-icons">view_carousel</i>
+          </div>
+          <div class="card-content">
+            <h4 class="card-title">Administración de Productos de Carrusel</h4>
+          </div>
+          <div class="card-content">
+            <div class="row">
+              <div class="col-md-12">
+                <h4>Seleccionar Carrusel</h4>
+                <hr class="hr-color">
+                <div class="row">
+                  <div class="col-xs-12">
+                    <span>¿Necesita ayuda?</span>
+                    <a href="https://farmaciasiman.site:1201/manuales/farmacia/ecommerce/administracion/carruseles/" 
+                      class="btn btn-round btn-sm mat-raised-button btn-info" style="margin-top: 0px"
+                      target="popup" onclick="window.open('https://farmaciasiman.site:1201/manuales/farmacia/ecommerce/administracion/carruseles/','popup','width=900,height=600'); return false;">
+                      <i class="material-icons">help</i>Leer manual
+                    </a>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-xs-12 col-sm-5 col-md-5 col-lg-4">
+                    <span class="labelsFormularios">Página:</span>
+                    <dx-select-box #luePaginaPosicion [dataSource]="listaPaginas" displayExpr="descripcion" valueExpr="paginaId" title="Seleccione la Página"
+                      [searchEnabled]="true" placeholder="Seleccione la Página" [(value)]="paginaId_seleccionada" (onValueChanged)="ObtenerCarruselesPorPaginas(paginaId_seleccionada)">
+                    </dx-select-box>
+                  </div>
+                  <div class="col-xs-12 col-sm-7 col-md-7 col-lg-8" style="margin-top: 22px" *ngIf="listaCarruseles.length === 0 && paginaId_seleccionada">
+                    <span class="labelsFormularios">
+                      <strong>*Los carruseles de esta página ya tienen agregados productos. Para editar los productos de un carrusel,
+                        diríjase a la opción "Lista de Carruseles"</strong>
+                    </span>
+                  </div>
+                  <div class="col-xs-12 col-sm-7 col-md-7 col-lg-8" style="background-color: #f9fcff; border-radius: 10px; border-left-color: #0058A8"
+                    *ngIf="listaCarruseles.length > 0">
+                    <div class="row">
+                      <div class="col-md-12" *ngIf="paginaId_seleccionada">
+                        <span class="labelsFormularios">Carrusel:</span>
+                        <dx-select-box #luePaginaPosicion [dataSource]="listaCarruseles" displayExpr="descripcion" valueExpr="carruselId" title="Seleccione el Carrusel"
+                          [searchEnabled]="true" placeholder="Seleccione el Carrusel" [(value)]="carruselId_seleccionado" (onValueChanged)="SeleccionarCarrusel(carruselId_seleccionado)"
+                          [readOnly]="readonlyCarrusel">
+                        </dx-select-box>
+                      </div>
+                    </div>
+                    <div class="row" *ngIf="carruselId_seleccionado">
+                      <div class="col-md-12">
+                        <h5 class="labelsFormularios">
+                          <span>
+                            <strong>Datos de Carrusel </strong>
+                          </span>
+                          <button (click)="cambiarModoEditarCarrusel()" class="btn btn-round btn-sm mat-raised-button btn-warning" style="margin-top: 0px">
+                            <i class="material-icons">mode_edit</i>Editar
+                          </button>
+                        </h5>
+                        <hr class="">
+                        <div class="row">
+                          <div class="col-md-5">
+                            <span class="labelsFormularios">Título de Carrusel:</span>
+                            <dx-text-box [(ngModel)]="carrusel.descripcion" [disabled]="modoEditarCarrusel"></dx-text-box>
+                          </div>
+                          <div class="col-md-5">
+                            <span class="labelsFormularios">Tipo de Carrusel:</span>
+                            <dx-select-box #luePaginaPosicion [dataSource]="listaTipos" displayExpr="descripcion" valueExpr="id" title="Tipos de Carrusel"
+                              [searchEnabled]="true" placeholder="Seleccione el Carrusel" [(value)]="carrusel.carruselTipoId"></dx-select-box>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-5">
+                            <span class="labelsFormularios">Texto "Ver más":</span>
+                            <dx-text-box [(ngModel)]="carrusel.textoVerMas" [disabled]="modoEditarCarrusel"></dx-text-box>
+                          </div>
+                          <div class="col-md-5">
+                            <span class="labelsFormularios"># de productos a mostrar en la App:</span>
+                            <dx-number-box [(ngModel)]="carrusel.cantidadDeProductosVisiblesEnMovil" [disabled]="modoEditarCarrusel"></dx-number-box>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-10">
+                            <span class="labelsFormularios">Enlace a otra página:</span>
+                            <dx-text-box [(ngModel)]="carrusel.enlace" [disabled]="modoEditarCarrusel"></dx-text-box>
+                          </div>
+                        </div>
+                        <br>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <br>
+                <h4>Datos de Productos:</h4>
+                <hr class="hr-color">
+                <div class="row">
+                  <div class="col-xs-5 col-md-3 col-sm-3 col-lg-2">
+                    <span class="labelsFormularios">Fecha Inicia:</span>
+                    <dx-date-box accesskey="dx-fechaInicio" [displayFormat]="'dd/MM/yyyy'" [(ngModel)]="fechaInicio" [min]="minDate" type="date">
+                    </dx-date-box>
+                  </div>
+                  <div class="col-xs-5 col-md-3 col-sm-3 col-lg-2">
+                    <span class="labelsFormularios">Fecha Finaliza:</span>
+                    <dx-date-box [displayFormat]="'dd/MM/yyyy'" [(ngModel)]="fechaFin" [min]="minDate" type="date">
+                    </dx-date-box>
+                  </div>
+                </div>
+                <br>
+                <div class="row">
+                  <div class="col-md-12">
+                    <span class="labelsFormularios">
+                      <strong>*Las fechas seleccionadas se aplicarán al siguiente producto que se agregue a la lista</strong>
+                    </span>
+                  </div>
+                </div>
+                <br>
+                <div class="row">
+                  <div class="col-xs-8 col-sm-8 col-md-8">
+                    <span class="labelsFormularios">Seleccionar Productos:</span>
+                    <dx-lookup class="field-customization" noDataText="No se encontraron productos." searchPlaceholder="Ingrese el código o descripción del producto"
+                      [(value)]="producto_seleccionado" searchExpr="descripcion" displayExpr="descripcion" [(dataSource)]="dataSourceProductos"
+                      placeholder="Seleccione un producto" itemTemplate="item">
+                      <div *dxTemplate="let item of 'item'">
+                        <div class="custom-field">
+                          {{item.productoId}} - {{item.descripcion}}
+                        </div>
+                      </div>
+                    </dx-lookup>
+                  </div>
+                  <div class="col-xs-2 col-sm-1 col-md-1">
+                    <button rel="tooltip" title="Agregar" (click)="AgregarProductoAlista(producto_seleccionado)" type="button" style="margin-top:15px"
+                      class="btn btn-just-icon btn-round mat-raised-button btn-success ">
+                      <i class="material-icons">add</i>
+                    </button>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6" style="margin-top: 20px;">
+                    <span class="labelsFormularios">Productos seleccionados:</span>
+                  </div>
+                  <div class="col-md-6">
+                    <div style="float: right" *ngIf="listaProductos.length > 1">
+                      <div style="margin-left: 8px; position: absolute;margin-top: -10px;">
+                        <span><strong>Ordenar</strong></span>
+                      </div>
+                      <button rel="tooltip" title="Subir" type="button" class="btn btn-grid btn-default" (click)="cambiarOrdenProducto(grid.instance.getSelectedRowsData()[0], true)">
+                        <i class="material-icons">arrow_upward</i>
+                      </button>
+                      <button rel="tooltip" title="Bajar" type="button" class="btn btn-grid btn-default" (click)="cambiarOrdenProducto(grid.instance.getSelectedRowsData()[0], false)">
+                        <i class="material-icons">arrow_downward</i>
+                      </button>
+                      <button rel="tooltip" title="Eliminar todos los productos" (click)="EliminarTodosLosProductosDeCarrusel(carruselId_seleccionado)"
+                        type="button" class="btn btn-round btn-sm mat-raised-button btn-danger">
+                        <i class="material-icons">delete_sweep</i> Limpiar Lista
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12">
+                    <dx-data-grid #grid [showBorders]="true" [dataSource]="listaProductos" [hoverStateEnabled]="true" [selectedRowKeys]="[]">
+                      <dxo-selection mode="single"></dxo-selection>
+                      <dxo-editing [allowUpdating]="true"></dxo-editing>
+                      <dxi-column caption="Orden" dataField="orden" sortOrder="asc" width="70px" [allowEditing]="false"></dxi-column>
+                      <dxi-column caption="Código" dataField="productoId" width="100" [allowEditing]="false"></dxi-column>
+                      <dxi-column caption="Descripción" dataField="descripcion" minWidth="300" [allowEditing]="false"></dxi-column>
+                      <dxi-column caption="Fecha Inicio Activo" dataField="fechaInicioActivo" width="130" dataType="date" cellTemplate="dateCell"></dxi-column>
+                      <dxi-column caption="Fecha Fin Activo" dataField="fechaFinActivo" width="120" dataType="date" cellTemplate="dateCell"></dxi-column>
+                      <div *dxTemplate="let cellData of 'dateCell'">
+                        {{cellData.value | date: 'dd/MM/yyyy'}}
+                      </div>
+                      <dxi-column caption="" cellTemplate="accionTemplate" [width]="50"> </dxi-column>
+                      <dxo-paging [pageSize]="10" [pageIndex]="1"></dxo-paging>
+                      <div *dxTemplate="let d of 'accionTemplate'">
+                        <button rel="tooltip" title="Eliminar" (click)="EliminarProductoDeLista(d.data)" type="button" class="btn btn-grid btn-danger ">
+                          <i class="material-icons">close</i>
+                        </button>
+                      </div>
+                    </dx-data-grid>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <br>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="col-xs-5 col-sm-2 col-md-4 col-lg-3">
+                  <button class="btn btn-fill btn-Azulsiman" type="submit" (click)="GuardarProductos()">Guardar</button>
+                  <br>
+                </div>
+                <div class="col-xs-5 col-sm-2 col-md-4 col-lg-3">
+                  <button class="btn btn-fill btn-danger" type="submit" (click)="Cancelar()">Cancelar</button>
+                  <br>
+                </div>
+              </div>
+            </div>
+            <br>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

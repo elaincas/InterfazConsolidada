@@ -1,0 +1,77 @@
+<div class="form-group">
+  <div class="row">
+    <dx-form>
+      <dxi-item itemType="group" [colCount]="12">
+        <dxi-item itemType="group" [colSpan]="5">
+          <dx-lookup
+            #Requisito
+            noDataText="No se encontraron requisitos."
+            searchPlaceholder="Ingrese el código o nombre del requisito"
+            [dataSource]="requisitos"
+            [displayExpr]="GetDisplayExpr"
+            placeholder="Seleccione un requisito"
+            [showClearButton]=true
+          >
+          </dx-lookup>
+        </dxi-item>
+        <dxi-item itemType="group" [colSpan]="5">
+          <dx-lookup
+            #Laboratorio
+            noDataText="No se encontraron laboratorios."
+            searchPlaceholder="Ingrese el código o nombre del laboratorio"
+            [dataSource]="laboratorios"
+            [displayExpr]="GetDisplayExprLab"
+            placeholder="Seleccione un laboratorio"
+            [showClearButton]=true
+          >
+          </dx-lookup>
+        </dxi-item>
+        <dxi-item itemType="group" [colSpan]="2">
+          <dx-button (click)="Validar(Requisito.value, Laboratorio.value)" text="Agregar" ngClass="btn-Azulsiman"></dx-button>
+        </dxi-item>
+      </dxi-item>
+    </dx-form>
+  </div>
+</div>
+
+<div class="row" style="margin-top: 50px;">
+  <div class="col-md-12">
+      <dx-data-grid
+        [rowAlternationEnabled]="true"
+        [dataSource]="analisisRequisitos"
+        noDataText = "No se han agregado requisitos"
+        showBorders = true
+      >
+        <dxo-filter-row [visible]="true"> </dxo-filter-row>
+        <dxi-column
+          caption="Código Requisito"
+          dataField="requisito.id"
+          [width]="200"
+        ></dxi-column>
+        <dxi-column
+          caption="Nombre"
+          dataField="requisito.descripcion"
+        ></dxi-column>
+        <dxi-column
+          caption="Laboratorio"
+          dataField="laboratorio.nombre"
+        ></dxi-column>
+        <dxi-column
+          caption="Acción"
+          cellTemplate="accionTemplate"
+          [width]="100"
+        ></dxi-column>
+
+        <div *dxTemplate="let d of 'accionTemplate'">
+          <button
+            rel="tooltip"
+            (click)="EliminarRequisito(d.data)"
+            type="button"
+            class="btn btn-grid btn-danger"
+          >
+            <i class="material-icons">delete</i>
+          </button>
+        </div>
+      </dx-data-grid>
+  </div>
+</div>

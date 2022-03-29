@@ -1,0 +1,312 @@
+<div class="main-content">
+  <div class="container-flui">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-icon" data-background-color="red">
+            <i class="material-icons">smartphone</i>
+          </div>
+
+          <div class="card-content">
+            <h4 class="card-title">Administración de recargas</h4>
+
+            <div class="row">
+              <div class="col-md-2"></div>
+              <div class="col-md-6">
+                <span>Producto</span>
+                <dx-drop-down-box [(value)]="gridBoxProductoRecargaValue" valueExpr="id" displayExpr="nombre"
+                  placeholder="Seleccione una recarga" [showClearButton]="true" [dataSource]="productosRecarga">
+                  <div *dxTemplate="let data of 'content'">
+                    <dx-data-grid #gridProductosOriginales [dataSource]="productosRecarga" [columns]="[
+                        { dataField: 'id', caption: 'Código', width: 120 },
+                        'nombre',
+                        { dataField: 'operador.nombre', caption: 'Operador', visible: false }
+                      ]" [selection]="{ mode: 'single' }" [paging]="{ enabled: true, pageSize: 10 }" [pager]="{
+                        showPageSizeSelector: true,
+                        allowedPageSizes: [5, 10, 20],
+                        showInfo: true
+                      }" [filterRow]="{ visible: true, applyFilter: 'auto' }" [scrolling]="{ mode: 'infinite' }"
+                      [height]="300" [(selectedRowKeys)]="gridBoxProductoRecargaValueSelect">
+                    </dx-data-grid>
+                  </div>
+                </dx-drop-down-box>
+              </div>
+              <div class="col-md-2">
+                <dx-button (click)="Configurar()" ngClass="btn btn-fill btn-Azulsiman alinear" text="Configurar">
+                </dx-button>
+              </div>
+              <div class="col-md-2"></div>
+            </div>
+
+            <hr />
+            <div class="m-top-2" *ngIf="mostrarConfiguracion == true">
+              <div class="row m-bottom-2">
+                <div class="row">
+                  <div class="col-md-2"></div>
+                  <div class="col-md-4">
+                    <div>Seleccione un operador:</div>
+                    <dx-select-box [disabled]="deshabilitarSeleccionarOperador" [(dataSource)]="operadores"
+                      [(ngModel)]="operadorValue" displayExpr="nombre" valueExpr="id"
+                      (onValueChanged)="OperadorChange($event)"></dx-select-box>
+                  </div>
+                  <div class="col-md-4">
+                    <div>Seleccione un tipo de producto:</div>
+                    <dx-select-box [disabled]="deshabilitarSeleccionarTipoProducto"
+                      [(dataSource)]="operadorTipoProducto" [(ngModel)]="tipoRecargaOperadorValue" displayExpr="nombre"
+                      valueExpr="id" (onValueChanged)="TipoProductoChange($event)"></dx-select-box>
+                  </div>
+                  <div class="col-md-2"></div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-8">
+                  <dx-form id="form" [formData]="productoRecargaConfigurado" labelLocation="top"
+                    validationGroup="validarConfiguracion" [showValidationSummary]="true">
+                    <dxi-item itemType="group" [colCount]="2">
+                      <dxi-item [label]="{ text: 'Valor' }" dataField="monto" [editorOptions]="{ readOnly: false }"
+                        [colSpan]="1"></dxi-item>
+                      <dxi-item [label]="{ text: 'Tipo' }" *ngIf="esOperadorTigo" dataField="tipo"
+                        cssClass="tipoProductoTooltip" editorType="dxTextBox" [editorOptions]="{ readOnly: true }"
+                        [colSpan]="1">
+                      </dxi-item>
+                      <dxi-item [label]="{ text: 'Selector' }" *ngIf="esOperadorTigo" dataField="selector"
+                        [colSpan]="colSpanSelector" editorType="dxNumberBox" cssClass="selectorProductoTooltip"
+                        [editorOptions]="{
+                          min: 0,
+                          showSpinButtons: 'true',
+                          showClearButton: 'true',
+                          readOnly: false
+                        }">
+                        <dxi-validation-rule type="required" message="{{ msjGenerales.datoRequerido }}">
+                        </dxi-validation-rule>
+                      </dxi-item>
+
+                      <dxi-item [label]="{ text: 'Código Externo' }" *ngIf="esOperadorClaro && esPaquete"
+                        dataField="codigoExternoRecarga" cssClass="codigoExternoProductoTooltip"
+                        [editorOptions]="{ readOnly: false }" [colSpan]="1">
+                        <dxi-validation-rule type="required" message="{{ msjGenerales.datoRequerido }}">
+                        </dxi-validation-rule>
+                      </dxi-item>
+                    </dxi-item>
+                    <dxi-item [label]="{ text: 'Información Adicional' }" dataField="informacionAdicional"
+                      editorType="dxTextArea" cssClass="infoAdicionalProductoTooltip" [editorOptions]="{ height: 90 }"
+                      [colSpan]="2"></dxi-item>
+                  </dx-form>
+
+                  <dx-tooltip showEvent="mouseenter" hideEvent="mouseleave" position="bottom"
+                    target=".tipoProductoTooltip">
+                    <div *dxTemplate="let data = data; of: 'content'">
+                      Código que identifica una recarga normal de un paquete,
+                      este es proporcionado por el operador y se completa
+                      automáticamente al seleccionar el tipo de producto.
+                    </div>
+                  </dx-tooltip>
+
+                  <dx-tooltip showEvent="mouseenter" hideEvent="mouseleave" position="bottom"
+                    target=".infoAdicionalProductoTooltip">
+                    <div *dxTemplate="let data = data; of: 'content'">
+                      Información adicional que describe al producto.
+                    </div>
+                  </dx-tooltip>
+
+                  <dx-tooltip showEvent="mouseenter" hideEvent="mouseleave" position="bottom"
+                    target=".selectorProductoTooltip">
+                    <div *dxTemplate="let data = data; of: 'content'">
+                      Código de identificación del producto de un operador, este
+                      es proporcionado por el operador.
+                    </div>
+                  </dx-tooltip>
+                  <dx-tooltip showEvent="mouseenter" hideEvent="mouseleave" position="bottom"
+                    target=".codigoExternoProductoTooltip">
+                    <div *dxTemplate="let data = data; of: 'content'">
+                      Código de identificación del producto de un operador, este
+                      es proporcionado por el operador.
+                    </div>
+                  </dx-tooltip>
+                </div>
+                <div class="col-md-2"></div>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer" *ngIf="mostrarConfiguracion == true">
+            <div class="col-md-2"></div>
+            <div class="col-md-8">
+              <div class="pull-right">
+                <dx-button ngClass="btn btn-Azulsiman" text="Guardar" type="default" [useSubmitBehavior]="true"
+                  validationGroup="validarConfiguracion" (onClick)="GuardarConfiguracion()">
+                </dx-button>
+              </div>
+            </div>
+            <div class="col-md-2"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-icon" data-background-color="red">
+            <i class="material-icons">format_list_bulleted</i>
+          </div>
+          <div class="card-content">
+            <h4 class="card-title">Recargas Configuradas</h4>
+
+            <dx-data-grid [showBorders]="true" [rowAlternationEnabled]="true" [dataSource]="recargasConfiguradas">
+              <dxo-load-panel [enabled]="true" text="Cargando Información"></dxo-load-panel>
+
+              <dxo-paging [pageSize]="10"> </dxo-paging>
+              <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10, 25, 50, 100]" [showInfo]="true">
+              </dxo-pager>
+
+              <dxo-filter-row [visible]="true"> </dxo-filter-row>
+
+              <dxo-header-filter [visible]="true"></dxo-header-filter>
+              <dxo-search-panel [visible]="true" [width]="240" placeholder="Buscar..."></dxo-search-panel>
+
+              <dxi-column caption="Código Producto" dataField="id">
+              </dxi-column>
+              <dxi-column caption="Descripción" dataField="producto.nombre">
+              </dxi-column>
+              <dxi-column caption="Operador" dataField="operador.nombre" alignment="center" [groupIndex]="0">
+              </dxi-column>
+              <dxi-column caption="Tipo" dataField="tipoProductoRecarga.nombre" alignment="center" [groupIndex]="1">
+              </dxi-column>
+              <dxi-column caption="Monto" dataField="monto" alignment="center" dataType="number"></dxi-column>
+
+              <dxi-column caption="Código Externo" cellTemplate="codigoExternoTemplate"></dxi-column>
+
+              <dxi-column caption="Activo" dataField="activo"></dxi-column>
+
+              <dxi-column caption="Acciones" cellTemplate="accionTemplate" [width]="100">
+              </dxi-column>
+              <div *dxTemplate="let accion of 'accionTemplate'">
+                <dx-tooltip showEvent="mouseenter" hideEvent="mouseleave" position="bottom" target="#btnEditarRecarga">
+                  <div *dxTemplate="let data = data; of: 'content'">
+                    Editar datos de la recarga configurada.
+                  </div>
+                </dx-tooltip>
+
+                <dx-tooltip showEvent="mouseenter" hideEvent="mouseleave" position="bottom" target="#btnActivarRecarga">
+                  <div *dxTemplate="let data = data; of: 'content'">
+                    Si la recarga es activada, volvera a ser mostrada en la lista de recargas a vender en la página web y en el ERP.
+                  </div>
+                </dx-tooltip>
+
+                <dx-tooltip showEvent="mouseenter" hideEvent="mouseleave" position="bottom" target="#btnDesactivarRecarga">
+                  <div *dxTemplate="let data = data; of: 'content'">
+                    Si la recarga es desactivada, no se mostrará en la lista de recargas a vender en la página web y en el ERP.
+                  </div>
+                </dx-tooltip>
+
+                <button id="btnEditarRecarga" rel="tooltip" (click)="EditarRecarga(accion.data)" type="button"
+                  class="btn btn-grid btn-Azulsiman">
+                  <i class="material-icons">mode_edit</i>
+                </button>
+                <button id="btnDesactivarRecarga" rel="tooltip" (click)="DesactivarProductoRecarga(accion.data.id)"
+                  type="button" class="btn btn-grid btn-danger" *ngIf="accion.data.activo">
+                  <i class="material-icons">toggle_off</i>
+                </button>
+                <button id="btnActivarRecarga" rel="tooltip" (click)="ActivarProductoRecarga(accion.data.id)"
+                  type="button" class="btn btn-grid btn-Azulsiman" *ngIf="accion.data.activo == false">
+                  <i class="material-icons">toggle_on</i>
+                </button>
+              </div>
+
+              <div *dxTemplate="let recarga of 'codigoExternoTemplate'">
+                <span *ngIf="recarga.data.operadorId == 2">{{
+                  recarga.data.codigoExternoRecarga
+                  }}</span>
+                <span *ngIf="recarga.data.operadorId == 3">{{
+                  recarga.data.selector
+                  }}</span>
+              </div>
+            </dx-data-grid>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="showModalInfo" id="mdlSample" class="modal fade" role="dialog"
+  [ngStyle]="{'display': showModalInfo ? 'block' : 'none', 'opacity': 1,'background-color': '#0000004a'}">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">
+          <span
+            *ngIf="respuestaServidor.data.respuestaTipo == respuestaConfiguracionTipo.RecargaConfiguradaCorrectamente">{{modo
+            == ModoFormulario.Agregar ?
+            mensajesConfiguracion.registroGuardado:mensajesConfiguracion.registroEditado}}</span>
+          <span
+            *ngIf="respuestaServidor.data.respuestaTipo == respuestaConfiguracionTipo.RecargaYaConfigurada">{{mensajesConfiguracion.recargaConfigurada}}</span>
+          <span
+            *ngIf="respuestaServidor.data.respuestaTipo == respuestaConfiguracionTipo.Error">{{mensajesConfiguracion.tituloError}}</span>
+          <span
+            *ngIf="respuestaServidor.data.respuestaTipo == respuestaConfiguracionTipo.DatosInvalidos">{{mensajesConfiguracion.tituloErrorValidacion}}</span>
+        </h4>
+      </div>
+      <div class="modal-body">
+
+        <div *ngIf="respuestaServidor.data.respuestaTipo == respuestaConfiguracionTipo.RecargaYaConfigurada">
+          <!-- Recarga Ya Configurada -->
+          <div *ngIf="respuestaServidor.data.resultadoValidacionRecarga.operadores.length > 1">
+            <span>Operadores donde se encontró configurada la recarga:</span>
+            <dx-list [dataSource]="respuestaServidor.data.resultadoValidacionRecarga.operadores">
+              <div *dxTemplate="let item of 'item'">
+                <span>{{item.nombre}}</span>
+              </div>
+            </dx-list>
+          </div>
+
+          <div *ngIf="respuestaServidor.data.resultadoValidacionRecarga.operadores.length == 1">
+            <span>Operador donde se encontró configurada la recarga:</span>
+            <dx-list [dataSource]="respuestaServidor.data.resultadoValidacionRecarga.operadores">
+              <div *dxTemplate="let item of 'item'">
+                <span>{{item.nombre}}</span>
+              </div>
+            </dx-list>
+          </div>
+        </div>
+
+        <div *ngIf="respuestaServidor.data.respuestaTipo == respuestaConfiguracionTipo.RecargaConfiguradaCorrectamente">
+          <!-- Recarga Configurada Correctamente-->
+          <div class="alert alert-success" role="alert">
+            {{modo == ModoFormulario.Agregar ? "Recarga configurada exitosamente.":"Recarga editada exitosamente."}}
+          </div>
+          <div *ngIf="respuestaServidor.data.resultadoValidacionRecarga.mensajeValidacion.length > 0">
+            <hr>
+            <br>
+            <span>Información adicional</span>
+            <div class="alert alert-info" role="alert"
+              *ngFor="let item of respuestaServidor.data.resultadoValidacionRecarga.mensajeValidacion">
+              {{item}}
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="respuestaServidor.data.respuestaTipo == respuestaConfiguracionTipo.Error">
+          <!-- Error al configurar-->
+          <div class="alert alert-danger" role="alert"
+            *ngFor="let item of respuestaServidor.data.resultadoValidacionRecarga.mensajeValidacion">
+            {{item}}
+          </div>
+        </div>
+
+        <div *ngIf="respuestaServidor.data.respuestaTipo == respuestaConfiguracionTipo.DatosInvalidos">
+          <!-- Datos Invalidos-->
+          <div class="alert alert-danger" role="alert"
+            *ngFor="let item of respuestaServidor.data.resultadoValidacionRecarga.mensajeValidacion">
+            {{item}}
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer" align="right">
+        <button type="button" id="btnOK" class="btn btn-success" (click)="showModalInfo = !showModalInfo"><i
+            class="fa fa-check fa-fw"></i> Ok</button>
+      </div>
+    </div>
+  </div>

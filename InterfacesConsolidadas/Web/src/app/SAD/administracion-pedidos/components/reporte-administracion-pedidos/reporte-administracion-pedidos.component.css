@@ -1,0 +1,136 @@
+.width-img{
+  width: 100%;
+}
+
+.labelsNoAplica{
+  color: #b0bec5 !important;;
+}
+
+.align-left{
+  text-align: left;
+}
+
+.url{
+  cursor: pointer;
+}
+
+.pb-0{
+  padding-bottom: 0px !important;
+}
+
+.mt-10{
+  margin-top: 10px !important;
+}
+
+::ng-deep #gridReportePedidos td {
+  vertical-align: middle !important;
+}
+
+::ng-deep .container {
+  position: relative;
+}
+
+::ng-deep .right-content .sub-title {
+  font-size: 120%;
+  color: rgba(152, 152, 152, 0.8);
+}
+
+::ng-deep .title-container {
+  font-weight: bold;
+}
+
+::ng-deep .stats {
+  display: table;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+::ng-deep .stats > div {
+  display: table-cell;
+  text-align: center;
+  border: 1px solid rgba(191, 191, 191, 0.25);
+  padding: 20px 0 25px;
+  width: 16.66%;
+}
+
+::ng-deep .stats > div:first-child, .stats > div:last-child {
+  border-right-width: 0;
+  border-left-width: 0;
+}
+
+::ng-deep #tabpanel .dx-multiview-item-content {
+  padding: 20px 10px 22px;
+  min-height: 178px;
+  position: relative;
+}
+
+/* ToolBar Style */
+::ng-deep #gridContainer .dx-datagrid-header-panel {
+  padding: 0;
+  background-color: rgba(85, 149, 222, 0.6);
+}
+
+::ng-deep #gridContainer .dx-datagrid-header-panel .dx-toolbar {
+  margin: 0;
+  padding-right: 20px;
+  background-color: transparent;
+}
+
+::ng-deep #gridContainer .dx-datagrid-header-panel .dx-toolbar-items-container {
+  height: 70px;
+}
+
+::ng-deep #gridContainer .dx-datagrid-header-panel .dx-toolbar-before .dx-toolbar-item:not(:first-child) {
+  background-color: rgba(103, 171, 255, 0.6);
+}
+
+::ng-deep #gridContainer .dx-datagrid-header-panel .dx-toolbar-before .dx-toolbar-item:last-child {
+  padding-right: 10px;
+}
+
+::ng-deep #gridContainer .dx-datagrid-header-panel .dx-selectbox {
+  margin: 17px 10px;
+}
+
+::ng-deep #gridContainer .dx-datagrid-header-panel .dx-button {
+  margin: 17px 0;
+}
+
+::ng-deep #gridContainer .informer {
+  height: 70px;
+  width: 130px;
+  text-align: center;
+  color: #fff;
+}
+
+::ng-deep #gridContainer .count {
+  padding-top: 15px;
+  line-height: 27px;
+  margin: 0;
+}
+
+.badge-info {
+  background-color: #3a87ad;
+}
+
+.badge-warning {
+  background-color: #f89406;
+}
+
+.badge-success {
+  background-color: green;
+}
+
+/* Mapa */
+::ng-deep .options {
+  padding: 20px;
+  background-color: rgba(191, 191, 191, 0.15);
+  margin-top: 20px;
+}
+::ng-deep .caption {
+  font-size: 18px;
+  font-weight: 500;
+}
+::ng-deep .option {
+  margin-top: 10px;
+}

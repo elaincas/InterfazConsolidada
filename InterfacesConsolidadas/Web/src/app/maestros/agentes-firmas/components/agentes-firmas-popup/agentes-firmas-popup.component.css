@@ -1,0 +1,16 @@
+::ng-deep #fileuploader-container {
+  border: 1px solid #d3d3d3;
+}
+
+::ng-deep .imagen-firma {
+  margin: 0 auto;
+  margin-top: 2em;
+  width: 300px;
+  display: block;
+}
+
+::ng-deep .mt-4 {
+  margin-top: 1em;
+}
+
+

@@ -1,0 +1,104 @@
+<!-- <app-main-loader></app-main-loader> -->
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-icon" data-background-color="green">
+                        <i class="material-icons">assignment_ind</i>
+                    </div>
+                    <div class="card-content">
+                        <h4 class="card-title">
+                            <strong>Asignación de Productos</strong>
+                        </h4>
+                        <div class="row">
+                            <div class="col-lg-offset-1 col-lg-8 col-md-8 col-sm-10 col-xs-10">
+                                <div class="row">
+                                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
+                                        <span>Colaborador Vhur:</span>
+                                        <dx-number-box [(ngModel)]="productoPrestamo.ColaboradorID" (onValueChanged)="ObtenerInformacionColaborador()"></dx-number-box>
+                                    </div>
+                                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
+                                        <br>
+                                        <dx-check-box [(ngModel)]="esDataColaboradorDespedidoSeleccionado" text= "Colaboradores Despedidos"></dx-check-box>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <br>
+                                    <div class="col-lg-8 col-md-10 col-sm-12 col-xs-12">
+                                        <span>Colaborador:</span>
+                                        <dx-lookup #dropDownProductos [(ngModel)]="productoPrestamo.ColaboradorID" displayExpr="nombre" valueExpr="colaboradorID"
+                                        placeholder="Select a value..." [showClearButton]="true" [dataSource]="colaborador.listaColaboradores"
+                                        closeOnOutsideClick="true" name="dropDownProducto">
+                                    </dx-lookup>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <br>
+                                    <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
+                                        <span>Producto:</span>
+                                        <dx-lookup #dropDownProductos [(ngModel)]="productoPrestamo.ProductoID" displayExpr="nombreProducto" valueExpr="productoID"
+                                            placeholder="Select a value..." [showClearButton]="true" [dataSource]="productos"
+                                            closeOnOutsideClick="true" name="dropDownProducto">
+                                        </dx-lookup>
+                                    </div>
+                                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                                    <span>Cantidad:</span>
+                                    <dx-number-box [(ngModel)]="productoPrestamo.Cantidad" max="1" min="0"></dx-number-box>
+                                </div>
+                            </div>
+                            <div *ngIf="mostrardivEstado">
+                                <br>
+                                <span>Reportado como {{productoPrestamo.Estado}}</span>
+                            </div>
+                            <div class="row">
+                                <br>
+                                <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11">
+                                    <dx-button type="success" text="Asignar" style="float: right" (onClick)="MostarPopup(1)"></dx-button>
+
+                                    <dx-button type="default" text="Estado Producto" (onClick)="MostarPopup(2)"></dx-button>
+                                </div>
+                            </div>
+                            <br>
+                            <dx-popup class="popup" id="popup" height="30%" width="65%" [showTitle]="true" ng-controller="Ctrl" title="Estado del {{informacionProducto.descripcion}}"
+                                [dragEnabled]="false" [closeOnOutsideClick]="true" [(visible)]="_mostrarPopup" [showCloseButton]="true"
+                                [resizeEnabled]="true">
+                                <div *dxTemplate="let data of 'content'">
+                                   
+                                    <div  class="row" >
+                                        Unidades disponibles: <strong>{{informacionProducto.unidadesNuevas+informacionProducto.recurperadas}}</strong> <br/>
+                                     
+                                    </div>
+                                    <div class="row">
+                                        <dx-text-box [(ngModel)]="productoPrestamo.Observacion" placeholder="Observaciones..."></dx-text-box>
+                                    </div>
+                                    <div class="row" style="float: right;">
+                                        <br>
+                                       
+                                        <div *ngIf="esPopupParaAsignar">
+                                            <dx-button icon="fa fa-check" type="success" text="Buen Estado(Inicial)" (onClick)="AsignarInformacion(1)">
+                                            </dx-button>
+                                            <dx-button icon="fa fa-search-plus" type="success" text="Recuperado Buen Estado" (onClick)="AsignarInformacion(2)">
+                                            </dx-button>
+
+                                        </div>
+                                        <div *ngIf="!esPopupParaAsignar">
+                                            <dx-button icon="fa fa-search-minus" type="danger" text="Perdido" (onClick)="RecuperarProducto(4)">
+                                            </dx-button>
+                                            <dx-button icon="fa fa-cut" type="danger" text="Recuperado Mal Estado" (onClick)="RecuperarProducto(3)">
+                                            </dx-button>
+                                            <dx-button icon="fa fa-search-plus" type="default" text="Recuperado Buen Estado" (onClick)="RecuperarProducto(2)">
+                                            </dx-button>
+                                            <dx-button icon="fa fa-hourglass-end" type="default" text="StandBy" (onClick)="RecuperarProducto(1007)">
+                                            </dx-button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </dx-popup>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

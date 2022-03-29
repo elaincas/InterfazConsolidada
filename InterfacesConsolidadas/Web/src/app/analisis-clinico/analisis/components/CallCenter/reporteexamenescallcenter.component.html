@@ -1,0 +1,90 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-icon" data-background-color="green">
+                        <i class="material-icons">storage</i>
+                    </div>
+                    <div class="card-content">
+                        <h4 class="card-title">
+                            <strong>Facturas por Call Center</strong>
+                        </h4>
+                        <br/>
+                        <p>
+                            <strong>Obtener reporte por el rango de fechas y sucursal    siguientes:</strong>
+                        </p>
+                        <div class="row">
+                            <div class="col-md-2 col-xs-4">
+                                <span class="labelsFormulario">Fecha Desde:</span>
+                            </div>
+                            <div class="col-md-2 col-xs-4">
+                                <span class="labelsFormulario">Fecha Hasta:</span>
+                            </div>
+                            <div class="col-md-2 col-xs-4">
+                                <span class="labelsFormulario">Sucursal:</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2 col-xs-4">
+                                <dx-date-box [showClearButton]="true" displayFormat="dd/MM/yyyy" [(ngModel)]="fechaInicial" [(max)]="fechaFinal"  (onValueChanged)="validarBoton()"></dx-date-box>
+                            </div>
+                            <div class="col-md-2 col-xs-4">
+                                <dx-date-box [showClearButton]="true"  displayFormat="dd/MM/yyyy" [(ngModel)]="fechaFinal"   (onValueChanged)="validarBoton()" ></dx-date-box>
+                            </div>
+                            <div class="col-md-2 col-xs-4">
+                                <dx-select-box  
+                                    [dataSource]="sucursales"
+                                    displayExpr="nombre"
+                                    valueExpr="key"
+                                    [searchEnabled]="true"
+                                    placeholder="Elije una Sucursal"
+                                    [(ngModel)]="sucursal"
+                                    (onValueChanged)="validarBoton()"
+                                    >
+                                </dx-select-box>
+                            </div>
+                            <div class="col-md-2 col-xs-3">
+                                <dx-button type="default" icon="fa fa-search" (onClick)="obtenerReporte()" [disabled]="bloquearBusqueda"></dx-button>
+                            </div>
+                            
+                                
+                        </div>
+                        <br>
+                        <dx-data-grid #grid id="gridReporteFacturaProducto" [dataSource]="ReporteFacturaProducto" [showColumnLines]="true" [showRowLines]="true"
+                            [showBorders]="true" [columnAutoWidth]="true" [rowAlternationEnabled]="true">
+                            <dxo-filter-row [visible]="true"> </dxo-filter-row>
+                            <dxo-header-filter [visible]="true"></dxo-header-filter>
+                            <dxo-paging [pageSize]="10"></dxo-paging>
+                            <dxo-pager 
+                                [showPageSizeSelector]="true"
+                                [allowedPageSizes]="[5, 10, 20]"
+                                [showInfo]="true">
+                            </dxo-pager>
+                        
+                           <!-- <dxo-export [enabled]="true" fileName="Facturas_Examenes_CallCenter" [allowExportSelectedData]="true"></dxo-export>-->
+                            <dxi-column [hidingPriority]="0" caption="Fecha" dataType="date" width="100px" dataField="fechaFactura"> </dxi-column>
+                            <dxi-column [hidingPriority]="1" caption="Factura" dataField="factura_ID"> </dxi-column>
+                            <dxi-column dataField="agente_Nombre" caption="Agente"></dxi-column>
+                            <dxi-column dataField="nombre" caption="Cliente"></dxi-column>
+                            <dxi-column caption="Examen" dataField="prod_Desc"> </dxi-column>
+                            <dxi-column dataField="observacionesEspeciales" caption="Observaciones"></dxi-column>
+                            <dxi-column caption="Total  " dataField="total" dataType="number" cellTemplate="moneyCell"> </dxi-column>
+                            <dxi-column caption="Sucursal" dataField="sucursal"> </dxi-column>
+                            <div *dxTemplate="let cellData of 'dateCell'">
+                                {{cellData.value | date: 'dd/MM/yyyy'}}
+                            </div>
+                            <div *dxTemplate="let cellData of 'moneyCell'">
+                                {{cellData.value | number:'.2-5'}}
+                            </div>
+                            <div style="text-align: center!important" *dxTemplate="let data of 'ver'">
+                                <i class="fa fa-eye" (click)="Descarga(data.data)"></i>
+                            </div>
+                            
+                        </dx-data-grid>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

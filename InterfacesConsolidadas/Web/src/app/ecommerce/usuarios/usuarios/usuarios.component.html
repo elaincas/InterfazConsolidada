@@ -1,0 +1,113 @@
+<!-- <app-main-loader></app-main-loader> -->
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+
+        <div class="card">
+          <div class="card-header card-header-icon" data-background-color="red">
+            <i class="material-icons">how_to_reg</i>
+          </div>
+          <div class="card-content">
+            <h4 class="card-title">Administración De Usuarios</h4>
+            <form [formGroup]="filtrosFrm" (ngSubmit)="cargarUsuarios()" class="horizontal-form">
+              <div class="row">
+
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <label>Nombre:</label>
+                    <dx-text-box formControlName="nombre" required [maxLength]="50">
+                    </dx-text-box>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <label>Apellido:</label>
+                    <dx-text-box formControlName="apellido" required [maxLength]="50">
+                    </dx-text-box>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <label>Identidad:</label>
+                    <dx-text-box formControlName="noIdentidad" required [maxLength]="50">
+                    </dx-text-box>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <label>Correo:</label>
+                    <dx-text-box formControlName="correo" required [maxLength]="50" mode="email">
+                      <dx-validator>
+                        <dxi-validation-rule type="email" message="El formato es invalido"></dxi-validation-rule>
+                      </dx-validator>
+                    </dx-text-box>
+                  </div>
+                </div>
+
+                <div class="col-md-11">
+                  <div class="col-md-2 col-lg-2">
+                    <div class="form-group form-group__checkbox">
+                      <dx-check-box formControlName="bloqueados" text="Bloqueado"></dx-check-box>
+                    </div>
+                  </div>
+                  <div class="col-md-2 col-lg-2">
+                    <div class="form-group form-group__checkbox">
+                      <dx-check-box formControlName="identidadConfirmada" text="Enlazado"></dx-check-box>
+                    </div>
+                  </div>
+                  <div class="col-md-2 col-lg-2">
+                    <div class="form-group form-group__checkbox">
+                      <dx-check-box formControlName="subioDocumentosIdentidad" text="Subió Documentos"></dx-check-box>
+                    </div>
+                  </div>
+                  <div class="col-md-3 col-lg-2">
+                    <div class="form-group form-group__checkbox">
+                      <dx-check-box formControlName="recargasNoHabilitadas" text="Recargas No Habilitadas">
+                      </dx-check-box>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-1">
+                  <div class="form-group">
+                    <button class="btn btn-primary btn-search" type="submit">
+                      <i class="material-icons">youtube_searched_for</i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </form>
+            <dx-data-grid [showBorders]="true" [rowAlternationEnabled]="true" [dataSource]="usuarios">
+              <dxo-filter-row [visible]="true"> </dxo-filter-row>
+
+              <dxo-header-filter [visible]="true"></dxo-header-filter>
+              <dxo-search-panel [visible]="true" [width]="240" placeholder="Buscar..."></dxo-search-panel>
+
+              <dxi-column caption="N° Identidad" dataField="datosPersonales.noIdentidad"> </dxi-column>
+              <dxi-column caption="Nombre" dataField="datosPersonales.nombre"> </dxi-column>
+              <dxi-column caption="Correo" dataField="correoElectronico"> </dxi-column>
+              <dxi-column caption="Registro" dataField="fechaRegistro"> </dxi-column>
+
+              <dxi-column caption="Ip" dataField="direccionIp"> </dxi-column>
+              <dxi-column caption="Activo" dataField="activo"> </dxi-column>
+              <dxi-column caption="" cellTemplate="accionTemplate" [width]="100"> </dxi-column>
+              <div *dxTemplate="let d of 'accionTemplate'">
+                <button rel="tooltip" (click)="editarUsuario(d.data)" type="button" class="btn btn-grid btn-Azulsiman ">
+                  <i class="material-icons">mode_edit</i>
+                </button>
+              </div>
+            </dx-data-grid>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-usuario-form-modal (onGuardar)="alActualizarUsuario()" #usuarioModal></app-usuario-form-modal>

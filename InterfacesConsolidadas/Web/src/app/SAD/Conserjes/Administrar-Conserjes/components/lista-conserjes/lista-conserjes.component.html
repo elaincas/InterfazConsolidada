@@ -1,0 +1,92 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="card">
+          <div
+            class="card-header card-header-icon"
+            data-background-color="green">
+            <i class="material-icons fa-2x">people</i>
+          </div>
+          <div class="card-content pb-0">
+            <h4 class="card-title pb-0">Listado de Conserjes</h4>
+          </div>
+          <div class="card-content">
+            <div class="row">
+              <div class="col-sm-12">
+                <button class="btn btn-primary" type="submit" (click)="NavegarARegistrarConserje()">
+                  Registrar conserje
+                </button>
+              </div>
+              <div class="col-sm-3 col-6">
+                <span class="labelsFormularios">ID Conserje</span>
+                <dx-text-box [(ngModel)]="filtrosLista.id" placeholder="Buscar por ID..."></dx-text-box>
+              </div>
+              <div class="col-sm-3 col-6">
+                <span class="labelsFormularios">Nombre</span>
+                <dx-text-box [(ngModel)]="filtrosLista.nombre" placeholder="Buscar por nombre..."></dx-text-box>
+              </div>
+              <div class="col-sm-3 col-6">
+                <span class="labelsFormularios">Codigo VHUR</span>
+                <dx-text-box [(ngModel)]="filtrosLista.codigoVhur" placeholder="Buscar por VHUR..."></dx-text-box>
+              </div>
+              <div class="col-sm-3 col-6">
+                <button class="btn btn-block btn-success" type="submit" (click)="ObtenerLista()">
+                  Aplicar Filtros
+                </button>
+              </div>
+            </div>
+            <div class="row mt-10">
+              <div class="col-md-12">
+                <dx-data-grid [dataSource]="ListaConserjes" [hoverStateEnabled]="true" [showBorders]="true" [showRowLines]="true">
+                  <dxo-sorting mode="multiple"></dxo-sorting>
+                  <dxo-paging [pageSize]="15" [pageIndex]="0"></dxo-paging>
+                  <dxi-column caption="ID" dataField="id" [width]="80" alignment="center"></dxi-column>
+                  <dxi-column caption="Nombre" dataField="nombre"></dxi-column>
+                  <dxi-column caption="Celular" dataField="celular" [width]="110" [hidingPriority]="0"></dxi-column>
+                  <dxi-column caption="VHUR" dataField="codigoVhur" [width]="100" alignment="center" [hidingPriority]="1"></dxi-column>
+                  <!-- <dxi-column caption="Usuario seguridad corp." dataField="nombreUsuarioSeguridadCorporativa" [hidingPriority]="2"></dxi-column> -->
+                  <dxi-column caption="Acciones" cellTemplate="accionTemplate" [width]="160" alignment="center"> </dxi-column>
+                  <div *dxTemplate="let d of 'accionTemplate'">
+                    <button rel="tooltip" title="Inactivar" (click)="InactivarConserje(d.data)" type="button" class="btn btn-grid btn-danger ">
+                      <i class="material-icons">close</i>
+                    </button>
+                    <button rel="tooltip" title="Editar" (click)="EditarConserje(d.data)" type="button" class="btn btn-grid btn-Azulsiman ">
+                      <i class="material-icons">mode_edit</i>
+                    </button>
+                    <button rel="tooltip" title="Ver fotografía" (click)="VerFotografiaConserje(d.data)" type="button" class="btn btn-grid btn-info ">
+                      <i class="material-icons">image</i>
+                    </button>
+                  </div>
+                </dx-data-grid>
+              </div>
+            </div>
+          </div>
+          <dx-popup class="popup"
+                    [showTitle]="true"
+                    title="Fotografía del conserje"
+                    [dragEnabled]="false"
+                    [closeOnOutsideClick]="true"
+                    [(visible)]="popupConserjeVisible"
+                    [width]= 400
+                    [height] = 400
+                    (onHiding)="onHidePopPupConserje()">
+          <div *dxTemplate="let data of 'content'">
+            <dx-gallery *ngIf="fotografiasGaleria != null && fotografiasGaleria.length > 0" #gallery
+                        id="gallery"
+                        [dataSource]="fotografiasGaleria"
+                        [height]="400"
+                        [loop]="false"
+                        [showNavButtons]="false"
+                        [showIndicator]="false">
+            </dx-gallery>
+            <h6 *ngIf="fotografiasGaleria == null || fotografiasGaleria.length == 0" class="text-danger text-center">
+              No se han registrado fotografías
+            </h6>
+          </div>
+        </dx-popup>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

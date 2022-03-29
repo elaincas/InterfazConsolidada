@@ -1,0 +1,128 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+
+      <div class="col-lg-5 col-md-6 col-sm-6">
+        <div class="card card-stats">
+          <div class="card-header" id="usuariosRegistradosMesActualHeader" data-background-color="green">
+            <i class="material-icons">person_add</i>
+          </div>
+          <div class="card-content">
+            <p class="category">Usuarios Registrados</p>
+            <div class="card-content-group">
+              <div class="card-content-group-inline-element card-content-group-inline-element__last">
+                <p class="category">Mes Actual</p>
+                <h3 class="title card-content-group-element-value"> + {{ ecommerceDashboardService.resumen?.usuarios?.usuariosRegistradosMesActual | number }} </h3>
+              </div>
+              <div class="card-content-group-inline-element card-content-group-inline-element__last">
+                <p class="category ">Mes Anterior</p>
+                <h3 class="title card-content-group-element-value"> {{ ecommerceDashboardService.resumen?.usuarios?.usuariosRegistradosUltimoMes | number }}</h3>
+              </div>
+
+              <div class="card-content-group-inline-element ">
+                <p class="category ">Total</p>
+                <h3 class="title card-content-group-element-value"> {{ ecommerceDashboardService.resumen?.usuarios?.usuariosExistentes | number }}</h3>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer">
+            <div class="stats">
+              <i class="material-icons">date_range</i> Historico de usuarios
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-3 col-md-6 col-sm-6">
+        <div class="card card-stats">
+          <div class="card-header" id="usuariosRegistradosMesActualHeader" data-background-color="green">
+            <i class="material-icons">shopping_cart</i>
+          </div>
+          <div class="card-content">
+            <p class="category">Pedidos</p>
+            <div class="card-content-group">
+
+              <div class="card-content-group-inline-element" *ngFor="let estado of ecommerceDashboardService.resumen?.pedidos?.cantidadPedidosPorEstado; index as i"
+                [attr.data-index]="i" [ngClass]="{'card-content-group-inline-element__last': i !== ecommerceDashboardService.resumen?.pedidos?.cantidadPedidosPorEstado.length -1}">
+                <p class="category ">{{estado.estado}}</p>
+                <h3 class="title card-content-group-element-value"> {{ estado.cantidad | number }}</h3>
+              </div>
+
+            </div>
+          </div>
+          <div class="card-footer">
+            <div class="stats">
+              <i class="material-icons">date_range</i> Mes Actual
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="col-lg-4 col-md-6 col-sm-6">
+        <div class="card card-stats">
+          <div class="card-header" data-background-color="green">
+            <i class="material-icons">attach_money</i>
+          </div>
+          <div class="card-content">
+            <p class="category">Ventas</p>
+            <div class="card-content-group">
+              <div class="card-content-group-inline-element card-content-group-inline-element__last">
+                <p class="category">Mes Actual</p>
+                <h3 class="title card-content-group-element-value">L {{ ecommerceDashboardService.resumen?.pedidos?.totalVentasMesActual | number }}</h3>
+              </div>
+              <div class="card-content-group-inline-element ">
+                <p class="category ">Mes Anterior</p>
+                <h3 class="title card-content-group-element-value">L {{ ecommerceDashboardService.resumen?.pedidos?.totalVentasUltimoMes | number}}</h3>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-footer">
+            <div class="stats">
+              <i class="material-icons" [ngClass]="{'text-danger': !fueronVentasDelMesPasadoSuperadas }">show_chart</i>
+              <span class="text-danger" *ngIf="!fueronVentasDelMesPasadoSuperadas">
+                No se han superado las ventas del mes anterior.
+              </span>
+              <span *ngIf="fueronVentasDelMesPasadoSuperadas">
+                Las ventas del mes anterior fueron superadas.
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header card-header-icon" data-background-color="green">
+              <i class="material-icons">insert_chart</i>
+            </div>
+            <div class="card-content">
+              <h4 class="card-title">
+                <strong>Ventas por aplicación</strong>
+              </h4>
+              <div class="row">
+                <div class="col-md-12">
+                  <app-grafica-ventas-por-app></app-grafica-ventas-por-app>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+
+        <app-grafica-ventas-por-mes-app-lineal [dataSource]="ecommerceDashboardService.resumen?.pedidos?.ventasAgrupadasPorApp.portalWeb"
+          [icon]="'web'"  [title]="'Ventas en Sitio Web'"></app-grafica-ventas-por-mes-app-lineal>
+
+        <app-grafica-ventas-por-mes-app-lineal [dataSource]="ecommerceDashboardService.resumen?.pedidos?.ventasAgrupadasPorApp.androidApp"
+          [icon]="'android'" [title]="'Ventas en Android'"></app-grafica-ventas-por-mes-app-lineal>
+
+        <app-grafica-ventas-por-mes-app-lineal [dataSource]="ecommerceDashboardService.resumen?.pedidos?.ventasAgrupadasPorApp.iosApp"
+          [icon]="'phone_iphone'" [title]="'Ventas en iOS'"></app-grafica-ventas-por-mes-app-lineal>
+      </div>
+    </div>
+  </div>

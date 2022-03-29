@@ -1,0 +1,126 @@
+<dx-popup class="popup" id="popup" height="550" width="60%" [showTitle]="true" title="Nueva Colonia"
+  [dragEnabled]="true" [closeOnOutsideClick]="false" [(visible)]="mostrarPopup" [showCloseButton]="true"
+  [resizeEnabled]="true" (onShown)="onShowing($event)">
+  <div *dxTemplate="let data of 'content'">
+    <dx-scroll-view #scrollView id="scrollview">
+      <dx-form [formGroup]="formGroupNueva">
+        <dxi-item itemType="group" caption="Info. Colonia">
+          <div class="row">
+            <div class="col-md-5">
+              <div class="form-group">
+                <label for="">Ciudad:</label>
+                <dx-lookup formControlName="selectCiudad" [dataSource]="ciudades" displayExpr="descripcion"
+                  valueExpr="id" [showClearButton]="true" [searchEnabled]="true"
+                  (onValueChanged)="onValueChangedCiudad($event)">
+                </dx-lookup>
+              </div>
+            </div>
+
+            <div class="col-md-5">
+              <div class="form-group">
+                <label for="">Sucursal:</label>
+                <dx-lookup formControlName="selectSucursal" [dataSource]="sucursales" displayExpr="nombre"
+                  valueExpr="id" [showClearButton]="true" [searchEnabled]="true">
+                </dx-lookup>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-5">
+              <div class="form-group">
+                <label>Colonia:</label>
+                <dx-drop-down-box formControlName="selectColonia" [(value)]="gridBoxValue" displayExpr="nombre"
+                  valueExpr="id" placeholder="Seleccione una colonia..." [showClearButton]="true"
+                  [dataSource]="colonias" name="colonias" [validationError]="{
+                        type: 'required',
+                        message: 'Debe de seleccionar como minimo una colonia.'
+                      }">
+
+                  <div *dxTemplate="let data of 'content'">
+                    <dx-data-grid #gridAplicacion [wordWrapEnabled]="true" [dataSource]="colonias"
+                      [selection]="{ mode: 'single' }" [hoverStateEnabled]="true" [filterRow]="{ visible: true }"
+                      [height]="400" [(selectedRowKeys)]="gridBoxValueSelect">
+                      <dxi-column dataField="id" caption="Id" [width]="80"> </dxi-column>
+                      <dxi-column dataField="nombre" caption="Nombre"> </dxi-column>
+                      <dxi-column dataField="ciudad" caption="Ciudad"> </dxi-column>
+                      <dxo-search-panel [visible]="true"></dxo-search-panel>
+                    </dx-data-grid>
+                  </div>
+                </dx-drop-down-box>
+              </div>
+            </div>
+          </div>
+        </dxi-item>
+
+        <dxi-item itemType="group" caption="Horarios">
+          <div class="row" style="display: flex; justify-content: center;">
+            <table class="table table-borderless" style="width: 95%;">
+              <thead>
+                <tr>
+                  <th scope="col"></th>
+                  <th scope="col">Desde</th>
+                  <th scope="col">Hasta</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr>
+                  <td>
+                    <strong>Lunes a Viernes</strong>
+                  </td>
+                  <td>
+                    <dx-date-box formControlName="horaAperturaLV" type="time" [showClearButton]="true" [min]="minDate"
+                      [max]="maxDate"></dx-date-box>
+                  </td>
+                  <td>
+                    <dx-date-box formControlName="horaCierreLV" type="time" [showClearButton]="true" [min]="minDate"
+                      [max]="maxDate"></dx-date-box>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td><strong>Sábado</strong></td>
+                  <td>
+                    <dx-date-box formControlName="horaAperturaSabado" type="time" [showClearButton]="true"
+                      [min]="minDate" [max]="maxDate"></dx-date-box>
+                  </td>
+                  <td>
+                    <dx-date-box formControlName="horaCierreSabado" type="time" [showClearButton]="true" [min]="minDate"
+                      [max]="maxDate"></dx-date-box>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <strong>Domingo</strong>
+                    <br>
+                    <dx-check-box text="Se trabaja domingo" formControlName="checkActivo">
+                    </dx-check-box>
+                  </td>
+                  <td>
+                    <dx-date-box [disableControl]="!seTrabajaDomingo" formControlName="horaAperturaDomingo" type="time" [showClearButton]="true"
+                      [min]="minDate" [max]="maxDate"></dx-date-box>
+                  </td>
+                  <td>
+                    <dx-date-box [disableControl]="!seTrabajaDomingo" formControlName="horaCierreDomingo" type="time" [showClearButton]="true"
+                      [min]="minDate" [max]="maxDate"></dx-date-box>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </dxi-item>
+
+        <dxi-item>
+          <div class="row">
+            <div class="col-md-3">
+              <dx-button text="Guardar" type="success" (onClick)="registrarColonia()">
+              </dx-button>
+
+            </div>
+          </div>
+        </dxi-item>
+      </dx-form>
+    </dx-scroll-view>
+  </div>
+</dx-popup>

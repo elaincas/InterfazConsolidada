@@ -1,0 +1,37 @@
+<dx-drop-down-box
+  #ddlProductos
+  [(value)]="productoSeleccionado"
+  [readOnly]="esReadonly"
+  id="lookupProductos"
+  valueExpr="productoId"
+  placeholder="Seleccione un Producto"
+  [showClearButton]="mostrarBotonLimpiar"
+  [dataSource]="dataSource"
+  displayExpr="producto"
+  [ngClass]="{
+    'producto-invalido': !esProductoValido
+  }"
+  (onClosed)="limpiarFiltros($event)"
+  [validationError]="validationErrorProductoSeleccionado()"
+>
+  <div *dxTemplate="let data of 'content'">
+    <dx-data-grid
+      #dxDataGridProductos
+      [dataSource]="productos"
+      (onRowClick)="filaClickeada($event)"
+      [remoteOperations]="true"
+      [hoverStateEnabled]="true"
+      [paging]="{ enabled: true, pageSize: 30 }"
+      [filterRow]="{ visible: true }"
+      [scrolling]="{ mode: 'infinite' }"
+      [height]="300"
+    >
+      <dxi-column
+        caption="Código"
+        dataField="productoId"
+        [width]="100"
+      ></dxi-column>
+      <dxi-column caption="Producto" dataField="producto"></dxi-column>
+    </dx-data-grid>
+  </div>
+</dx-drop-down-box>

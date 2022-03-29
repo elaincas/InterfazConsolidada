@@ -1,0 +1,99 @@
+<!-- <app-main-loader></app-main-loader> -->
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-icon" data-background-color="green">
+                        <i class="material-icons">assignment</i>
+                    </div>
+                    <div class="card-content">
+                        <h4 class="card-title">
+                            <strong>Auxiliar Productos</strong>
+                        </h4>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+                                        <span>Seleccionar Producto:</span>
+                                        <dx-select-box [dataSource]="productos" displayExpr="nombreProducto" valueExpr="productoID"
+                                            placeholder="Productos..." [(ngModel)]="productoID">
+                                        </dx-select-box>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-2 col-md-5 col-sm-5 col-xs-8">
+                                        <span>Desde:</span>
+                                        <dx-date-box [displayFormat]="'dd/MM/yyyy'" [(ngModel)]="fechaDesde" type="date">
+                                        </dx-date-box>
+                                    </div>
+                                    <div class="col-lg-2 col-md-5 col-sm-5 col-xs-8">
+                                        <span>Hasta:</span>
+                                        <dx-date-box [displayFormat]="'dd/MM/yyyy'" [(ngModel)]="fechaHasta" type="date">
+                                        </dx-date-box>
+                                    </div>
+                                    <div class="col-lg-2 col-md-2  col-sm-2 col-xs-4">
+                                        <br>
+                                        <dx-button type="default" icon="fa fa-search" (onClick)="BusquedaInformacion()"></dx-button>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <div class="col-md-2" style="float: left;" *ngIf="mostrarInventarioInicial">
+                                        <span class="labelsFormularios"><strong>Inventario Inicial:</strong></span>
+                                        <dx-number-box name="txtInventaropInicial" [readOnly]="true" [(ngModel)]="productosAuxiliar.inventarioInicial">
+                                        </dx-number-box>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <dx-data-grid #grid id="gridAuxiliar" [dataSource]="productosAuxiliar.listaAuxiliar"
+                                            [showColumnLines]="true" [showRowLines]="true" [showBorders]="true"
+                                            [columnAutoWidth]="true" [rowAlternationEnabled]="true">
+                                            <dxo-filter-row [visible]="true"> </dxo-filter-row>
+                                            <dxo-header-filter [visible]="true"></dxo-header-filter>
+                                            <dxo-paging [pageSize]="10" [pageIndex]="0"> </dxo-paging>
+                                            <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10, 20, 50]"
+                                                [showNavigationButtons]="true">
+                                            </dxo-pager>
+                                            <dxo-export [enabled]="true" fileName="Auxiliar_de_Productos"
+                                                [allowExportSelectedData]="true"></dxo-export>
+                                            <dxi-column caption="Prod. Cod." width="100px" dataField="productoID" [visible]="false"></dxi-column>
+                                            <dxi-column dataField="descripcion" caption="Producto"></dxi-column>
+                                            <dxi-column caption="Lote" width="70px" dataField="productoDetalleID"
+                                                [groupIndex]="0"></dxi-column>
+                                            <dxi-column caption="Estado" width="200px" dataField="estado"> </dxi-column>
+                                            <dxi-column caption="Fecha Estado" dataField="fechaCambioEstado" dataType="date"
+                                                cellTemplate="dateCell"></dxi-column>
+                                            <dxi-column caption="No Asignación" dataField="productoPrestamoID" [visible]="false"></dxi-column>
+                                            <dxi-column caption="Colaborador Vhur" dataField="colaboradorID"></dxi-column>
+                                            <dxi-column caption="Colaborador Nombre" dataField="nombre"> </dxi-column>
+                                            <dxi-column caption="Usuario Realiza Transacción" dataField="usuario"></dxi-column>
+                                            <dxi-column caption="Observacion" dataField="observacionDetallesProducto"></dxi-column>
+                                            <dxi-column caption="Traslado No" dataField="noTraslado"> </dxi-column>
+                                            <dxi-column caption="Zona Envia" dataField="zonaEnvia"> </dxi-column>
+                                            <dxi-column caption="Zona Recibe" dataField="zonaRecibe"> </dxi-column>
+                                            <dxi-column caption="Fecha" dataField="fecha" cellTemplate="dateCell2"></dxi-column>
+                                            <dxi-column caption="Zona Actual" dataField="zonaActual"> </dxi-column>
+
+                                            <div *dxTemplate="let cellData of 'dateCell'">
+                                                {{cellData.value | date: 'dd/MM/yyyy'}}
+                                            </div>
+                                            <div *dxTemplate="let cellData of 'dateCell2'">
+                                                {{cellData.value | date: 'dd/MM/yyyy'}}
+                                            </div>
+
+                                            <dxo-summary>
+                                                <dxi-total-item column="productoID" summaryType="count">
+                                                </dxi-total-item>
+                                            </dxo-summary>
+                                        </dx-data-grid>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

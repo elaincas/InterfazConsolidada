@@ -1,0 +1,50 @@
+::ng-deep .dx-field {
+    display: flex;
+    justify-content: flex-start;
+}
+
+::ng-deep .dx-field-value {
+    width: 20% !important ;
+}
+
+::ng-deep .dx-field-label {
+    width: 20%;
+    text-align: center;    
+}
+::ng-deep .dx-collection {
+    display: flex;
+    justify-content: space-around;
+}
+
+.radio-sucursales-group {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.edit-btn-container{
+    display: flex;
+    justify-content: end;
+    padding-right: 42px;
+    margin-bottom: 10px;
+}
+
+.edit-form-inputs{
+    border: 3px solid salmon;
+}
+
+::ng-deep .dx-field-label {
+    width: 25% ;
+}
+
+::ng-deep .dx-field-value{
+    width: 75% !important;
+}
+
+.formEditByGroup label {
+    width: 100%;
+}
+
+.variableLookupRow{
+    display: flex;
+    justify-content: center;
+}

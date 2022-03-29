@@ -1,0 +1,123 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="card">
+      <div class="card-header card-header-icon" data-background-color="green">
+        <i class="material-icons">add</i>
+      </div>
+      <div class="card-content">
+        <h4 class="card-title">Registrar Traslado</h4>
+        <div class="row">
+          <div class="col-md-5  col-xs-6">
+            <span>Finalidad:</span>
+            <dx-select-box [dataSource]="tipoSalida" displayExpr="FinalidadInventarioDescripcion" valueExpr="FinalidadInventarioId" placeholder="Finalidad..."
+              [(ngModel)]="productoGrid.IdTipoSalida"></dx-select-box>
+          </div>
+          <div class="col-md-5  col-xs-6">
+            <span>Sucursal:</span>
+            <dx-lookup [dataSource]="dataSourceSucursales" displayExpr="Nombre" valueExpr="SucursalId" placeholder="Sucursal..." [(ngModel)]="productoGrid.SucursalCod"
+              [closeOnOutsideClick]="true"></dx-lookup>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-10  col-xs-12">
+            <br>
+            <span>Descripción:</span>
+            <dx-text-box placeholder="Descripción..." [(ngModel)]="movimientoTraslado.Observaciones" maxLength="150"></dx-text-box>
+          </div>
+        </div>
+        <br>
+        <hr>
+        <div class="row">
+          <div class="col-md-5  col-xs-5">
+            <span>Producto:</span>
+            <dx-lookup [dataSource]="dataSourceProductos" placeholder="Escriba producto..." displayExpr="NombreProducto" valueExpr= "ProductoId"
+            [(ngModel)] = "productoGrid.ProductoCod" (onKeyUp)="Enter($event)" [closeOnOutsideClick]="true" title="Productos">
+            </dx-lookup>
+          </div>
+          <div class="col-md-1  col-xs-3" style="display: inline-block">
+            <br>
+            <dx-button type="default" icon="fa fa-search" (onClick)="BuscarProducto()"></dx-button>
+          </div>
+          <div class="col-md-6 col-xs-5 hidden">
+            <span>Nombre Prod:</span>
+            <dx-text-box placeholder="Producto..." disabled="true" [(ngModel)]="productoGrid.NombreProducto"></dx-text-box>
+          </div>
+        </div>
+        <br>
+        <div class="row">
+          <div class="col-md-2  col-xs-4">
+            <span>Inventario Actual:</span>
+            <dx-text-box placeholder="Cantidad..." [(value)]="cantidadTotal" disabled="true"></dx-text-box>
+          </div>
+          <div class="col-md-2    col-xs-4">
+            <span>Cantidad Trasladar:</span>
+            <dx-number-box placeholder="Cantidad..." [(ngModel)]="productoGrid.Cantidad" (onValueChanged)="RestarCantidad()"></dx-number-box>
+          </div>
+          <div class="col-md-2  col-xs-4">
+            <span>Cantidad Restante:</span>
+            <dx-text-box placeholder="Cantidad..." [(value)]="cantidadRestante" disabled="true"></dx-text-box>
+          </div>
+          <div class="col-md-2  col-xs-4">
+            <span>Costo:</span>
+            <dx-number-box format="#,##0.00" [(ngModel)]="productoGrid.Costo" disabled="true"></dx-number-box>
+          </div>
+          <div class="col-md-2  col-xs-4">
+            <span>Precio:</span>
+            <dx-number-box format="#,##0.00" [(ngModel)]="productoGrid.Precio" disabled="true"></dx-number-box>
+          </div>
+        </div>
+
+        <br>
+
+        <div class="row">
+          <br>
+          <div class="col-md-10 col-xs-12">
+            <dx-button style="float:right" type="default" text="Agregar" (onClick)="Agregar()"></dx-button>
+
+          </div>
+        </div>
+        <div class="row">
+          <br>
+          <div class="col-md-12 col-xs-12">
+            <dx-data-grid [dataSource]="productosGridAgregados" [showColumnLines]="true" [showRowLines]="true" [showBorders]="true" [columnAutoWidth]="true"
+              [rowAlternationEnabled]="true">
+              <dxo-filter-row [visible]="true"> </dxo-filter-row>
+              <dxo-header-filter [visible]="true"></dxo-header-filter>
+              <dxo-export [enabled]="true" fileName="Traslados_" [allowExportSelectedData]="true"></dxo-export>
+              <dxi-column dataField="SucursalCodigo" caption="Cód. Sucursal" witdh="25"> </dxi-column>
+              <dxi-column caption="Sucursal" dataField="NombreSucursal"> </dxi-column>
+              <dxi-column dataField="ProductoCodigo" caption="Cód. Prod"></dxi-column>
+              <dxi-column dataField="NombreProducto" caption="Nombre Producto"> </dxi-column>
+              <dxi-column dataField="TipoSalida" caption="Tipo Salida"> </dxi-column>
+              <dxi-column dataType="number" caption="Costo" dataField="Costo" cellTemplate="moneyCell"> </dxi-column>
+              <dxi-column dataType="number" caption="Precio" dataField="Precio" cellTemplate="moneyCell"></dxi-column>
+              <dxi-column caption="Cantidad" dataField="Cantidad"> </dxi-column>
+              <dxi-column caption="Acciones" cellTemplate="accionTemplate" [width]="70"> </dxi-column>
+
+              <div *dxTemplate="let cellData of 'dateCell'">
+                {{cellData.value | date: 'dd/MM/yyyy'}}
+              </div>
+              <div *dxTemplate="let cellData of 'moneyCell'">
+                {{cellData.value | number:'.2-5'}}
+              </div>
+              <div *dxTemplate="let data of 'accionTemplate'">
+                <div class="row" style="margin: 0 auto">
+                  <div class="col-md-2">
+                    <i class="fa fa-times-circle" (click)="EliminarRegistroGrid(data)"> </i>
+                  </div>
+                </div>
+              </div>
+              <dxo-scrolling mode="virtual"></dxo-scrolling>
+            </dx-data-grid>
+          </div>
+        </div>
+        <div class="row">
+          <br>
+          <div class="col-md-12 col-xs-12">
+            <dx-button style="float:right" type="success" text="Enviar" (onClick)="EnviarInformacion()" [disabled]="sePuedeEnviar"></dx-button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

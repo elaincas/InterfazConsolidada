@@ -1,0 +1,199 @@
+<div class="row">
+  <div class="col-lg-5 col-md-12">
+    <div class="card">
+      <div class="card-content">
+        <form [formGroup]="formControlDetalle">
+          <div class="row">
+            <div class="col-md-12">
+              <label for="">Valor: </label>
+              <dx-text-box
+                (onEnterKey)="agregarDetalle()"
+                #textBoxValor
+                formControlName="valor"
+                placeholder=""
+              ></dx-text-box>
+              <div *ngIf="submit && validacion.valor.error">
+                <span class="text-danger">{{ validacion.valor.mensaje }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="">
+                  ¿Es Activo?
+                  <dx-check-box formControlName="activo"> </dx-check-box>
+                </label>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="">
+                  ¿Es Visible en la Web?
+                  <dx-check-box formControlName="visibleWeb"> </dx-check-box>
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-inline">
+              <div class="col-lg-12 col-md-12">
+                <dx-button
+                  [disabled]="botonAgregarDeshabilitado"
+                  *ngIf="!esEdicion"
+                  text="Agregar"
+                  (click)="agregarDetalle()"
+                  type="success"
+                >
+                </dx-button>
+                <dx-button
+                  *ngIf="esEdicion"
+                  [disabled]="botonEditarDeshabilitado"
+                  text="Editar"
+                  (click)="editarDetalle()"
+                  type="success"
+                >
+                </dx-button>
+                <dx-button
+                  text="Limpiar"
+                  type="danger"
+                  (onClick)="limpiarDetalle()"
+                >
+                </dx-button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-12 col-md-12">
+    <div class="card">
+      <div class="card-content">
+        <dx-data-grid
+          [dataSource]="detalles"
+          [allowColumnReordering]="true"
+          [allowColumnResizing]="true"
+          keyExpr="id"
+          [showBorders]="true"
+          style="width: 100%"
+        >
+          <dxo-filter-row [visible]="true"></dxo-filter-row>
+          <dxo-selection mode="single"></dxo-selection>
+          <dxo-editing mode="cell" [allowUpdating]="true"></dxo-editing>
+          <dxo-paging [pageSize]="5"></dxo-paging>
+          <dxo-pager
+            [showPageSizeSelector]="true"
+            [showInfo]="true"
+            [visible]="true"
+            [showNavigationButtons]="true"
+          >
+          </dxo-pager>
+          <dxo-scrolling mode="standard" showScrollbar="always"></dxo-scrolling>
+          <dxo-selection mode="multiplex"></dxo-selection>
+          <dxo-export
+            [enabled]="true"
+            fileName="SecciónProductosDetalles"
+            [allowExportSelectedData]="true"
+          ></dxo-export>
+          <dxo-column-chooser
+            [enabled]="true"
+            mode="select"
+          ></dxo-column-chooser>
+          <dxi-column
+            caption="Id"
+            dataField="id"
+            [allowEditing]="false"
+            [width]="50"
+          >
+          </dxi-column>
+          <dxi-column
+            caption="Valor"
+            dataField="valor"
+            [allowEditing]="false"
+            [width]="340"
+          >
+          </dxi-column>
+          <dxi-column
+            caption="¿Es Visible en la Web?"
+            dataField="visibleWeb"
+            [allowEditing]="false"
+            [width]="150"
+          >
+          </dxi-column>
+          <dxi-column
+            caption="Usuario Agrega"
+            dataField="usuarioAgregaId"
+            [allowEditing]="false"
+            [width]="100"
+          >
+          </dxi-column>
+          <dxi-column
+            caption="Usuario Modifica"
+            dataField="usuarioModificaId"
+            [allowEditing]="false"
+            [width]="100"
+          >
+          </dxi-column>
+          <dxi-column
+            caption="Fecha Agrega"
+            dataField="fechaAgrega"
+            dataType="date"
+            format="dd/MM/yyyy"
+            [allowEditing]="false"
+            [width]="90"
+          >
+          </dxi-column>
+          <dxi-column
+            caption="Fecha Modifica"
+            dataField="fechaModifica"
+            [allowEditing]="false"
+            dataType="date"
+            format="dd/MM/yyyy"
+            [width]="90"
+          ></dxi-column>
+          <dxi-column
+            caption="Acciones"
+            cellTemplate="accionTemplate"
+            [allowExporting]="false"
+            [width]="100"
+          >
+          </dxi-column>
+          <div *dxTemplate="let c of 'accionTemplate'">
+            <div class="text-center">
+              <button
+                rel="tooltip"
+                title="Desactivar"
+                *ngIf="c.data.activo"
+                type="button"
+                (click)="inactivarDetalle(c.data.id)"
+                class="btn btn-grid btn-danger"
+              >
+                <i class="material-icons">arrow_downward</i>
+              </button>
+              <button
+                rel="tooltip"
+                title="Activar"
+                *ngIf="!c.data.activo"
+                (click)="activarDetalle(c.data.id)"
+                type="button"
+                class="btn btn-grid btn-success"
+              >
+                <i class="material-icons">arrow_upward</i>
+              </button>
+              <button
+                rel="tooltip"
+                title="Editar"
+                type="button"
+                (click)="obtenerValoresParaActualizarDetalle(c.data)"
+                class="btn btn-grid btn-Azulsiman"
+              >
+                <em class="material-icons">mode_edit</em>
+              </button>
+            </div>
+          </div>
+        </dx-data-grid>
+      </div>
+    </div>
+  </div>
+</div>

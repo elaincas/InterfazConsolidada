@@ -1,0 +1,8 @@
+.select-box-container{
+  width: calc(100% - 135px);
+}
+
+.add_create-button{
+  padding-left: 12px;
+  padding-right: 12px;
+}

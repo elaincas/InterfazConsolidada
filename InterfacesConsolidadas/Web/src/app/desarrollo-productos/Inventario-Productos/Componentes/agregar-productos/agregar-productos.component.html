@@ -1,0 +1,334 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="card">
+      <div class="card-header card-header-icon" data-background-color="green">
+        <i class="material-icons">add</i>
+      </div>
+      <div class="card-content">
+        <h4 class="card-title">Nuevo Producto</h4>
+        <form [formGroup]="formProductos">
+          <div class="row hidden">
+            <div class="col-md-2">
+              <div class="form-group is-empty label-floating">
+                <label class="control-label" for="ProductoId"
+                  >Código Farmacia:</label
+                >
+                <input
+                  id="ProductoId"
+                  class="form-control"
+                  type="text"
+                  formControlName="ProductoId"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-2">
+              <label class="control-label" for="ProdIdPOS"
+                >Código Farmacia:</label
+              >
+
+              <dx-text-box
+                (onValueChanged)="obtenerProductoMaestroPorId($event)"
+                formControlName="ProdIdPOS"
+              ></dx-text-box>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-8">
+              <label class="control-label" for="ProdIdPOS">Descripción:</label>
+              <dx-text-box formControlName="NombreProducto"></dx-text-box>
+              <span
+                class="badge badge-black"
+                *ngIf="formErrors.NombreProducto"
+                >{{ formErrors.NombreProducto }}</span
+              >
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <label class="control-label">Proveedor</label>
+              <dx-lookup
+                [dataSource]="dataSourceProveedor"
+                [closeOnOutsideClick]="true"
+                formControlName="ProveedorId"
+                displayExpr="Nombre"
+                valueExpr="Id"
+                title="Proveedor"
+                placeholder="Seleccione un proveedor"
+              >
+              </dx-lookup>
+            </div>
+            <div class="col-md-4">
+              <label class="control-label">Distribuidor</label>
+              <dx-lookup
+                [dataSource]="dataSourceDistribuidores"
+                [closeOnOutsideClick]="true"
+                formControlName="DistribuidorId"
+                displayExpr="Nombre"
+                valueExpr="DistribuidorId"
+                title="Distribuidor"
+                placeholder="Seleccione un distribuidor"
+              >
+              </dx-lookup>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-2">
+              <label class="control-label" for="UltimoCosto">Costo:</label>
+              <dx-number-box
+                formControlName="UltimoCosto"
+                format="L ###,###,##0.00"
+              ></dx-number-box>
+            </div>
+            <div class="col-md-2">
+              <label class="control-label" for="UltimoPrecio">Precio:</label>
+
+              <dx-number-box
+                formControlName="UltimoPrecio"
+                format="L ###,###,##0.00"
+              ></dx-number-box>
+            </div>
+          </div>
+          <div class="row">
+            <br>
+            <div class="col-md-5">
+              <dx-file-uploader #ImagenAgregar  selectButtonText="Seleccionar" labelText="o arrastrar la imagen"
+              accept=".png,.JPG" uploadMode="useform" type="default" allowCanceling="true" uploadButtonText=""
+              readyToUploadMessage="Listo para subir" (onValueChanged)="ObtenerImagenSeleccionadoDxFileUploader($event)"
+              (onOptionChanged)="QuitarImagen($event)">
+            </dx-file-uploader>
+            <img  *ngIf="fileDataUri"[src]="fileDataUri" style="max-height: 350px; max-width: 350px;">
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-9">
+              <div class="form-group form-button">
+                <button class="btn btn-fill btn-Azulsiman hidden" type="submit">
+                  Limpiar
+                </button>
+                <button
+                  class="btn btn-fill btn-Azulsiman"
+                  type="submit"
+                  (click)="limpiarControlesDeFormulario()"
+                >
+                  Limpiar
+                </button>
+                <button
+                  class="btn btn-fill btn-Azulsiman"
+                  type="submit"
+                  (click)="crearProducto()"
+                >
+                  Agregar
+                </button>
+                <span class="badge badge-black" *ngIf="mensajeRespuesta">{{
+                  mensajeRespuesta
+                }}</span>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-content">
+              <div class="material-datatables table-responsive">
+                <div
+                  id="datatables_wrapper"
+                  class="dataTables_wrapper form-inline dt-bootstrap"
+                >
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <dx-data-grid
+                        [dataSource]="productos"
+                        [showColumnLines]="true"
+                        [showRowLines]="true"
+                        [showBorders]="true"
+                        [columnAutoWidth]="true"
+                        [rowAlternationEnabled]="true"
+                      >
+                        <dxo-filter-row [visible]="true"> </dxo-filter-row>
+                        <dxo-header-filter [visible]="true"></dxo-header-filter>
+                        <dxo-paging [pageSize]="10" [pageIndex]="0">
+                        </dxo-paging>
+                        <dxo-pager
+                          [showPageSizeSelector]="true"
+                          [allowedPageSizes]="[10, 20, 50]"
+                          [showNavigationButtons]="true"
+                        >
+                        </dxo-pager>
+                        <dxo-export
+                          [enabled]="true"
+                          fileName="Inventario-Productos-Ubicación"
+                          [allowExportSelectedData]="true"
+                        ></dxo-export>
+                        <dxi-column caption="Cod." width="80px" dataField="ProductoId">
+                        </dxi-column>
+                        <dxi-column
+                          caption="Producto"
+                          dataField="NombreProducto"
+                        ></dxi-column>
+                        <dxi-column caption="Costo"   format="L ###,###,##0.00" dataField="UltimoCosto">
+                        </dxi-column>
+                        <dxi-column caption="Precio"  format="L ###,###,##0.00" dataField="UltimoPrecio">
+                        </dxi-column>
+                        <dxi-column
+                          caption="Acciones"
+                          cellTemplate="accionTemplate"
+                          [width]="70"
+                        >
+                        </dxi-column>
+                        <div *dxTemplate="let cellData of 'dateCell'">
+                          {{ cellData.value | date: "dd/MM/yyyy" }}
+                        </div>
+                        <div *dxTemplate="let data of 'accionTemplate'">
+                          <div class="row">
+                            <div class="col-md-2">
+                              <i
+                                class="fa fa-pencil"
+                                (click)="onEditarProducto(data.data)"
+                              >
+                              </i>
+                            </div>
+                            <div class="col-md-2">
+                              <i
+                                class="fa fa-minus-circle"
+                                (click)="descontinuarProducto(data.data)"
+                              >
+                              </i>
+                            </div>
+                          </div>
+                        </div>
+                      </dx-data-grid>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+<dx-popup
+  class="popup"
+  id="popup"
+  height="80%"
+  width="60%"
+  [showTitle]="true"
+  title="Editar Producto"
+  [dragEnabled]="false"
+  [closeOnOutsideClick]="true"
+  [(visible)]="_mostrarPopup"
+  [showCloseButton]="true"
+  [resizeEnabled]="true"
+>
+  <div *dxTemplate="let data of 'content'">
+    <br />
+    <dx-scroll-view width="100%" height="100%">
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <span
+          >Nombre Producto:
+          <dx-text-box
+            [(ngModel)]="producto.NombreProducto"
+            placeholder="Nombre Producto..."
+          ></dx-text-box>
+        </span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <label class="control-label">Proveedor</label>
+        <dx-lookup
+          [dataSource]="dataSourceProveedorEdit"
+          [closeOnOutsideClick]="true"
+          #proveedorEdit
+          displayExpr="Nombre"
+          valueExpr="Id"
+          title="Proveedor"
+          placeholder="Seleccione un proveedor"
+
+        >
+        </dx-lookup>
+      </div>
+      <div class="col-md-6">
+        <label class="control-label">Distribuidor</label>
+        <dx-lookup
+          [dataSource]="dataSourceDistribuidoresEdit"
+          [closeOnOutsideClick]="true"
+          #distribuidorEdit
+          displayExpr="Nombre"
+          valueExpr="DistribuidorId"
+          title="Distribuidor"
+          placeholder="Seleccione un distribuidor"
+
+        >
+        </dx-lookup>
+      </div>
+    </div>
+
+    <BR />
+    <div class="row">
+      <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+        <span
+          >Precio:
+          <dx-number-box
+          format="L ###,###,##0.00"
+            [(ngModel)]="producto.UltimoPrecio"
+            placeholder="Precio..."
+          ></dx-number-box
+        ></span>
+      </div>
+      <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+        <span
+          >Costo:
+          <dx-number-box
+          format="L ###,###,##0.00"
+            [(ngModel)]="producto.UltimoCosto"
+            placeholder="Costo..."
+          ></dx-number-box
+        ></span>
+      </div>
+    </div>
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+      <div class="row">
+        <br>
+        <div class="col-md-5">
+          <dx-file-uploader #ImagenEditar  selectButtonText="Seleccionar" labelText="o arrastrar la imagen"
+          accept=".png,.JPG" uploadMode="useform" type="default" allowCanceling="true" uploadButtonText=""
+          readyToUploadMessage="Listo para subir" (onValueChanged)="ObtenerImagenSeleccionadoDxFileUploader($event,true)"
+          (onOptionChanged)="QuitarImagen($event,true)">
+        </dx-file-uploader>
+        <img *ngIf="fileDataUriEdit" [src]="fileDataUriEdit" style="max-height: 250px;">
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+      <div class="row" >
+        <br />
+        <dx-button
+          icon="fa fa-times-circle"
+          type="danger"
+          text="Cerrar"
+          (onClick)="CerrarPopup()"
+        >
+        </dx-button>
+        <dx-button
+          icon="fa fa-plus-circle"
+          type="success"
+          text="Guardar"
+          (onClick)="Editar()"
+        >
+        </dx-button>
+      </div>
+
+    </div>
+    </dx-scroll-view>
+  </div>
+</dx-popup>

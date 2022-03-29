@@ -1,0 +1,57 @@
+  hr {
+      margin-top: -1em;
+    }
+    
+  .hr-color{
+    border-color: rgba(0, 87, 168, 0.4);
+    margin-bottom: 5px;
+  }
+
+  .icono-seccion{
+    max-height: 70px;
+    width: auto;
+  }
+
+  .btn-pagina{
+    background-color: #FFFFFF;
+  }
+  .btn-pagina.visible{
+    border: 1px solid #59B15D;
+  }
+
+  .btn-pagina.visible-off{
+    border: 1px solid red;
+  }
+/* Tabla de Estados */
+  .tabla-estados {
+    float: right;
+    border-top-right-radius: 4px;
+    border: 1px solid #ccc;
+    text-align: right;
+    border-collapse: inherit;
+  }
+
+  .tabla-estados span {
+    margin-right: 10px;
+    margin-left: 5px;
+  }
+
+  .tabla-estados td {
+    border-bottom: 1px solid #ccc;
+    text-align: left;
+  }
+
+  .cuadro-muestra {
+    border-right: 1px solid #ccc;
+    height: 35px;
+    width: 35px;
+  }
+
+  .cuadro-muestra.deshabilitado {
+    background-color: #ffcccc;
+  }
+
+  .cuadro-muestra.habilitado {
+    background-color: rgba(124, 216, 129, 0.342);
+  }
+

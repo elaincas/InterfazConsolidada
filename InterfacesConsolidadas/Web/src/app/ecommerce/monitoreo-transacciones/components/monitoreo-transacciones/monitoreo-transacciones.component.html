@@ -1,0 +1,97 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div
+            class="card-header card-header-icon"
+            data-background-color="green"
+          >
+            <i class="material-icons">description</i>
+          </div>  
+          <div class="card-content">
+            <h4 class="card-title">Reporte de Monitoreo de Limite de transacciones</h4>
+            <div class="row">
+                <div class="col-md-2 col-xs-4">
+                    <span class="labelsFormulario">Fecha Desde:</span>
+                </div>
+                <div class="col-md-2 col-xs-4">
+                    <span class="labelsFormulario">Fecha Hasta:</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2 col-xs-4">
+                    <dx-date-box [showClearButton]="true" displayFormat="dd/MM/yyyy" [(ngModel)]="fechaInicial" [(max)]="fechaFinal"  (onValueChanged)="validarBoton()"></dx-date-box>
+                </div>
+                <div class="col-md-2 col-xs-4">
+                    <dx-date-box [showClearButton]="true"  displayFormat="dd/MM/yyyy" [(ngModel)]="fechaFinal"   (onValueChanged)="validarBoton()" ></dx-date-box>
+                </div>
+              
+                <div class="col-md-2 col-xs-3">
+                    <dx-button type="default" icon="fa fa-search" (onClick)="obtenerReporte()" [disabled]="bloquearBusqueda"></dx-button>
+                </div>
+            </div>
+            <br>
+          </div>
+          <div class="card-content" *ngIf = "PaisID == 4">
+            <p width="10%" align="center" >Límite: {{valorMaximoString}}</p>
+            <dx-progress-bar
+                  [min]="0"
+                  [max]="ValorMaximo"
+                  [value]="CantidadTotal"
+                  [statusFormat] = "CantidadTexto"
+                  width = "50%"
+                  >
+              </dx-progress-bar>            
+          </div>
+          <div class="card-content">
+            <div class="row">
+              
+                <dx-data-grid
+                  #dgmonitoreotransacciones
+                  [dataSource]="monitoreotransacciones"
+                  keyExpr="id"
+                  [showBorders]="true"
+                  [showRowLines]="true"
+                  [showColumnLines]="true"
+                  [rowAlternationEnabled]="true"
+                  [allowColumnResizing]="true"
+                >
+                  <dxo-paging [pageSize]="10"> </dxo-paging>
+                  <dxo-pager
+                    [showPageSizeSelector]="true"
+                    [allowedPageSizes]="[10, 25, 50, 100]"
+                    [showInfo]="true"
+                  ></dxo-pager>
+                  <dxo-filter-row [visible]="true"> </dxo-filter-row>
+                  <dxi-column
+                    dataField="sucursal"
+                    caption="Sucursal"
+                  ></dxi-column>
+                  <dxi-column
+                    dataField="cantidad"
+                    caption="Cantidad"
+                    cellTemplate="moneyCell"
+                  ></dxi-column>
+                  
+                  <dxo-summary>
+                      <dxi-total-item
+                        column="Cantidad"
+                        summaryType="sum"
+                        name="Total"
+                        [customizeText]="customizeTotal"
+                      >
+                      </dxi-total-item>
+                        <div *dxTemplate="let cellData of 'moneyCell'">
+                          {{cellData.value | NumberPipe}}
+                      </div>
+                  </dxo-summary>
+                </dx-data-grid>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

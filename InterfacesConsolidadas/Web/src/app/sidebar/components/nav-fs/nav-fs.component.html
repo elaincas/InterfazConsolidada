@@ -1,0 +1,3 @@
+<ul class="navFs">
+  <app-nav-fs-item [ngClass]="{'hide': item.visible == false}" (onItemClick)="itemClick($event)" [item]="item" *ngFor="let item of opciones"></app-nav-fs-item>
+</ul>

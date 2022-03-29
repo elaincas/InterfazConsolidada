@@ -1,0 +1,195 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-icon" data-background-color="green">
+            <i class="material-icons">360</i>
+          </div>
+          <div class="card-content">
+            <h4 class="card-title">
+              <strong>Administrar Comunicado Créditos</strong>
+            </h4>
+            <div class="row">
+              <div class="col-lg-offset-1 col-lg-10 col-md-10 col-sm-12 col-xs-12">
+                <div class="row">
+                  <div class="col-md-6" style="margin-top: 20px;">
+                    <span class="labelsFormularios">Nombre:</span>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
+                    <!-- <dx-lookup #dropDowndistribuidor [(ngModel)]="distribuidorCategoria.distribuidorExternoId"
+                      displayExpr="nombre" valueExpr="id" placeholder="Select a Distribuidor" [showClearButton]="true"
+                      [dataSource]="distribuidores" closeOnOutsideClick="true" name="dropDowndistribuidor">
+                    </dx-lookup> -->
+                    <dx-text-box [(ngModel)]="comunicadoCredito.titulo" placeholder="Nombre Comunicado...">
+                    </dx-text-box>
+                  </div>
+                  <!-- <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                    <dx-button type="success" icon="add" style="float: right" (onClick)="MostrarPopup()"></dx-button>
+                  </div> -->
+                </div>
+                <br>
+                <div class="row">
+                  <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
+                    <div class="row">
+                      <div class="col-md-6" style="margin-top: 20px;">
+                        <span class="labelsFormularios">Descripción:</span>
+                      </div>
+                    </div>
+                    <dx-text-box #desc [(ngModel)]="comunicadoCredito.descripcion"
+                      placeholder="Descripcion Comunicado...">
+                    </dx-text-box>
+                  </div>
+                </div>
+                <br>
+                <div class="row">
+                  <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
+                    <div class="row">
+                      <div class="col-md-6" style="margin-top: 20px;">
+                        <span class="labelsFormularios">Configurar Por:</span>
+                      </div>
+                    </div>
+
+                    <dx-tab-panel #tabPanel [height]="260" [dataSource]="tipoConfiguraciones" [selectedIndex]="0"
+                      [loop]="false" [animationEnabled]="true" [swipeEnabled]="true">
+                      <div *dxTemplate="let company of 'title'">
+                        <span>{{company.nombre}}</span>
+                      </div>
+                      <div *dxTemplate="let company of 'item'">
+                        <div class="tabpanel-item">
+                          <div *ngIf="company.id == 1">
+                              <dx-data-grid #gridCliente id="gridCliente" name ="gridCliente" [dataSource]="clientes" [showColumnLines]="true" [showRowLines]="true" [showBorders]="true"
+                              [columnAutoWidth]="true" [rowAlternationEnabled]="true" >
+                              <dxo-selection mode="multiple" showCheckBoxesMode="onClick"></dxo-selection>
+                                <dxo-filter-row [visible]="true"> </dxo-filter-row>
+                                <dxo-header-filter [visible]="true"></dxo-header-filter>
+                                <dxo-export [enabled]="true" fileName="Categorias" [allowExportSelectedData]="true">
+                                </dxo-export>
+                                <dxi-column dataField="clienteID" caption="ID Cliente">
+                                </dxi-column>
+                                <dxi-column dataField="nombreCliente" caption="Cliente">
+                                </dxi-column>
+                                <dxo-scrolling mode="virtual"></dxo-scrolling>
+                            </dx-data-grid>
+                          </div>
+                          <div *ngIf="company.id == 2">
+                            <dx-data-grid #gridPolizas id="gridPolizas" name="gridPolizas" [dataSource]="polizas" [showColumnLines]="true" [showRowLines]="true"
+                              [showBorders]="true" [columnAutoWidth]="true" [rowAlternationEnabled]="true">
+                              <dxo-selection mode="multiple" showCheckBoxesMode="onClick"></dxo-selection>
+                                <dxo-filter-row [visible]="true"> </dxo-filter-row>
+                                <dxo-header-filter [visible]="true"></dxo-header-filter>
+                                <dxo-export [enabled]="true" fileName="Categorias" [allowExportSelectedData]="true">
+                                </dxo-export>
+                                <dxi-column dataField="clienteID" caption="ID Cliente">
+                                </dxi-column>
+                                <dxi-column dataField="nombreCliente" caption="Cliente">
+                                </dxi-column>
+                                <dxi-column caption="Poliza" dataField="noPoliza"> </dxi-column>
+                                <dxi-column caption="Nombre Poliza" dataField="nombrePoliza"></dxi-column>
+                                <dxo-scrolling mode="virtual"></dxo-scrolling>
+                            </dx-data-grid>
+                          </div>
+                        </div>
+                      </div>
+                    </dx-tab-panel>
+                  </div>
+                </div>
+                <br>
+                <div class="row">
+                  <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
+                    <div class="row">
+                      <div class="col-md-6" style="margin-top: 20px;">
+                        <span class="labelsFormularios">Fecha Inicio:</span>
+                        <dx-date-box [value]="now" [(ngModel)]="comunicadoCredito.desde" type="date" id="dbDesde"
+                          #dbDesde stylingMode="outlined">
+                        </dx-date-box>
+                      </div>
+                      <div class="col-md-6" style="margin-top: 20px;">
+                        <span class="labelsFormularios">Fecha Fin:</span>
+                        <dx-date-box [value]="now" [(ngModel)]="comunicadoCredito.hasta" type="date" id="dbDesde"
+                          #dbDesde stylingMode="outlined">
+                        </dx-date-box>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <br>
+
+                <div class="row">
+                  <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
+                    <dx-file-uploader #fileUploader name="SubirArvhivoImagen" selectButtonText="Adjuntar Imagen"
+                      labelText="Este campo es obligatorio" (onValueChanged)="cargarArchivo($event)"
+                      [(value)]="comunicadoCredito.imagen" accept=".jpg,.png" uploadMode="userForm" type="default">
+                    </dx-file-uploader>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
+                    <div class="row" style="float: right;">
+                      <dx-button icon="fa fa-plus-circle" type="success" text="Guardar" (onClick)="AgregarComunicado()">
+                      </dx-button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- <dx-popup class="popup" id="popup" height="40%" width="45%" [showTitle]="true" ng-controller="Ctrl"
+    title="Agregar Distribuidor" [dragEnabled]="false" [closeOnOutsideClick]="true" [(visible)]="_mostrarPopup"
+    [showCloseButton]="true" [resizeEnabled]="true">
+    <div *dxTemplate="let data of 'content'">
+      <br />
+      <div *ngIf="esAgregarDistribuidor">
+
+        <div class="row">
+          <dx-text-box [(ngModel)]="distribuidor.nombre" placeholder="Nombre Distribuidor..."></dx-text-box>
+        </div>
+        <BR>
+        <div class="row">
+          <dx-text-box [(ngModel)]="distribuidor.codigoDistribuidor" placeholder="Opcional Código Distribuidor...">
+          </dx-text-box>
+        </div>
+        <div class="row" style="float: right;">
+          <br>
+          <dx-button icon="fa fa-times-circle" type="danger" text="Cerrar" (onClick)="MostrarPopup(0)">
+          </dx-button>
+          <dx-button icon="fa fa-plus-circle" type="success" text="Guardar" (onClick)="AgregarDistribuidor()">
+          </dx-button>
+
+        </div>
+      </div>
+      <div *ngIf="!esAgregarDistribuidor">
+        <div class="row">
+          <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
+            <dx-text-box [(ngModel)]="distribuidorEdicion.nombre" placeholder="Nombre Distribuidor..."></dx-text-box>
+          </div>
+        </div>
+        <BR>
+        <div class="row">
+          <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
+            <dx-lookup [(ngModel)]="distribuidorEdicion.distribuidorExternoId" [dataSource]="distribuidores"
+              closeOnOutsideClick="true" showPopupTitle="false" displayExpr="nombre" valueExpr="id">
+            </dx-lookup>
+          </div>
+          <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+            <dx-check-box text="Activo " [(ngModel)]="distribuidorEdicion.activo"></dx-check-box>
+          </div>
+        </div>
+        <BR>
+        <div class="row" style="float: right;">
+          <br>
+          <dx-button icon="fa fa-times-circle" type="danger" text="Cerrar" (onClick)="MostrarPopup(0)">
+          </dx-button>
+          <dx-button icon="fa fa-plus-circle" type="success" text="Guardar" (onClick)="Actualizar()">
+          </dx-button>
+        </div>
+      </div>
+    </div>
+  </dx-popup> -->

@@ -1,0 +1,354 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div
+            class="card-header card-header-icon"
+            data-background-color="green"
+          >
+            <i class="material-icons">list</i>
+          </div>
+          <div class="card-content">
+            <h4 class="card-title">
+              Reporte de Encuestas Satisfecho/Insatisfecho
+            </h4>
+          </div>
+          <div class="row">
+            <div class="col-xs-1"></div>
+            <div class="col-xs-2">
+              <div class="fondo-blanco jumbotron padding-disminuido-jumbotron">
+                <h4>Total Respuestas:</h4>
+                <span class="text-primary pull-right">{{
+                  reporteCalificacionesGenerales?.totalRespuestas
+                }}</span>
+              </div>
+            </div>
+            <div class="col-xs-2">
+              <div class="fondo-blanco jumbotron padding-disminuido-jumbotron">
+                <h4>Total Satisfecho:</h4>
+                <span class="text-primary pull-right">{{
+                  reporteCalificacionesGenerales?.totalSatisfecho
+                }}</span>
+              </div>
+            </div>
+            <div class="col-xs-2">
+              <div class="fondo-blanco jumbotron padding-disminuido-jumbotron">
+                <h4>Total Insatisfecho:</h4>
+                <span class="text-primary pull-right">{{
+                  reporteCalificacionesGenerales?.totalInsatisfecho
+                }}</span>
+              </div>
+            </div>
+            <div class="col-xs-2">
+              <div class="fondo-blanco jumbotron padding-disminuido-jumbotron">
+                <h4>Porcentaje Satisfecho:</h4>
+                <span class="text-primary pull-right">{{
+                  reporteCalificacionesGenerales.porcentajeSatisfechoTotal ===
+                  undefined
+                    ? ''
+                    : reporteCalificacionesGenerales.porcentajeSatisfechoTotal +
+                      '%'
+                }}</span>
+              </div>
+            </div>
+            <div class="col-xs-2">
+              <div class="fondo-blanco jumbotron padding-disminuido-jumbotron">
+                <h4>Porcentaje Insatisfecho:</h4>
+                <span class="text-primary pull-right">{{
+                  reporteCalificacionesGenerales.porcentajeInsatisfechoTotal ===
+                  undefined
+                    ? ''
+                    : reporteCalificacionesGenerales.porcentajeInsatisfechoTotal +
+                      '%'
+                }}</span>
+              </div>
+            </div>
+            <div class="col-xs-1"></div>
+          </div>
+          <div class="row mt-2rem espacio-lados-sm">
+            <div class="col-md-12">
+              <dx-data-grid
+                #dxDataGridListadoPreguntas
+                [showBorders]="true"
+                [rowAlternationEnabled]="true"
+                [wordWrapEnabled]="true"
+                [dataSource]="reporte"
+              >
+                <dxo-filter-row [visible]="true"></dxo-filter-row>
+                <dxo-header-filter [visible]="true"></dxo-header-filter>
+                <dxo-export
+                  [enabled]="true"
+                  fileName="ReportePreguntasCalificacionesSatisfechoInsatisfecho"
+                >
+                </dxo-export>
+                <dxi-column
+                  caption="Pregunta"
+                  [width]="350"
+                  dataField="descripcion"
+                ></dxi-column>
+                <dxi-column
+                  caption="Respuestas"
+                  [width]="80"
+                  dataField="totalRespuestas"
+                ></dxi-column>
+                <dxi-column
+                  caption="Total Satisfecho"
+                  [width]="100"
+                  dataField="totalSatisfecho"
+                ></dxi-column>
+                <dxi-column
+                  caption="Total Insatisfecho"
+                  [width]="100"
+                  dataField="totalInsatisfecho"
+                ></dxi-column>
+                <dxi-column
+                  caption="% Satisfecho"
+                  [width]="130"
+                  dataField="totalPorcentajeSatisfecho"
+                ></dxi-column>
+                <dxi-column
+                  caption="% Insatisfecho"
+                  [width]="130"
+                  dataField="totalPorcentajeInsatisfecho"
+                ></dxi-column>
+                <dxi-column
+                  caption="Acciones"
+                  [allowExporting]="false"
+                  cellTemplate="accionTemplate"
+                  [width]="50"
+                >
+                </dxi-column>
+                <dxo-paging [pageSize]="10" [pageIndex]="0"></dxo-paging>
+                <div *dxTemplate="let pregunta of 'accionTemplate'">
+                  <button
+                    rel="tooltip"
+                    title="Ver Calificaciones"
+                    (click)="filtrarPregunta(pregunta.data.id)"
+                    type="button"
+                    class="btn btn-grid btn-info"
+                  >
+                    <i class="material-icons">question_answer</i>
+                  </button>
+                  <button
+                    rel="tooltip"
+                    title="Preview"
+                    (click)="mostrarPreview(pregunta.data)"
+                    type="button"
+                    class="btn btn-grid btn-default mt-5px"
+                  >
+                    <i class="fa fa-eye"></i>
+                  </button>
+                </div>
+              </dx-data-grid>
+            </div>
+          </div>
+          <div class="row mt-2rem espacio-lados-sm">
+            <div class="col-md-4 espacio-abajo-sm" *ngIf="idPregunta !== null">
+              <button
+                rel="tooltip"
+                title="Ver todas las Calificaciones"
+                (click)="verTodasLasCalificaciones()"
+                type="button"
+                class="btn btn-grid btn-default"
+              >
+                Ver todas las Calificaciones
+              </button>
+            </div>
+            <div class="col-md-12">
+              <dx-data-grid
+                #dxDataGridListadoRespuestas
+                [showBorders]="true"
+                [remoteOperations]="true"
+                [wordWrapEnabled]="true"
+                [dataSource]="calificaciones"
+                id="dataGridListadoRespuestas"
+              >
+                <dxo-filter-row [visible]="true"></dxo-filter-row>
+                <dxo-header-filter [visible]="true"></dxo-header-filter>
+                <dxo-export
+                  [enabled]="true"
+                  fileName="ReporteCalificacionesSatisfechoInsatisfecho"
+                >
+                </dxo-export>
+                <dxi-column
+                  caption="Número Pedido"
+                  [width]="90"
+                  dataField="numeroPedido"
+                ></dxi-column>
+                <dxi-column
+                  caption="Teléfono"
+                  [width]="100"
+                  dataField="celular"
+                ></dxi-column>
+                <dxi-column
+                  caption="Correo Electrónico"
+                  [width]="250"
+                  dataField="correoElectronico"
+                ></dxi-column>
+                <dxi-column
+                  caption="Calificación"
+                  [width]="100"
+                  dataField="calificacion"
+                  cellTemplate="calificacionTemplate"
+                ></dxi-column>
+                <dxi-column
+                  caption="Comentario"
+                  [width]="330"
+                  dataField="comentario"
+                ></dxi-column>
+                <dxi-column
+                  caption="Fecha Agrega"
+                  [width]="150"
+                  dataField="fechaAgrega"
+                  [sortOrder]="'desc'"
+                  cellTemplate="fechaAgregaTemplate"
+                ></dxi-column>
+                <dxi-column
+                  caption="Fecha Pedido"
+                  [width]="150"
+                  dataField="fechaPedido"
+                  cellTemplate="fechaPedidoTemplate"
+                ></dxi-column>
+                <dxi-column
+                  caption="Acciones"
+                  [allowExporting]="false"
+                  cellTemplate="accionTemplate"
+                  [width]="50"
+                ></dxi-column>
+                <dxo-paging [pageSize]="10" [pageIndex]="0"></dxo-paging>
+                <dxo-pager
+                  [showPageSizeSelector]="true"
+                  [allowedPageSizes]="[5, 10, 20]"
+                ></dxo-pager>
+                <div
+                  *dxTemplate="let dataCalificacion of 'calificacionTemplate'"
+                >
+                  <span>{{
+                    dataCalificacion.data.calificacion === 1
+                      ? 'Satisfecho'
+                      : 'Insatisfecho'
+                  }}</span>
+                </div>
+                <div *dxTemplate="let dataFechaAgrega of 'fechaAgregaTemplate'">
+                  <span>{{
+                    dataFechaAgrega.data.fechaAgrega
+                      | amLocale: 'es'
+                      | amTimeAgo
+                  }}</span>
+                </div>
+                <div *dxTemplate="let dataFechaAgrega of 'fechaPedidoTemplate'">
+                  <span>{{
+                    dataFechaAgrega.data.fechaPedido
+                      | amDateFormat: 'MM/DD/YYYY'
+                  }}</span>
+                </div>
+                <div *dxTemplate="let pregunta of 'accionTemplate'">
+                  <button
+                    rel="tooltip"
+                    title="Preview"
+                    (click)="mostrarPreview(pregunta.data)"
+                    type="button"
+                    class="btn btn-grid btn-default"
+                  >
+                    <i class="fa fa-eye"></i>
+                  </button>
+                </div>
+              </dx-data-grid>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<dx-popup
+  class="popup"
+  id="popup"
+  width="50%"
+  height="68%"
+  [dragEnabled]="false"
+  [closeOnOutsideClick]="true"
+  [(visible)]="_mostrarPopup"
+  [showCloseButton]="true"
+  [resizeEnabled]="true"
+  [deferRendering]="false"
+>
+  <div *dxTemplate="let data of 'content'">
+    <br />
+    <div class="row text-center">
+      <div class="col-12">
+        <h3>{{ informacionPreview?.descripcion }}</h3>
+      </div>
+    </div>
+    <div class="row text-center">
+      <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2"></div>
+      <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+        <img
+          src="{{ informacionPreview.imagenSatisfechoUrl }}"
+          [ngClass]="{
+            'imagen-seleccionada': satisfechoSeleccionado,
+            'imagen-seleccionar': !satisfechoSeleccionado
+          }"
+          (click)="seleccionarSatisfechoInsatisfecho('satisfecho')"
+          class="satisfecho-insatisfecho imagen-seleccionar"
+          alt=""
+        />
+      </div>
+
+      <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+        <img
+          src="{{ informacionPreview.imagenInsatisfechoUrl }}"
+          [ngClass]="{
+            'imagen-seleccionada': insatisfechoSeleccionado,
+            'imagen-seleccionar': !insatisfechoSeleccionado
+          }"
+          class="satisfecho-insatisfecho"
+          (click)="seleccionarSatisfechoInsatisfecho('insatisfecho')"
+          alt=""
+        />
+      </div>
+      <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2"></div>
+    </div>
+    <div class="row">
+      <div
+        class="col-md-offset-3 col-md-7"
+        [ngStyle]="{ 'margin-top': '2rem' }"
+      >
+        <div [formGroup]="formGroupResultadoEncuesta" class="">
+          <label for="comentario" class=""
+            >Comentario:
+            <dx-text-area
+              [readOnly]="false"
+              [width]="400"
+              #pregunta
+              formControlName="comentario"
+            >
+            </dx-text-area>
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="row" style="float: right; padding-bottom: 1rem">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <br />
+        <dx-button
+          icon="fa fa-floppy-o"
+          type="primary"
+          text="Guardar"
+          (onClick)="guardarPreviewFalsamente()"
+        >
+        </dx-button>
+        <dx-button
+          icon="fa fa-times-circle"
+          type="defult"
+          text="Cerrar"
+          (onClick)="cerrarPreview()"
+        >
+        </dx-button>
+        <br />
+      </div>
+    </div>
+  </div>
+</dx-popup>

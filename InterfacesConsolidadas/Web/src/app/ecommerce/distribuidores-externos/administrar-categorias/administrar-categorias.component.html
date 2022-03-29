@@ -1,0 +1,158 @@
+<!-- <app-main-loader></app-main-loader> -->
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-icon" data-background-color="green">
+            <i class="material-icons">360</i>
+          </div>
+          <div class="card-content">
+            <h4 class="card-title">
+              <strong>Administrar Categorías</strong>
+            </h4>
+            <div class="row">
+              <div class="col-lg-offset-1 col-lg-10 col-md-10 col-sm-12 col-xs-12">
+                <div class="row">
+                  <div class="col-md-6" style="margin-top: 20px;">
+                    <span class="labelsFormularios">Distribuidor:</span>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
+                    <dx-lookup #dropDowndistribuidor [(ngModel)]="distribuidorCategoria.distribuidorExternoId"
+                      displayExpr="nombre" valueExpr="id" placeholder="Select a Distribuidor" [showClearButton]="true"
+                      [dataSource]="distribuidores" closeOnOutsideClick="true" name="dropDowndistribuidor">
+                    </dx-lookup>
+                  </div>
+                  <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                    <dx-button type="success" icon="add" style="float: right" (onClick)="MostrarPopup()"></dx-button>
+                  </div>
+                </div>
+                <br>
+                <div class="row">
+                  <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
+                    <dx-text-box [(ngModel)]="distribuidorCategoria.nombre" placeholder="Nombre Categoría...">
+                    </dx-text-box>
+                  </div>
+                </div>
+                <br>
+                <div class="row">
+                  <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
+                    <dx-text-box [(ngModel)]="distribuidorCategoria.idExterno" placeholder="Código externo categoría...">
+                    </dx-text-box>
+                  </div>
+                </div>
+                <br>
+                <div class="row">
+                  <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
+                    <dx-data-grid [dataSource]="distribuidoresCategorias" [showColumnLines]="true" [showRowLines]="true"
+                      [showBorders]="true" [columnAutoWidth]="true" [rowAlternationEnabled]="true">
+                      <dxo-filter-row [visible]="true"> </dxo-filter-row>
+                      <dxo-header-filter [visible]="true"></dxo-header-filter>
+                      <dxo-export [enabled]="true" fileName="Categorias" [allowExportSelectedData]="true">
+                      </dxo-export>
+                      <dxi-column dataField="id" caption="Código">
+                         </dxi-column>
+                      <dxi-column dataField="id" caption="Categoria">
+                        <dxo-lookup [dataSource]="distribuidoresCategorias" closeOnOutsideClick="true"
+                          showPopupTitle="false" displayExpr="nombre" valueExpr="id">
+                        </dxo-lookup>
+                      </dxi-column>
+                      <dxi-column dataField="distribuidorExternoId" caption="Distribuidor">
+                      
+                        <dxo-lookup [dataSource]="distribuidores" closeOnOutsideClick="true" showPopupTitle="false"
+                          displayExpr="nombre" valueExpr="id">
+                        </dxo-lookup>
+                      </dxi-column>
+                      <dxi-column dataField="idExterno" [visible]="false" caption="Código Externo"></dxi-column>
+                      <dxi-column caption="Activo" dataField="activo"> </dxi-column>
+                      <dxi-column caption="Editar" cellTemplate="accionTemplate" [width]="130"></dxi-column>
+                      <div *dxTemplate="let accion of 'accionTemplate'">
+                        <div style="text-align: center">
+                          <dx-button type="button" type="success" (click)="ActualizarCategoria(accion.data)"
+                            icon="fa fa-edit">
+                          </dx-button>
+                        </div>
+                      </div>
+                      <dxo-scrolling mode="virtual"></dxo-scrolling>
+                    </dx-data-grid>
+                  </div>
+                </div>
+                <br>
+                <div class="row">
+                  <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
+                    <div class="row" style="float: right;">
+                      <dx-button icon="fa fa-plus-circle" type="success" text="Guardar" (onClick)="AgregarCategoria()">
+                      </dx-button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <dx-popup class="popup" id="popup" height="40%" width="45%" [showTitle]="true" ng-controller="Ctrl"
+    title="Agregar Distribuidor" [dragEnabled]="false" [closeOnOutsideClick]="true" [(visible)]="_mostrarPopup"
+    [showCloseButton]="true" [resizeEnabled]="true">
+    <div *dxTemplate="let data of 'content'">
+      <br />
+      <div *ngIf="esAgregarDistribuidor">
+
+        <div class="row">
+          <dx-text-box [(ngModel)]="distribuidor.nombre" placeholder="Nombre Distribuidor..."></dx-text-box>
+        </div>
+        <BR>
+        <div class="row">
+          <dx-text-box [(ngModel)]="distribuidor.codigoDistribuidor" placeholder="Opcional Código Distribuidor...">
+          </dx-text-box>
+        </div>
+        <div class="row" style="float: right;">
+          <br>
+          <dx-button icon="fa fa-times-circle" type="danger" text="Cerrar" (onClick)="MostrarPopup(0)">
+          </dx-button>
+          <dx-button icon="fa fa-plus-circle" type="success" text="Guardar" (onClick)="AgregarDistribuidor()">
+          </dx-button>
+
+        </div>
+      </div>
+      <div *ngIf="!esAgregarDistribuidor">
+        <div class="row">
+          <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
+            <dx-text-box [(ngModel)]="distribuidorEdicion.nombre" placeholder="Nombre Distribuidor..."></dx-text-box>
+          </div>
+        </div>
+        <BR>
+          <div class="row">
+            <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
+              <dx-text-box [(ngModel)]="distribuidorEdicion.idExterno" placeholder="Id externo..."></dx-text-box>
+            </div>
+          </div>
+          <BR>
+        <div class="row">
+          <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
+            <dx-lookup [(ngModel)]="distribuidorEdicion.distribuidorExternoId" [dataSource]="distribuidores"
+              closeOnOutsideClick="true" showPopupTitle="false" displayExpr="nombre" valueExpr="id">
+            </dx-lookup>
+          </div>
+          
+          <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+            <dx-check-box  text = "Activo "[(ngModel)]="distribuidorEdicion.activo"></dx-check-box>
+          </div>
+        </div>
+        <BR>
+        <div class="row" style="float: right;">
+          <br>
+          <dx-button icon="fa fa-times-circle" type="danger" text="Cerrar" (onClick)="MostrarPopup(0)">
+          </dx-button>
+          <dx-button icon="fa fa-plus-circle" type="success" text="Guardar" (onClick)="Actualizar()">
+          </dx-button>
+        </div>
+      </div>
+    </div>
+  </dx-popup>

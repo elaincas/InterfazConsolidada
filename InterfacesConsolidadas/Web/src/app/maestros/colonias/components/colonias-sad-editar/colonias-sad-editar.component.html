@@ -1,0 +1,255 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-icon" data-background-color="green">
+            <i class="material-icons">mode_edit</i>
+          </div>
+
+          <div class="card-content">
+            <h4 class="card-title">Admin. Colonias SAD</h4>
+            <form [formGroup]="formGroupColonia">
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label for="">Ciudad:</label>
+                    <dx-lookup formControlName="selectCiudad" [dataSource]="ciudades" displayExpr="descripcion"
+                      valueExpr="id" [showClearButton]="true" [searchEnabled]="true"
+                      (onValueChanged)="onValueChangedCiudad($event)">
+                    </dx-lookup>
+                  </div>
+                </div>
+
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label for="">Sucursal:</label>
+                    <dx-lookup formControlName="selectSucursal" [dataSource]="sucursales" displayExpr="nombre"
+                      valueExpr="id" [showClearButton]="true" [searchEnabled]="true"
+                      (onValueChanged)="onValueChangedSucursal($event)">
+                    </dx-lookup>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <dx-button text="Mostrar" type="default" (onClick)="cargarColoniasSADdeSucursal()">
+                    </dx-button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <dx-data-grid style="width: 100%;" #gridColonias [dataSource]="coloniasSad" [showBorders]="true"
+                  [columnAutoWidth]="true" [height]="500" [wordWrapEnabled]="true"
+                  (onRowPrepared)="onRowPrepared($event)" (onKeyDown)="onKeyDownGrid($event)">
+                  <dxo-paging [pageSize]="10"></dxo-paging>
+                  <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10, 20, 30]" [showInfo]="true">
+                  </dxo-pager>
+                  <dxo-filter-row [visible]="true"></dxo-filter-row>
+                  <dxo-header-filter [visible]="true"></dxo-header-filter>
+                  <dxo-search-panel [visible]="true" [width]="240" placeholder="Search..."></dxo-search-panel>
+                  <dxo-editing mode="cell" [allowUpdating]="true"></dxo-editing>
+                  <dxi-column caption="Código" dataField="id" [allowEditing]="false" [width]="80">
+                  </dxi-column>
+                  <dxi-column caption="Colonia" dataField="colonia" [allowEditing]="false">
+                  </dxi-column>
+                  <dxi-column caption="Ciudad" dataField="ciudad" [allowEditing]="false" [width]="150"></dxi-column>
+                  <dxi-column caption="Sucursal" dataField="sucursal" [allowEditing]="false" [width]="150">
+                  </dxi-column>
+                  <dxi-column caption="Abre L-V" dataField="horaAperturaLunesAviernes" [allowEditing]="false"
+                    [width]="90">
+                  </dxi-column>
+                  <dxi-column caption="Cierre L-V" dataField="horaCierreLunesAviernes" [allowEditing]="false"
+                    [width]="90"></dxi-column>
+                  <dxi-column caption="Abre S" dataField="horaAperturaSabados" [allowEditing]="false" [width]="90">
+                  </dxi-column>
+                  <dxi-column caption="Cierre S" dataField="horaCierreSabados" [allowEditing]="false" [width]="90">
+                  </dxi-column>
+                  <dxi-column caption="Abre D" dataField="horaAperturaDomingos" [allowEditing]="false" [width]="90">
+                  </dxi-column>
+                  <dxi-column caption="Cierre D" dataField="horaCierreDomingos" [allowEditing]="false" [width]="90">
+                  </dxi-column>
+                  <dxi-column caption="Activo" dataField="activo" [allowEditing]="false" [width]="90">
+                  </dxi-column>
+                  <dxi-column caption="Seleccionar" dataField="seleccionada" [allowEditing]="true" [width]="110">
+                  </dxi-column>
+                </dx-data-grid>
+              </div>
+
+              <div class="row" style="float: right;margin-bottom: 10px;">
+                <div class="form-group">
+                  <dx-button text="Editar" type="default" (onClick)="mostrarPopupEditar()">
+                  </dx-button>
+                  <dx-button text="Agregar" type="default" (onClick)="mostrarPopupAgregarColoniaSAD()">
+                  </dx-button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<dx-popup class="popup" id="popup" height="550" width="60%" [showTitle]="true" title="Editar Colonias"
+  [dragEnabled]="true" [closeOnOutsideClick]="false" [(visible)]="_mostrarPopup" [showCloseButton]="true"
+  [resizeEnabled]="true">
+  <div *dxTemplate="let data of 'content'">
+    <dx-scroll-view #scrollView id="scrollview">
+      <dx-form [formGroup]="formGroupEditar">
+        <dxi-item itemType="group" caption="Colonias Por Modificar">
+          <div class="row" style="display: flex; justify-content: center;">
+            <dx-data-grid style="width: 95%;" #gridColonias [dataSource]="coloniasSadEditar" [showBorders]="true"
+              [columnAutoWidth]="true" [height]="200" [selection]="{ mode: 'single' }" [wordWrapEnabled]="true">
+              <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+              <dxo-selection mode="single"></dxo-selection>
+              <dxo-filter-row [visible]="true"></dxo-filter-row>
+              <dxo-header-filter [visible]="true"></dxo-header-filter>
+              <dxi-column caption="ID" dataField="coloniaId" [allowEditing]="false">
+              </dxi-column>
+              <dxi-column caption="Colonia" dataField="colonia" [allowEditing]="false">
+              </dxi-column>
+              <dxi-column caption="Ciudad" dataField="ciudad" [allowEditing]="false"></dxi-column>
+              <dxi-column caption="Sucursal" dataField="sucursal" [allowEditing]="false">
+              </dxi-column>
+            </dx-data-grid>
+          </div>
+        </dxi-item>
+        <dxi-item itemType="group" caption="Editar Sucursal">
+          <div class="row">
+            <div class="col-md-5">
+              <div class="fomr-group">
+                <label for="">Sucursal:</label>
+                <dx-lookup formControlName="selectSucursal" [dataSource]="sucursalesEdit" displayExpr="nombre"
+                  valueExpr="id" [showClearButton]="true" [searchEnabled]="true">
+                </dx-lookup>
+              </div>
+            </div>
+            <div class="col-md-5">
+              <div class="form-group">
+                <dx-button text="Guardar" type="success" (onClick)="actualizarSucursalDeColonias()">
+                </dx-button>
+              </div>
+            </div>
+          </div>
+        </dxi-item>
+        <dxi-item itemType="group" caption="Editar Horario">
+          <div class="row" style="display: flex; justify-content: center;">
+            <table class="table table-borderless" style="width: 95%;">
+              <thead>
+                <tr>
+                  <th scope="col"></th>
+                  <th scope="col">Desde</th>
+                  <th scope="col">Hasta</th>
+                  <th scope="col"></th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr>
+                  <td>
+                    <strong>Lunes a Viernes</strong>
+                  </td>
+                  <td>
+                    <dx-date-box formControlName="horaAperturaLV" type="time" [showClearButton]="true" [min]="minDate"
+                      [max]="maxDate"></dx-date-box>
+                  </td>
+                  <td>
+                    <dx-date-box formControlName="horaCierreLV" type="time" [showClearButton]="true" [min]="minDate"
+                      [max]="maxDate"></dx-date-box>
+                  </td>
+                  <td>
+                    <dx-button text="Guardar" type="success"
+                      (onClick)="actualizarHorarioLunesViernes('horaAperturaLV','horaCierreLV')">
+                    </dx-button>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td><strong>Sábado</strong></td>
+                  <td>
+                    <dx-date-box formControlName="horaAperturaSabado" type="time" [showClearButton]="true"
+                      [min]="minDate" [max]="maxDate"></dx-date-box>
+                  </td>
+                  <td>
+                    <dx-date-box formControlName="horaCierreSabado" type="time" [showClearButton]="true" [min]="minDate"
+                      [max]="maxDate"></dx-date-box>
+                  </td>
+                  <td>
+                    <dx-button text="Guardar" type="success"
+                      (onClick)="actualizarHorarioLunesViernes('horaAperturaSabado','horaCierreSabado')">
+                    </dx-button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <strong>Domingo</strong>
+                    <br>
+                    <dx-check-box (onValueChanged)="seTrabajaDomingo = $event.value" text="Se trabaja domingo" formControlName="trabajaDomingos">
+                    </dx-check-box>
+                  </td>
+                  <td>
+                    <dx-date-box [disableControl]="!seTrabajaDomingo" formControlName="horaAperturaDomingo" type="time" [showClearButton]="true"
+                      [min]="minDate" [max]="maxDate"></dx-date-box>
+                  </td>
+                  <td>
+                    <dx-date-box [disableControl]="!seTrabajaDomingo" formControlName="horaCierreDomingo" type="time" [showClearButton]="true"
+                      [min]="minDate" [max]="maxDate"></dx-date-box>
+                  </td>
+                  <td>
+                    <dx-button text="Guardar" type="success"
+                      (onClick)="actualizarHorarioLunesViernes('horaAperturaDomingo','horaCierreDomingo')">
+                    </dx-button>
+                  </td>
+                </tr>
+
+              </tbody>
+            </table>
+            <!-- <div class="col-md-3">
+              <label for="">Lunes a Viernes</label>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="">Desde</label>
+                <dx-date-box formControlName="horaAperturaLV" type="time" [showClearButton]="true" [min]="minDate"
+                  [max]="maxDate"></dx-date-box>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="">Hasta</label>
+                <dx-date-box formControlName="horaCierreLV" type="time" [showClearButton]="true" [min]="minDate"
+                  [max]="maxDate"></dx-date-box>
+              </div>
+            </div> -->
+
+          </div>
+        </dxi-item>
+
+        <dxi-item itemType="group" caption="Activar/Desactivar">
+          <div class="row">
+            <div class="col-md-3">
+              <div class="form-group">
+                <dx-check-box text="Activar/Desactiva" formControlName="checkActivo">
+                </dx-check-box>
+              </div>
+            </div>
+
+            <div class="col-md-3">
+              <div class="form-group">
+                <dx-button text="Guardar" type="success" (onClick)="actualizarEstadoDeColoniasSad()">
+                </dx-button>
+              </div>
+            </div>
+          </div>
+        </dxi-item>
+      </dx-form>
+    </dx-scroll-view>
+  </div>
+</dx-popup>
+
+<app-colonias-sad-agregar #appColoniasAdd></app-colonias-sad-agregar>

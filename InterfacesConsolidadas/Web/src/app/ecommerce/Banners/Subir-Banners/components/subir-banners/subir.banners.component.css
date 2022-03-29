@@ -1,0 +1,33 @@
+.banner{
+  width: 100%;
+  height: auto;
+  border: none;
+}
+
+.btnAgregarBannerAlista {
+  padding: 4% 0% 4% 2%;
+  margin: 2% 7% 2% 0%;
+  left: 5%;
+  border: 1px dotted #1b6d85;
+}
+
+.btnAgregarBannerAlista > button{
+
+}
+
+.btnVerBanner {
+  cursor: pointer;
+  top: 10%;
+}
+
+.fileUpload-container{
+  margin-left: 20px;
+}
+
+.banner-margin-bottom{
+  margin-bottom: 20px;
+}
+
+.loader .my-loader {
+  background-color: #D32F2F;
+}
